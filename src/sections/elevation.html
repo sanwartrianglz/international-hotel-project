@@ -1,0 +1,18 @@
+<h1>Elevation &amp; scrim</h1>
+  <p class="lede">Exactly one shadow tier, plus flat. Used on card hover, the search bar at rest, dropdowns and floating badges.</p>
+  <div class="canvas soft">
+    <div class="row" style="gap:32px">
+      <div style="width:220px;height:120px;background:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center" class="t-caption">Flat (95% of surfaces)</div>
+      <div style="width:220px;height:120px;background:#fff;border-radius:14px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center" class="t-caption">Shadow tier</div>
+    </div>
+  </div>
+  <pre class="code" style="margin-top:12px">box-shadow: rgba(0,0,0,.02) 0 0 0 1px,
+            rgba(0,0,0,.04) 0 2px 6px 0,
+            rgba(0,0,0,.1)  0 4px 8px 0;</pre>
+  <h2>Modal scrim — #000 at 50%</h2>
+  <div class="canvas" style="padding:0">
+    <div class="modal-demo"><div class="scrim">
+      <div class="modal"><div class="mh"><button class="icon-circle" aria-label="Close"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>Log in or sign up</div>
+      <div class="mb stack"><div class="t-display-sm">Welcome</div><div class="combo"><input class="input" placeholder="Country/Region"><input class="input" placeholder="Phone number"></div><button class="btn btn-primary full">Continue</button></div></div>
+    </div></div>
+  </div>

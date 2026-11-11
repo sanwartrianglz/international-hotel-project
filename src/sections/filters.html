@@ -1,0 +1,35 @@
+<h1>Filters modal<span class="tag-live">live site</span></h1>
+  <p class="lede">The richest form on the site. It has a sticky blurred header and a sticky footer (Clear all plus a dark "Show N places" button whose count updates live). Every control below works.</p>
+  <div class="canvas soft" style="display:flex;justify-content:center">
+    <div class="fmodal">
+      <header>Filters<button class="icon-circle" style="background:transparent" aria-label="Close"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+      <div class="fbody">
+        <div class="fsec"><h5>Recommended for you</h5><div class="tilecards" id="tiles"></div></div>
+        <div class="fsec"><h5>Type of place</h5><div class="segc" id="segc"><button class="on">Any</button><button>Home</button><button>Room</button><button>Hotel</button></div></div>
+        <div class="fsec"><h5>Price</h5>
+          <div class="switchseg" id="sw" data-v="0"><span class="thumb"></span><button class="on">Trip price</button><button>Nightly price</button></div>
+          <div class="hist" id="hist" style="margin-top:24px"></div>
+          <div class="range" id="range"><div class="track"></div><div class="fill" id="rfill"></div><div class="th" id="th0" role="slider" aria-label="Minimum price" tabindex="0"></div><div class="th" id="th1" role="slider" aria-label="Maximum price" tabindex="0"></div></div>
+          <div class="minmax"><label>Minimum<output id="pmin"></output></label><label>Maximum<output id="pmax"></output></label></div>
+        </div>
+        <div class="fsec"><h5>Rooms and beds</h5><div id="rooms"></div></div>
+        <div class="fsec"><h5>Standout stays</h5><div class="selcards" id="selcards"></div></div>
+        <div class="fsec"><h5>Booking options</h5>
+          <div class="srow"><div><div>Instant Book</div><small class="muted" style="font-size:14px">Book without waiting for approval</small></div><button class="tswitch" role="switch" aria-checked="false" aria-label="Instant Book"></button></div>
+          <div class="srow"><div><div>Free cancellation</div><small class="muted" style="font-size:14px">Only show flexible stays</small></div><button class="tswitch" role="switch" aria-checked="true" aria-label="Free cancellation"></button></div>
+          <div style="margin-top:12px"><button class="disclose" id="more">Show more <svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 9l6 6 6-6"/></svg></button></div>
+        </div>
+      </div>
+      <footer><button class="clear" id="clearAll">Clear all</button><button class="btn btn-dark" id="showN">Show 1,000+ places</button></footer>
+    </div>
+  </div>
+  <table class="props" style="margin-top:16px"><tr><th>Control</th><th>Spec</th></tr>
+    <tr><td>Modal</td><td>568px, 32px radius, header 64px (92.5% white + blur), footer 24px padding</td></tr>
+    <tr><td>Segmented (outlined)</td><td>54px, 16px radius, 4px inset, hairline dividers; selected = 2px ink inset, 12px radius</td></tr>
+    <tr><td>Segmented (switch)</td><td>48px #f2f2f2 track, 30px radius; white sliding thumb, unselected text #6c6c6c</td></tr>
+    <tr><td>Price slider</td><td>Rausch histogram (out-of-range bars turn hairline), 28px white thumbs, pill min/max outputs 56px</td></tr>
+    <tr><td>Stepper</td><td>32px #f2f2f2 circles, disabled glyph #c1c1c1, value "Any" when 0</td></tr>
+    <tr><td>Selectable card</td><td>Icon + title + description, 12px radius, selected 2px ink inset</td></tr>
+    <tr><td>Toggle switch</td><td>48×32, ink when on</td></tr>
+  </table>
+  <div class="idea"><b>Design idea:</b> a histogram behind the slider shows <i>where things are</i> before you choose. For a supervisor screen, a chart of "rooms by time to clean" could use the same idea. The live count on the apply button ("Show 24 rooms") tells you the result before you commit.</div>

@@ -1,0 +1,27 @@
+<h1>Buttons</h1>
+  <p class="lede">Primary is Rausch, 48px tall, 8px radius, weight 500. Press flips to <code>primary-active</code> — no transform, no shadow change.</p>
+  <div class="canvas"><div class="row" id="btnPlay"><button class="btn btn-primary" id="btnLive">Reserve</button></div></div>
+  <div class="controls">
+    <label>Variant <select id="btnVariant"><option value="btn-primary">primary</option><option value="btn-secondary">secondary</option><option value="btn-tertiary">tertiary-text</option><option value="btn-pill">pill-rausch</option></select></label>
+    <label>State <select id="btnState"><option value="">default</option><option value="is-active">active (pressed)</option><option value="is-disabled">disabled</option></select></label>
+    <label>Label <input type="text" id="btnLabel" value="Reserve"></label>
+    <label><input type="checkbox" id="btnFull"> full width</label>
+  </div>
+  <h2>All variants</h2>
+  <div class="canvas"><div class="row">
+    <button class="btn btn-primary">Reserve</button>
+    <button class="btn btn-primary is-active">Pressed</button>
+    <button class="btn btn-primary" disabled>Disabled</button>
+    <button class="btn btn-secondary">Contact host</button>
+    <button class="btn btn-tertiary">Show more</button>
+    <button class="btn btn-pill">Become a host</button>
+  </div></div>
+  <h2>Props</h2>
+  <table class="props"><tr><th>Component</th><th>Fill / text</th><th>Radius</th><th>Padding · height</th><th>Type</th></tr>
+    <tr><td><code>button-primary</code></td><td>primary / on-primary</td><td>sm 8px</td><td>14×24 · 48px</td><td>button-md</td></tr>
+    <tr><td><code>button-primary-active</code></td><td>primary-active</td><td>sm</td><td>—</td><td>—</td></tr>
+    <tr><td><code>button-primary-disabled</code></td><td>primary-disabled</td><td>sm</td><td>—</td><td>—</td></tr>
+    <tr><td><code>button-secondary</code></td><td>canvas / ink, 1px ink border</td><td>sm</td><td>13×23 · 48px</td><td>button-md</td></tr>
+    <tr><td><code>button-tertiary-text</code></td><td>transparent / ink, underline on hover</td><td>—</td><td>—</td><td>button-md</td></tr>
+    <tr><td><code>button-pill-rausch</code></td><td>primary / on-primary</td><td>full</td><td>10×20</td><td>button-sm</td></tr>
+  </table>
