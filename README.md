@@ -4,7 +4,7 @@ A reference Storybook built to study Airbnb's public design language for the Int
 
 Sources:
 - Tokens: `00_inputs/references/airbnb.design.md`
-- Live-site study: airbnb.com, 2026-11-11 (see the "Live site study" group)
+- Live-site study: airbnb.com, 2026-11-11 (stories tagged "live site" in each group)
 
 ## Run locally
 ```bash

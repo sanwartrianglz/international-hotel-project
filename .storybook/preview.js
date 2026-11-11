@@ -14,7 +14,7 @@ const preview = {
   parameters: {
     layout: 'fullscreen',
     options: {
-      storySort: { order: ['Docs', 'Foundations', 'Actions', 'Navigation', 'Listings', 'Listing detail', 'Inputs', 'Page', 'Live site study'] },
+      storySort: { order: ['Docs', 'Foundations', 'Actions', 'Navigation', 'Listings', 'Listing detail', 'Inputs', 'Page'] },
     },
     viewport: {
       options: {
