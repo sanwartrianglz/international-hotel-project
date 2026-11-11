@@ -1,0 +1,26 @@
+<h1>House rules &amp; requests<span class="tag-live">live site</span></h1>
+<p class="lede">This is Airbnb's closest built-in "checklist". Hosts pick from a <b>fixed set of standard rules</b>: guest count, pets, smoking, parties, <b>lock up at checkout</b> and a few more. Each rule shows as an icon tile and one short line. Hosts then add their own <b>free-text requests</b> ("During the stay", "Before checkout") underneath. Opened from Things to know → House rules → Show more.</p>
+<div class="canvas soft" style="display:flex;justify-content:center">
+  <div class="rulesmodal shadow-modal">
+    <div class="rmh"><button class="icon-circle" style="background:transparent" aria-label="Close"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="rmb">
+      <div class="t-display-lg" style="font-size:26px;font-weight:600">House rules and requests</div>
+      <p class="t-body-md muted" style="margin:6px 0 28px">You'll be staying in someone's home, so please treat it with care and respect.</p>
+      <div class="t-display-sm">House rules</div>
+      <p class="t-body-sm muted" style="margin:4px 0 12px">These things are required to book this place.</p>
+      <div id="rules"></div>
+      <div class="t-display-sm" style="margin-top:28px">Host requests</div>
+      <p class="t-body-sm muted" style="margin:4px 0 12px">The host asks that you follow these requests.</p>
+      <div class="rrow"><span class="rtile"><svg class="lineico" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4zM10 20v-5h4v5"/></svg></span><div><div class="t-body-md">During the stay</div><div class="t-body-sm muted">Visitors must show ID at reception. Quiet hours 22:00–08:00.</div></div></div>
+      <div class="rrow"><span class="rtile"><svg class="lineico" viewBox="0 0 24 24"><path d="M15 3h4v18h-4M10 17l5-5-5-5M15 12H3"/></svg></span><div><div class="t-body-md">Before checkout</div><div class="t-body-sm muted">Gather used towels in the bathroom. Leave access cards at reception.</div></div></div>
+    </div>
+  </div>
+</div>
+<table class="props" style="margin-top:16px"><tr><th>Part</th><th>Spec (measured)</th></tr>
+  <tr><td>Icon tile</td><td>40×40, <code>surface-soft #f7f7f7</code>, 8px radius, 24px line icon</td></tr>
+  <tr><td>Rule text</td><td>14–16px ink, optional muted sub-line (e.g. "Including vaping and e-cigarettes")</td></tr>
+  <tr><td>Sections</td><td>House rules (standard, fixed list) → Host requests (free text, grouped by moment)</td></tr>
+  <tr><td>Container</td><td>Modal, 32px radius, scrolls inside, close at top-left</td></tr>
+</table>
+<div class="idea"><b>Design idea for us:</b> the split between <b>standard items from a fixed list</b> (which can be translated automatically and shown as icons) and <b>a few free-text extras</b> is how our room checklists should work. The chain's brand standard is the fixed list, and the property or supervisor adds short local notes on top. Standard rules translate perfectly; only the free text needs machine translation (see Translation pattern).</div>
+<div class="note">Not confirmed: some sources describe a separate predefined <i>checkout task</i> list (e.g. "throw rubbish away", "turn things off"). On the live site and in Airbnb's host resources I only found the "Lock up at checkout" rule plus free-text "before checkout" requests, so this page shows what was verified.</div>
