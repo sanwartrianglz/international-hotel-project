@@ -39,3 +39,4 @@ Dated log of work sessions: what was done and what's next.
 - Tested in Chrome: login → 412 clean → urgent 418 → needs a fix → re-check, Arabic RTL, messages. Fixed: screens kept the previous scroll position; the mixed-direction score line in Arabic.
 - Amr's object PNGs still need to be exported from Figma into `05_build/app/public/objects/` (then `npm run objects`). Until then the app shows emoji stand-ins.
 - **Next:** export the object images; native-speaker review of the Arabic and Filipino strings; supervisor view (Floor · Team · Inbox · Inspect); deploy to GitHub Pages for a shareable link.
+- Added an iPhone 15 Pro mockup around the app on desktop screens (for reviews and presenting). Sheets, alerts and toasts stay inside the phone screen; the status bar follows offline mode and the break screen; Arabic mirrors only the app, not the phone. `?frame=off` / `?frame=on`.

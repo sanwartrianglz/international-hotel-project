@@ -26,7 +26,7 @@ button:disabled { cursor: not-allowed; }
 }
 .device-tablet { max-inline-size: 760px; }
 
-.screen { display: flex; flex-direction: column; min-block-size: 100dvh; }
+.screen { display: flex; flex-direction: column; min-block-size: var(--app-h); }
 .screen-body { flex: 1; padding: var(--s4); display: flex; flex-direction: column; gap: var(--s4); padding-block-end: var(--s6); }
 .center { align-items: center; justify-content: center; text-align: center; }
 .muted { color: var(--text-2); }
@@ -90,7 +90,7 @@ button:disabled { cursor: not-allowed; }
 .bottom-bar {
   position: sticky; inset-block-end: 0; z-index: 4;
   display: flex; flex-direction: column; gap: var(--s2);
-  padding: var(--s3) var(--s4) calc(var(--s3) + env(safe-area-inset-bottom));
+  padding: var(--s3) var(--s4) calc(var(--s3) + var(--safe-bottom));
   background: var(--white); border-block-start: 1px solid var(--border);
 }
 .bar-row { display: flex; gap: var(--gap-tap); }
@@ -208,7 +208,7 @@ button:disabled { cursor: not-allowed; }
 .sheet {
   inline-size: 100%; max-inline-size: 480px; max-block-size: 92dvh; overflow-y: auto;
   background: var(--white); border-radius: var(--radius-l) var(--radius-l) 0 0;
-  padding: var(--s2) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom));
+  padding: var(--s2) var(--s4) calc(var(--s4) + var(--safe-bottom));
   display: flex; flex-direction: column; gap: var(--s4); animation: up 0.25s ease;
 }
 .sheet-note { border-block-start: 6px solid var(--note); }
@@ -363,7 +363,7 @@ button:disabled { cursor: not-allowed; }
 .bubble.theirs { align-self: flex-start; border-end-start-radius: 4px; }
 .bubble-main { display: flex; align-items: center; gap: var(--s2); font-weight: 600; }
 .bubble-meta { font-size: 12px; opacity: 0.75; margin-block-start: 2px; }
-.preset-panel { position: sticky; inset-block-end: 0; padding: var(--s3) var(--s4) calc(var(--s3) + env(safe-area-inset-bottom)); background: var(--white); border-block-start: 1px solid var(--border); display: flex; flex-direction: column; gap: var(--s2); }
+.preset-panel { position: sticky; inset-block-end: 0; padding: var(--s3) var(--s4) calc(var(--s3) + var(--safe-bottom)); background: var(--white); border-block-start: 1px solid var(--border); display: flex; flex-direction: column; gap: var(--s2); }
 .preset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
 .preset { display: flex; flex-direction: column; align-items: center; gap: 4px; min-block-size: 92px; padding: var(--s2); border-radius: var(--radius-m); background: var(--surface); border: 2px solid var(--border); font-size: var(--fs-caption); font-weight: 600; text-align: center; }
 .preset:active { background: var(--st-to-inspect-bg); }
@@ -389,7 +389,7 @@ button:disabled { cursor: not-allowed; }
 .ok-line { color: var(--st-ready); font-weight: 600; margin: 0; }
 
 /* ---------- Break: full-screen paused ---------- */
-.break-screen { min-block-size: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s3); padding: var(--s5); background: var(--navy); color: var(--white); text-align: center; }
+.break-screen { min-block-size: var(--app-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s3); padding: var(--s5); background: var(--navy); color: var(--white); text-align: center; }
 .break-screen h1 { margin: 0; font-size: 32px; }
 .break-icon { font-size: 64px; }
 .break-timer { font-size: 56px; font-weight: 600; font-variant-numeric: tabular-nums; direction: ltr; }
@@ -421,3 +421,66 @@ button:disabled { cursor: not-allowed; }
   .device-tablet .tile-grid { grid-template-columns: repeat(4, 1fr); }
   .device-tablet .preset-grid { grid-template-columns: repeat(6, 1fr); }
 }
+
+/* ---------- Frame-aware sizes (full-screen on a real phone) ---------- */
+:root { --app-h: 100dvh; --safe-bottom: env(safe-area-inset-bottom); }
+
+/* ---------- iPhone 15 Pro mockup (desktop / presentations) ---------- */
+html.is-framed, html.is-framed body { overflow: hidden; }
+html.is-framed body { background: radial-gradient(1200px 700px at 30% 20%, #ffffff 0%, #ece9e2 55%, #dcd8cf 100%); }
+html.is-framed { --app-h: 798px; --safe-bottom: 22px; }
+
+.mock-stage {
+  min-block-size: 100dvh; display: flex; align-items: center; justify-content: center;
+  gap: 56px; padding: 24px; font-family: var(--font); color: var(--navy);
+}
+.mock-slot { position: relative; flex: none; }
+.iphone {
+  position: absolute; inset-block-start: 0; inset-inline-start: 0; transform-origin: top left;
+  inline-size: 417px; block-size: 876px; padding: 12px; border-radius: 68px;
+  background: linear-gradient(145deg, #6b6a68, #3a3936 40%, #57554f 70%, #2c2b29);
+  box-shadow:
+    inset 0 0 0 2px #8d8b86, inset 0 0 0 5px #1b1b1a,
+    0 2px 4px rgba(0,0,0,0.2), 0 40px 80px -20px rgba(30,41,59,0.45), 0 20px 40px -20px rgba(0,0,0,0.3);
+}
+.iphone-btn { position: absolute; inline-size: 4px; border-radius: 2px; background: linear-gradient(90deg, #2a2927, #6d6b66); }
+.iphone-btn-action { inset-inline-start: -3px; inset-block-start: 118px; block-size: 32px; }
+.iphone-btn-vol-up { inset-inline-start: -3px; inset-block-start: 174px; block-size: 62px; }
+.iphone-btn-vol-down { inset-inline-start: -3px; inset-block-start: 250px; block-size: 62px; }
+.iphone-btn-power { inset-inline-end: -3px; inset-block-start: 210px; block-size: 98px; background: linear-gradient(270deg, #2a2927, #6d6b66); }
+.iphone-screen {
+  position: relative; inline-size: 393px; block-size: 852px; overflow: hidden;
+  border-radius: 56px; background: var(--surface);
+  transform: translateZ(0); /* makes position:fixed children (sheets, alerts, toasts) stay inside the phone */
+}
+.iphone-island {
+  position: absolute; z-index: 60; inset-block-start: 11px; inset-inline-start: 50%; translate: -50% 0;
+  inline-size: 126px; block-size: 37px; border-radius: 20px; background: #000;
+}
+.ios-status {
+  position: relative; z-index: 55; block-size: 54px; padding: 18px 30px 0 52px;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  background: var(--white); color: var(--navy); font-family: -apple-system, "SF Pro Text", var(--font);
+}
+.ios-status-dark { background: var(--navy); color: var(--white); }
+.ios-time { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; inline-size: 54px; text-align: center; }
+.ios-icons { display: flex; align-items: center; gap: 6px; padding-block-start: 3px; }
+.iphone-content { position: relative; block-size: 798px; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
+.iphone-content::-webkit-scrollbar { display: none; }
+.iphone-home {
+  position: absolute; z-index: 60; inset-block-end: 8px; inset-inline-start: 50%; translate: -50% 0;
+  inline-size: 134px; block-size: 5px; border-radius: 3px; background: #111; pointer-events: none;
+}
+.iphone-home-light { background: #fff; }
+html.is-framed .app { max-inline-size: none; min-block-size: 100%; box-shadow: none; }
+html.is-framed .sheet { max-inline-size: none; }
+html.is-framed .toasts { inset-block-start: 70px; }
+
+.mock-caption { max-inline-size: 300px; }
+.mock-title { font-size: 28px; font-weight: 600; line-height: 1.2; }
+.mock-sub { color: var(--text-2); margin-block: 4px 20px; }
+.mock-caption ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 15px; color: var(--text-2); }
+.mock-caption li { padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.7); border: 1px solid var(--border); }
+.mock-caption b { color: var(--navy); }
+.mock-caption code { font-size: 13px; background: var(--surface); padding: 1px 6px; border-radius: 6px; }
+@media (max-width: 900px) { .mock-caption { display: none; } }

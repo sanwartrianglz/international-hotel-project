@@ -11,6 +11,8 @@ npm run dev        # open the printed URL; use phone size in DevTools (or your p
 npm run build      # production build in dist/ (offline-ready PWA)
 ```
 
+On a desktop-size window the app shows inside an **iPhone 15 Pro mockup** (Dynamic Island, live status bar, home indicator; the signal bars go empty when Demo controls simulate "no signal"). On a real phone it runs full-screen. Add `?frame=off` to hide the phone or `?frame=on` to force it.
+
 ## Demo script (Joy's day)
 1. **My phone** → face unlock → briefing → **Start shift**.
 2. **My next room = 412** (VIP, prayer mat, no alcohol, female staff, 2 pillows). Tap a purple note to see *do / don't / why* + 🔊.

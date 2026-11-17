@@ -7,6 +7,7 @@ import { CleanScreen, DoneScreen, FixScreen } from "./screens/Clean";
 import { IssueScreen, ReportsScreen } from "./screens/Issue";
 import { MessagesScreen, RoomsScreen, MenuScreen, EndScreen, OffDuty, DemoScreen } from "./screens/More";
 import { BreakScreen, Toasts, UrgentAlert } from "./components/chrome";
+import { DeviceFrame } from "./components/DeviceFrame";
 
 export default function App() {
   const { phase, screen, lang, onBreak, setOnline, device } = useApp();
@@ -20,7 +21,7 @@ export default function App() {
 
   // Each new screen starts at the top.
   const screenKey = phase + screen.name + ("no" in screen ? screen.no : "");
-  useEffect(() => { window.scrollTo(0, 0); }, [screenKey]);
+  useEffect(() => { window.scrollTo(0, 0); document.getElementById("app-scroll")?.scrollTo(0, 0); }, [screenKey]);
 
   // Real signal follows the browser; the demo panel can also simulate "no signal".
   useEffect(() => {
@@ -54,10 +55,12 @@ export default function App() {
   }
 
   return (
-    <div className={`app device-${device ?? "phone"}`}>
-      {body}
-      {phase === "shift" && !onBreak && <UrgentAlert />}
-      <Toasts />
-    </div>
+    <DeviceFrame>
+      <div className={`app device-${device ?? "phone"}`}>
+        {body}
+        {phase === "shift" && !onBreak && <UrgentAlert />}
+        <Toasts />
+      </div>
+    </DeviceFrame>
   );
 }
