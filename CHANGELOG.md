@@ -28,3 +28,9 @@ Dated log of work sessions: what was done and what's next.
 - Made the Airbnb study storybook on Chromatic public (Manage → Collaborate → Storybook visibility) so teammates can open https://main--6af44e46707bf6dc8d660abf.chromatic.com/ without a Chromatic account. The library, tests and settings stay private.
 - FigJam: added section "6b · U2 object set · flat-vector alternative" (node 68:1669) to the right of Amr's "4 · Amr" section. It holds 46 empty tiles, one for each U2 object, each with a copy-ready Google Flow prompt in the flat-vector style Salma proposed (no outlines, subtle gradients, sky blue / bright green / coral red / pastel pink with forest green accents, on off-white). It is an alternative only: Amr's set in section 6 is unchanged, and there is no decision to switch. The style reference image still has to be pasted into its placeholder box by hand.
 - **Next:** generate the 46 images in Google Flow with the reference attached; the team compares them with Amr's clay-3D set and logs the outcome in DECISIONS.md.
+
+## 2026-11-17
+- Installed GitHub CLI and signed in as `sanwartrianglz`.
+- Turned the project folder into a git repo and pushed it to the public repo https://github.com/sanwartrianglz/international-hotel-project. Added `README.md` (team how-to), `.gitignore` (node_modules, build output, env files) and `.gitattributes` (LF line endings).
+- Merged the Airbnb storybook's standalone git history (3 commits) into the main repo. Its old `.git` folder is kept as `.git-standalone-backup/` (git ignores it); delete it once Chromatic republishing from the main repo has been confirmed.
+- **Next:** invite Sally and Amr as collaborators; set up the mobile app in `05_build/` from the FigJam findings.
