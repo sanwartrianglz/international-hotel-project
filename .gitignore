@@ -1,0 +1,26 @@
+# Dependencies & build output
+node_modules/
+storybook-static/
+dist/
+build/
+.expo/
+.next/
+*.log
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Local Claude Code settings
+.claude/settings.local.json
+
+# Backup of the storybook's old standalone git folder
+.git-standalone-backup/

@@ -1,0 +1,1703 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Airbnb DS Storybook</title>
+<!-- Reference viewer for 00_inputs/references/airbnb.design.md. Inter stands in for Airbnb Cereal VF (licensed). Study material only — not our brand. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ===== colors ===== */
+  --primary:#ff385c; --primary-active:#e00b41; --primary-disabled:#ffd1da;
+  --primary-error-text:#c13515; --primary-error-text-hover:#b32505;
+  --luxe:#460479; --plus:#92174d;
+  --ink:#222222; --body:#3f3f3f; --muted:#6a6a6a; --muted-soft:#929292;
+  --hairline:#dddddd; --hairline-soft:#ebebeb; --border-strong:#c1c1c1;
+  --canvas:#ffffff; --surface-soft:#f7f7f7; --surface-card:#ffffff; --surface-strong:#f2f2f2;
+  --on-primary:#ffffff; --on-dark:#ffffff; --legal-link:#428bff; --star-rating:#222222; --scrim:#000000;
+  /* ===== radius ===== */
+  --r-none:0; --r-xs:4px; --r-sm:8px; --r-md:14px; --r-lg:20px; --r-xl:32px; --r-full:9999px;
+  /* ===== spacing ===== */
+  --s-xxs:2px; --s-xs:4px; --s-sm:8px; --s-md:12px; --s-base:16px; --s-lg:24px; --s-xl:32px; --s-xxl:48px; --s-section:64px;
+  /* ===== elevation (the only tier) ===== */
+  --shadow:rgba(0,0,0,.02) 0 0 0 1px, rgba(0,0,0,.04) 0 2px 6px 0, rgba(0,0,0,.1) 0 4px 8px 0;
+  --font:'Airbnb Cereal VF', Circular, Inter, -apple-system, system-ui, Roboto, 'Helvetica Neue', sans-serif;
+
+  /* ===== storybook chrome (not part of the DS) ===== */
+  --sb-bg:#f6f9fc; --sb-side:#ffffff; --sb-line:#e6e9ee; --sb-text:#2e3438; --sb-dim:#73828c; --sb-accent:#1ea7fd; --sb-code:#f3f5f7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);color:var(--ink);background:var(--sb-bg);-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+
+/* ---------- typography tokens as classes ---------- */
+.t-rating-display{font-size:64px;font-weight:700;line-height:1.1;letter-spacing:-1px}
+.t-display-xl{font-size:28px;font-weight:700;line-height:1.43}
+.t-display-lg{font-size:22px;font-weight:500;line-height:1.18;letter-spacing:-.44px}
+.t-display-md{font-size:21px;font-weight:700;line-height:1.43}
+.t-display-sm{font-size:20px;font-weight:600;line-height:1.2;letter-spacing:-.18px}
+.t-title-md{font-size:16px;font-weight:600;line-height:1.25}
+.t-title-sm{font-size:16px;font-weight:500;line-height:1.25}
+.t-body-md{font-size:16px;font-weight:400;line-height:1.5}
+.t-body-sm{font-size:14px;font-weight:400;line-height:1.43}
+.t-caption{font-size:14px;font-weight:500;line-height:1.29}
+.t-caption-sm{font-size:13px;font-weight:400;line-height:1.23}
+.t-badge{font-size:11px;font-weight:600;line-height:1.18}
+.t-micro-label{font-size:12px;font-weight:700;line-height:1.33}
+.t-uppercase-tag{font-size:8px;font-weight:700;line-height:1.25;letter-spacing:.32px;text-transform:uppercase}
+.t-button-md{font-size:16px;font-weight:500;line-height:1.25}
+.t-button-sm{font-size:14px;font-weight:500;line-height:1.29}
+.t-link{font-size:14px;font-weight:400;line-height:1.43}
+.t-nav-link{font-size:16px;font-weight:600;line-height:1.25}
+.muted{color:var(--muted)}
+
+/* ---------- layout: storybook shell ---------- */
+.app{display:grid;grid-template-columns:248px 1fr;height:100vh}
+.side{background:var(--sb-side);border-right:1px solid var(--sb-line);overflow:auto;padding:16px 12px 32px}
+.brandbox{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;border-bottom:1px solid var(--sb-line);margin-bottom:10px}
+.brandbox .dot{width:26px;height:26px;border-radius:8px;background:var(--primary)}
+.brandbox b{font-size:14px;color:var(--sb-text)} .brandbox small{display:block;font-size:11px;color:var(--sb-dim)}
+.search{width:100%;padding:8px 10px;border:1px solid var(--sb-line);border-radius:20px;font:13px var(--font);margin-bottom:10px;background:#fff}
+.grp{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sb-dim);padding:14px 8px 6px}
+.nav a{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;color:var(--sb-text);text-decoration:none;font-size:13px}
+.nav a::before{content:"";width:8px;height:8px;border-radius:2px;background:#9ea7ad;flex:none}
+.nav a.comp::before{background:#1ea7fd;border-radius:50%}
+.nav a:hover{background:#f0f4f7}
+.nav a.on{background:var(--sb-accent);color:#fff}.nav a.on::before{background:#fff}
+.main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.toolbar{display:flex;align-items:center;gap:6px;padding:8px 16px;border-bottom:1px solid var(--sb-line);background:#fff;flex-wrap:wrap}
+.toolbar .crumb{font-size:13px;color:var(--sb-dim);margin-right:auto}
+.toolbar .crumb b{color:var(--sb-text)}
+.tb{border:1px solid var(--sb-line);background:#fff;border-radius:6px;padding:5px 10px;font-size:12px;color:var(--sb-text);cursor:pointer}
+.tb.on{border-color:var(--sb-accent);color:var(--sb-accent);background:#eef8ff}
+.scroll{overflow:auto;flex:1;padding:24px}
+.story{display:none;max-width:1180px;margin:0 auto}
+.story.on{display:block}
+.story h1{font-size:24px;font-weight:700;margin:0 0 4px;color:var(--sb-text)}
+.story .lede{color:var(--sb-dim);font-size:14px;line-height:1.5;margin:0 0 20px;max-width:760px}
+.story h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--sb-dim);margin:28px 0 10px}
+.canvas{background:var(--canvas);border:1px solid var(--sb-line);border-radius:6px;padding:32px;margin:0 auto;transition:max-width .25s;overflow:hidden}
+.canvas.soft{background:var(--surface-soft)}
+.frame{max-width:100%}
+.row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.stack{display:flex;flex-direction:column;gap:12px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0 0;font-size:12px;color:var(--sb-dim)}
+.controls label{display:flex;align-items:center;gap:6px}
+.controls select,.controls input[type=text]{font:12px var(--font);padding:4px 6px;border:1px solid var(--sb-line);border-radius:4px}
+table.props{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--sb-line);border-radius:6px;overflow:hidden}
+.props th{text-align:left;font-weight:600;color:var(--sb-dim);background:#fafbfc;padding:8px 12px;border-bottom:1px solid var(--sb-line);font-size:12px}
+.props td{padding:8px 12px;border-bottom:1px solid var(--sb-line);vertical-align:top;color:var(--sb-text)}
+.props tr:last-child td{border-bottom:0}
+code,.code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;background:var(--sb-code);padding:1px 5px;border-radius:4px}
+pre.code{display:block;padding:14px;overflow:auto;line-height:1.5;margin:0;border:1px solid var(--sb-line)}
+.note{font-size:13px;line-height:1.5;color:var(--sb-text);background:#fff8e6;border:1px solid #f5dfa3;border-radius:6px;padding:10px 12px;margin-top:12px}
+
+/* ---------- foundations ---------- */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.sw{border:1px solid var(--sb-line);border-radius:10px;overflow:hidden;background:#fff;cursor:pointer}
+.sw .chip{height:72px;border-bottom:1px solid var(--sb-line)}
+.sw .meta{padding:8px 10px;font-size:12px;line-height:1.4}
+.sw .meta b{display:block;font-size:13px;color:var(--sb-text)}
+.sw .meta span{color:var(--sb-dim)}
+.typerow{display:grid;grid-template-columns:170px 1fr 170px;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--hairline-soft)}
+.typerow .tok{font-size:12px;color:var(--sb-dim)} .typerow .spec{font-size:12px;color:var(--sb-dim);text-align:right}
+.spacebar{display:flex;align-items:center;gap:14px;font-size:13px;padding:6px 0}
+.spacebar .bar{height:16px;background:var(--primary);border-radius:2px;opacity:.85}
+.spacebar .lbl{width:150px;color:var(--sb-dim)}
+.radii{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:16px}
+.radii .r{height:88px;border:2px solid var(--ink);background:var(--surface-soft);display:flex;align-items:flex-end;padding:8px;font-size:12px}
+
+/* ---------- components ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:14px 24px;border-radius:var(--r-sm);border:0;cursor:pointer;font-size:16px;font-weight:500;line-height:1.25;white-space:nowrap}
+.btn-primary{background:var(--primary);color:var(--on-primary)}
+.btn-primary:active,.btn-primary.is-active{background:var(--primary-active)}
+.btn-primary:disabled,.btn-primary.is-disabled{background:var(--primary-disabled);cursor:not-allowed}
+.btn-secondary{background:var(--canvas);color:var(--ink);border:1px solid var(--ink);padding:13px 23px}
+.btn-tertiary{background:transparent;color:var(--ink);padding:0;height:auto;text-decoration:none}
+.btn-tertiary:hover{text-decoration:underline}
+.btn-pill{background:var(--primary);color:var(--on-primary);border-radius:var(--r-full);padding:10px 20px;height:auto;font-size:14px;font-weight:500}
+.btn.full{width:100%}
+.icon-circle{width:32px;height:32px;border-radius:50%;background:var(--surface-strong);color:var(--ink);border:0;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.icon-outline{width:40px;height:40px;border-radius:50%;background:var(--canvas);color:var(--ink);border:1px solid var(--hairline);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.ico{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.searchbar{display:flex;align-items:center;height:64px;background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-full);box-shadow:var(--shadow);padding:0 8px 0 0;max-width:850px;margin:0 auto}
+.seg{flex:1;padding:8px 24px;display:flex;flex-direction:column;gap:2px;border-radius:var(--r-full);cursor:pointer;min-width:0}
+.seg:hover{background:var(--surface-soft)}
+.seg + .seg{border-left:1px solid var(--hairline)}
+.seg .l{font-size:12px;font-weight:600}
+.seg .p{font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.orb{width:48px;height:48px;border-radius:50%;background:var(--primary);color:#fff;border:0;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
+.orb:active{background:var(--primary-active)}
+.orb .ico{width:18px;height:18px;stroke-width:3}
+.searchmini{display:none;align-items:center;gap:12px;height:56px;border:1px solid var(--hairline);border-radius:var(--r-full);box-shadow:var(--shadow);padding:0 20px;font-size:14px;font-weight:600}
+
+.topnav{height:80px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hairline);padding:0 24px;background:var(--canvas)}
+.wordmark{display:flex;align-items:center;gap:6px;color:var(--primary);font-weight:700;font-size:20px;letter-spacing:-.5px}
+.wordmark i{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid var(--primary);display:block}
+.tabs{display:flex;gap:28px}
+.ptab{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;position:relative;font-size:16px;font-weight:600;background:none;border-top:0;border-left:0;border-right:0}
+.ptab.on{color:var(--ink);border-bottom-color:var(--ink)}
+.ptab .pic{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#ffe3c2,#ffb59e);position:relative}
+.ptab:nth-child(2) .pic{background:linear-gradient(135deg,#d5f0ff,#9fd0f5)}
+.ptab:nth-child(3) .pic{background:linear-gradient(135deg,#e9e2ff,#bfb1f2)}
+.newtag{position:absolute;top:-4px;right:-10px;background:var(--canvas);color:var(--ink);border-radius:var(--r-full);padding:2px 6px;box-shadow:var(--shadow);font-size:8px;font-weight:700;letter-spacing:.32px;text-transform:uppercase;line-height:1.25}
+.util{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500}
+.burger{display:none}
+
+.catstrip{display:flex;gap:32px;overflow:auto;border-bottom:1px solid var(--hairline);padding:0 4px;background:var(--canvas)}
+.cat{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 0 10px;color:var(--muted);font-size:12px;font-weight:600;border-bottom:2px solid transparent;cursor:pointer;flex:none;background:none;border-top:0;border-left:0;border-right:0}
+.cat:hover{color:var(--ink);border-bottom-color:var(--hairline)}
+.cat.on{color:var(--ink);border-bottom-color:var(--ink)}
+.cat svg{width:24px;height:24px}
+
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:24px 16px}
+.pcard{background:var(--canvas);border-radius:var(--r-md);cursor:pointer}
+.photo{position:relative;aspect-ratio:1/1;border-radius:var(--r-md);overflow:hidden;background:#ccc}
+.photo .img{position:absolute;inset:0}
+.photo .fav{position:absolute;top:12px;left:12px;background:var(--canvas);color:var(--ink);border-radius:var(--r-full);padding:4px 10px;font-size:11px;font-weight:600;line-height:1.18;box-shadow:var(--shadow)}
+.photo .heart{position:absolute;top:12px;right:12px;width:32px;height:32px;background:transparent;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.photo .heart svg{width:24px;height:24px;fill:rgba(0,0,0,.5);stroke:#fff;stroke-width:2}
+.photo .heart.saved svg{fill:var(--primary)}
+.dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:4px}
+.dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.6)} .dots i:first-child{background:#fff}
+.pmeta{padding-top:12px;font-size:14px;line-height:1.43}
+.pmeta .top{display:flex;justify-content:space-between;gap:8px}
+.pmeta .price{margin-top:4px} .pmeta .price b{font-weight:600}
+.star{width:12px;height:12px;fill:var(--star-rating);vertical-align:-1px}
+.pcard:hover .photo{box-shadow:var(--shadow)}
+
+.xcard .photo{aspect-ratio:4/5}
+
+.rating{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 0}
+.rating .big{display:flex;align-items:center;gap:12px}
+.laurel{width:40px;height:72px;fill:none;stroke:var(--ink);stroke-width:2}
+.statrow{display:flex;gap:0;margin-top:24px;border-top:1px solid var(--hairline);width:100%}
+.statrow div{flex:1;padding:16px 8px;border-right:1px solid var(--hairline);font-size:14px}
+.statrow div:last-child{border-right:0}
+.statrow b{display:block;font-size:18px;font-weight:600}
+
+.amen{border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:12px 0;display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
+.amen .a{display:flex;align-items:center;gap:16px;padding:12px 0;font-size:16px;line-height:1.5}
+.amen .a svg{width:24px;height:24px;flex:none}
+.amen .a.off{text-decoration:line-through;color:var(--muted)}
+
+.reviews{display:grid;grid-template-columns:1fr 1fr;gap:40px 64px}
+.rv .who{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.avatar{width:48px;height:48px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600}
+.rv p{margin:0 0 6px;font-size:14px;line-height:1.43;color:var(--body);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.rv.open p{-webkit-line-clamp:unset}
+
+.hostcard{background:var(--canvas);border-radius:var(--r-md);padding:24px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:24px;max-width:560px;align-items:center}
+.hostcard .id{text-align:center;padding:8px 16px}
+.hostcard .id .avatar{width:96px;height:96px;font-size:32px;margin:0 auto 8px;position:relative}
+.superhost{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;background:var(--canvas);border-radius:var(--r-full);padding:4px 10px;box-shadow:var(--shadow)}
+.hoststats{display:flex;flex-direction:column;gap:12px;font-size:14px}
+.hoststats div{border-bottom:1px solid var(--hairline);padding-bottom:12px}
+.hoststats b{display:block;font-size:20px;font-weight:700}
+
+.resv{background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-md);box-shadow:var(--shadow);padding:24px;max-width:372px}
+.resv .pr{display:flex;align-items:baseline;gap:6px;margin-bottom:20px}
+.resv .grid{border:1px solid var(--border-strong);border-radius:var(--r-sm);overflow:hidden;margin-bottom:16px}
+.resv .grid .r1{display:grid;grid-template-columns:1fr 1fr}
+.resv .cell{padding:10px 12px;cursor:pointer}
+.resv .cell + .cell{border-left:1px solid var(--border-strong)}
+.resv .grid .r2{border-top:1px solid var(--border-strong);display:flex;align-items:center;justify-content:space-between;padding:6px 12px}
+.resv .k{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.resv .v{font-size:14px}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{width:32px;height:32px;border-radius:50%;border:1px solid var(--border-strong);background:var(--canvas);cursor:pointer;color:var(--ink);font-size:16px}
+.stepper button:disabled{opacity:.35;cursor:not-allowed}
+.fees{margin-top:16px;font-size:14px;line-height:1.43}
+.fees .ln{display:flex;justify-content:space-between;padding:4px 0}
+.fees .ln span:first-child{text-decoration:underline}
+.fees .tot{display:flex;justify-content:space-between;border-top:1px solid var(--hairline);margin-top:12px;padding-top:16px;font-weight:600;font-size:16px}
+.center{text-align:center;font-size:14px;margin:12px 0 0}
+.mobilebar{display:none;align-items:center;justify-content:space-between;border-top:1px solid var(--hairline);padding:12px 24px;background:var(--canvas);margin:0 -32px -32px}
+
+.dp{display:inline-block;padding:8px}
+.dp .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.dp .hd b{font-size:16px;font-weight:600}
+.dp .gridd{display:grid;grid-template-columns:repeat(7,40px);row-gap:2px}
+.dp .dow{font-size:12px;color:var(--muted);text-align:center;height:24px}
+.day{width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--ink);font-size:14px;cursor:pointer;position:relative;font-family:inherit}
+.day:hover{outline:1px solid var(--ink)}
+.day.past{color:var(--muted-soft);text-decoration:line-through;cursor:not-allowed}
+.day.past:hover{outline:0}
+.day.inrange{background:var(--surface-soft);border-radius:0}
+.day.sel{background:var(--ink);color:var(--on-dark)}
+.cellwrap{position:relative}
+.cellwrap.rs::before,.cellwrap.re::before{content:"";position:absolute;top:0;bottom:0;background:var(--surface-soft);z-index:0}
+.cellwrap.rs::before{left:50%;right:0}.cellwrap.re::before{left:0;right:50%}
+.cellwrap .day{z-index:1}
+
+.field{display:flex;flex-direction:column;gap:6px;max-width:360px}
+.field label{font-size:14px;font-weight:500;color:var(--muted)}
+.input{height:56px;padding:14px 12px;border:1px solid var(--hairline);border-radius:var(--r-sm);font:16px/1.5 var(--font);color:var(--ink);background:var(--canvas);outline:0;width:100%}
+.input::placeholder{color:var(--muted)}
+.input:focus,.input.focus{border:2px solid var(--ink);padding:13px 11px}
+.input:disabled{background:var(--surface-soft);color:var(--muted-soft)}
+.field.err .input{border:2px solid var(--primary-error-text);background:#fff8f6;padding:13px 11px}
+.field .msg{display:none;align-items:center;gap:6px;font-size:12px;color:var(--primary-error-text)}
+.field.err .msg{display:flex}
+.combo{border:1px solid var(--border-strong);border-radius:var(--r-sm);max-width:360px;overflow:hidden}
+.combo .input{border:0;border-radius:0}
+.combo .input + .input{border-top:1px solid var(--border-strong)}
+.combo .input:focus{border:2px solid var(--ink);border-radius:var(--r-sm)}
+
+.modal-demo{position:relative;height:340px;border-radius:6px;overflow:hidden;background:repeating-linear-gradient(45deg,#f2f2f2 0 12px,#fafafa 12px 24px)}
+.modal-demo .scrim{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+.modal{background:var(--canvas);border-radius:var(--r-md);width:min(420px,90%);box-shadow:var(--shadow)}
+.modal .mh{display:flex;align-items:center;justify-content:center;position:relative;height:64px;border-bottom:1px solid var(--hairline);font-weight:700;font-size:16px}
+.modal .mh .icon-circle{position:absolute;left:16px;background:transparent}
+.modal .mb{padding:24px}
+
+.footer{background:var(--canvas);border-top:1px solid var(--hairline);padding:48px 80px 0}
+.footer .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding-bottom:32px}
+.footer h4{margin:0 0 12px;font-size:14px;font-weight:600}
+.footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.footer a{color:var(--ink);text-decoration:none;font-size:14px}
+.footer a:hover{text-decoration:underline}
+.legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--hairline);padding:24px 0;font-size:13px;color:var(--muted)}
+.legal a{color:var(--legal-link);font-size:13px}
+.legal .r{display:flex;gap:16px;color:var(--ink);font-weight:600;font-size:14px}
+
+.citygrid{display:grid;grid-template-columns:repeat(6,1fr);gap:24px 16px}
+.city b{display:block;font-size:16px;font-weight:600;line-height:1.25}
+.city span{font-size:14px;color:var(--muted)}
+
+/* =========================================================
+   LIVE-SITE ADDITIONS (studied on airbnb.com, 2026-11-11)
+   ========================================================= */
+.tag-live{display:inline-block;font-size:11px;font-weight:600;color:#0a7a3d;background:#e6f6ec;border-radius:4px;padding:2px 6px;margin-left:6px;vertical-align:2px}
+.tag-app{display:inline-block;font-size:11px;font-weight:600;color:#8a5a00;background:#fff3d6;border-radius:4px;padding:2px 6px;margin-left:6px;vertical-align:2px}
+.idea{font-size:13px;line-height:1.5;color:var(--sb-text);background:#eef6ff;border:1px solid #cfe3fb;border-radius:6px;padding:10px 12px;margin-top:12px}
+.idea b{color:#0b5cad}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+/* tokens seen live but not in the file */
+.shadow-pop{box-shadow:rgba(0,0,0,.12) 0 2px 16px 0}
+.shadow-card2{box-shadow:rgba(0,0,0,.02) 0 0 0 1px,rgba(0,0,0,.1) 0 8px 24px 0}
+.shadow-modal{box-shadow:rgba(0,0,0,.28) 0 8px 28px 0}
+
+/* dark (ink) button + grey button + gradient CTA */
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:active{background:#000}
+.btn-grey{background:var(--surface-strong);color:var(--ink);border-radius:12px}
+.btn-grad{background:linear-gradient(to right,#e61e4d 0%,#e31c5f 50%,#d70466 100%);color:#fff;border-radius:999px}
+.btn-grad:active{filter:brightness(.92)}
+
+/* photo icons (3D illustrated) */
+.pi-defs{position:absolute;width:0;height:0;overflow:hidden}
+.pi{display:inline-block;flex:none}
+.pi svg{width:100%;height:100%;display:block;overflow:visible}
+.pi48{width:48px;height:48px}.pi32{width:32px;height:32px}.pi64{width:64px;height:64px}.pi96{width:96px;height:96px}
+.pigrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:16px}
+.picell{border:1px solid var(--hairline-soft);border-radius:14px;padding:16px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#fff}
+.picell span{font-size:12px;color:var(--muted);text-align:center}
+.pinav{display:flex;gap:28px;border-bottom:1px solid var(--hairline);padding:0 8px;overflow:auto}
+.pinav button{display:flex;align-items:center;gap:8px;background:none;border:0;border-bottom:3px solid transparent;padding:10px 0 12px;font:500 16px var(--font);color:var(--muted);cursor:pointer;flex:none}
+.pinav button.on{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
+.pinav button:hover .pi{transform:scale(1.06)}
+.pinav .pi{transition:transform .2s}
+.pinav button.on .pi{animation:piPlay .9s cubic-bezier(.3,1.4,.5,1)}
+@keyframes piPlay{0%{transform:scale(1) rotate(0)}25%{transform:scale(1.18) translateY(-6px) rotate(-8deg)}55%{transform:scale(.96) translateY(1px) rotate(5deg)}80%{transform:scale(1.04) rotate(-2deg)}100%{transform:scale(1) rotate(0)}}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.compare > div{border:1px solid var(--hairline);border-radius:14px;padding:16px}
+.compare h4{margin:0 0 12px;font-size:13px;font-weight:600}
+.lineico{width:24px;height:24px;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* announcement modal */
+.ann{background:#fff;border-radius:32px;width:min(393px,100%);padding:56px 24px 24px;text-align:center;position:relative}
+.ann .x{position:absolute;top:20px;right:20px;width:16px;height:16px;border:0;background:none;cursor:pointer;padding:0}
+.ann h3{font-size:22px;font-weight:500;line-height:1.27;margin:16px 0 24px;letter-spacing:-.2px}
+
+/* toast / floating pill */
+.toast{display:inline-flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--hairline);border-radius:12px;padding:8px 24px 8px 8px;box-shadow:rgba(0,0,0,.02) 0 0 0 1px,rgba(0,0,0,.1) 0 8px 24px 0;font-size:14px;font-weight:500}
+.toast .thumb{width:40px;height:40px;border-radius:8px;background:var(--surface-soft);display:flex;align-items:center;justify-content:center}
+.toast.in{animation:toastIn .5s cubic-bezier(.2,1.2,.4,1)}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+
+/* account menu */
+.menu{width:265px;background:#fff;border-radius:12px;padding:8px 0;box-shadow:rgba(0,0,0,.12) 0 2px 16px 0}
+.menu a{display:flex;align-items:center;gap:12px;padding:12px 16px;font-size:14px;color:var(--ink);text-decoration:none}
+.menu a:hover{background:var(--surface-soft)}
+.menu hr{border:0;border-top:1px solid var(--hairline);margin:8px 16px}
+.menu .promo{display:flex;gap:12px;align-items:center;padding:12px 16px}
+.menu .promo b{display:block;font-size:14px;font-weight:600}
+.menu .promo span{font-size:12px;color:var(--muted);line-height:1.33}
+
+/* expanded search */
+.sx{display:flex;align-items:center;height:66px;background:#ebebeb;border-radius:9999px;max-width:850px;margin:0 auto;position:relative}
+.sx .seg{border-left:0 !important;height:100%;justify-content:center}
+.sx .seg + .seg::before{content:"";position:absolute;margin-left:-24px;height:32px;width:1px;background:var(--hairline)}
+.sx .seg{position:relative}
+.sx .seg.act{background:#fff;box-shadow:rgba(0,0,0,.12) 0 6px 20px 0}
+.sx .seg:hover:not(.act){background:#dddddd}
+.orbx{height:48px;border-radius:9999px;border:0;background:linear-gradient(to right,#e61e4d,#e31c5f 50%,#d70466);color:#fff;display:flex;align-items:center;gap:8px;padding:0 16px 0 14px;font:500 16px var(--font);margin-right:8px;cursor:pointer;flex:none;transition:padding .2s}
+.orbx .ico{width:16px;height:16px;stroke-width:3}
+
+/* popover (guest picker) */
+.pop{background:#fff;border-radius:32px;box-shadow:rgba(0,0,0,.12) 0 2px 16px 0;padding:16px 32px;width:min(400px,100%)}
+.prow{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--hairline-soft)}
+.prow:last-child{border-bottom:0}
+.prow b{display:block;font-size:16px;font-weight:600}
+.prow small{font-size:14px;color:var(--muted)}
+.prow a{font-size:14px;color:var(--muted);text-decoration:underline}
+.step2{display:flex;align-items:center;gap:12px}
+.step2 button{width:32px;height:32px;border-radius:50%;border:1px solid var(--border-strong);background:#fff;cursor:pointer;color:var(--muted);font-size:18px;line-height:1}
+.step2 button:disabled{border-color:var(--hairline-soft);color:var(--hairline);cursor:not-allowed}
+.step2 output{min-width:18px;text-align:center;font-size:16px}
+.step3 button{border:0;background:var(--surface-strong);color:var(--ink)}
+.step3 button:disabled{background:var(--surface-strong);color:var(--border-strong)}
+
+/* filter chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{height:34px;padding:8px 12px;border:1px solid var(--hairline);border-radius:24px;background:#fff;font:400 12px var(--font);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;position:relative}
+.chip:hover{border-color:var(--ink)}
+.chip.on{border:2px solid var(--ink);padding:7px 11px;background:var(--surface-soft)}
+.chip .count{position:absolute;top:-7px;right:-7px;width:18px;height:18px;border-radius:50%;background:var(--ink);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.chip-lg{height:48px;padding:11px 16px;border-radius:28px;font-size:14px}
+.chip-lg.on{padding:10px 15px}
+.chip-x{border:1px solid var(--ink);height:40px;border-radius:24px;padding:0 14px;font-size:14px}
+.vdiv{width:1px;height:24px;background:var(--hairline)}
+
+/* filters modal */
+.fmodal{background:#fff;border-radius:32px;width:min(568px,100%);overflow:hidden;box-shadow:rgba(0,0,0,.28) 0 8px 28px 0;display:flex;flex-direction:column;max-height:620px}
+.fmodal header{height:64px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid var(--hairline);font-weight:600;font-size:16px;background:rgba(255,255,255,.925);backdrop-filter:blur(8px);flex:none}
+.fmodal header button{position:absolute;right:24px}
+.fbody{overflow:auto;padding:0 32px}
+.fsec{padding:24px 0;border-bottom:1px solid var(--hairline)}
+.fsec:last-child{border-bottom:0}
+.fsec h5{margin:0 0 16px;font-size:20px;font-weight:600;letter-spacing:-.18px}
+.fmodal footer{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-top:1px solid var(--hairline);flex:none}
+.fmodal footer .clear{font:600 16px var(--font);text-decoration:underline;background:none;border:0;cursor:pointer;padding:10px}
+.segc{display:flex;border:1px solid var(--hairline);border-radius:16px;padding:4px;height:54px}
+.segc button{flex:1;border:0;background:none;font:500 14px var(--font);color:var(--ink);cursor:pointer;border-radius:12px;position:relative}
+.segc button + button::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:1px;background:var(--hairline)}
+.segc button.on{box-shadow:inset 0 0 0 2px var(--ink);background:var(--surface-soft)}
+.segc button.on::before,.segc button.on + button::before{display:none}
+.switchseg{display:flex;background:var(--surface-strong);border-radius:30px;padding:4px;height:48px;position:relative}
+.switchseg button{flex:1;border:0;background:none;font:500 14px var(--font);color:#6c6c6c;border-radius:100px;cursor:pointer;position:relative;z-index:1;transition:color .2s}
+.switchseg button.on{color:var(--ink)}
+.switchseg .thumb{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:#fff;border-radius:100px;box-shadow:rgba(0,0,0,.08) 0 2px 6px;transition:transform .25s cubic-bezier(.3,1.2,.5,1)}
+.switchseg[data-v="1"] .thumb{transform:translateX(100%)}
+.hist{display:flex;align-items:flex-end;gap:2px;height:64px;padding:0 14px}
+.hist i{flex:1;background:var(--primary);border-radius:1px 1px 0 0;transition:background .15s}
+.hist i.out{background:var(--hairline)}
+.range{position:relative;height:28px;margin:0 14px}
+.range .track{position:absolute;left:0;right:0;top:13px;height:2px;background:var(--hairline)}
+.range .fill{position:absolute;top:13px;height:2px;background:var(--ink)}
+.range .th{position:absolute;top:0;width:28px;height:28px;margin-left:-14px;border-radius:50%;background:#fff;border:1px solid var(--border-strong);box-shadow:rgba(0,0,0,.08) 0 2px 4px;cursor:grab;touch-action:none}
+.range .th:active{cursor:grabbing;transform:scale(1.1)}
+.minmax{display:flex;justify-content:space-between;margin-top:16px}
+.minmax label{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.minmax output{display:flex;align-items:center;justify-content:center;min-width:86px;height:56px;padding:0 16px;border:1px solid var(--border-strong);border-radius:9999px;font-size:16px;color:var(--ink)}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:16px}
+.selcards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.selcard{display:flex;gap:16px;align-items:flex-start;text-align:left;border:1px solid var(--hairline);border-radius:12px;padding:16px;background:#fff;cursor:pointer;font-family:inherit}
+.selcard:hover{border-color:var(--ink)}
+.selcard.on{box-shadow:inset 0 0 0 2px var(--ink);border-color:transparent;background:var(--surface-soft)}
+.selcard b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
+.selcard span{font-size:14px;color:var(--muted);line-height:1.3}
+.tilecards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tile{border:1px solid var(--hairline);border-radius:12px;background:#fff;height:116px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;font:400 14px var(--font);color:var(--ink);padding:8px}
+.tile.on{box-shadow:inset 0 0 0 2px var(--ink);border-color:transparent}
+.tswitch{width:48px;height:32px;border-radius:32px;background:var(--hairline);border:0;position:relative;cursor:pointer;transition:background .2s;flex:none}
+.tswitch::after{content:"";position:absolute;top:2px;left:2px;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:rgba(0,0,0,.15) 0 1px 3px;transition:transform .2s}
+.tswitch[aria-checked=true]{background:var(--ink)}
+.tswitch[aria-checked=true]::after{transform:translateX(16px)}
+.disclose{display:inline-flex;align-items:center;gap:6px;font:600 16px var(--font);text-decoration:underline;background:none;border:0;cursor:pointer;padding:0;color:var(--ink)}
+
+/* map */
+.map{position:relative;height:340px;border-radius:14px;overflow:hidden;background:
+  radial-gradient(circle at 20% 70%,#cfe8c7 0 60px,transparent 61px),
+  radial-gradient(circle at 75% 30%,#d9ecd2 0 40px,transparent 41px),
+  linear-gradient(120deg,transparent 62%,#b9dcf2 62% 70%,transparent 70%),
+  repeating-linear-gradient(0deg,transparent 0 46px,#fff 46px 49px),
+  repeating-linear-gradient(90deg,transparent 0 58px,#fff 58px 61px),#ecebe6}
+.ppin{position:absolute;transform:translate(-50%,-50%);background:#fff;color:var(--ink);border:0;border-radius:28px;height:28px;padding:0 10px;font:600 14px var(--font);box-shadow:rgba(0,0,0,.04) 0 0 0 1px,rgba(0,0,0,.18) 0 2px 4px;cursor:pointer;transition:transform .15s;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.ppin:hover{transform:translate(-50%,-50%) scale(1.08);z-index:3}
+.ppin.on{background:var(--ink);color:#fff;z-index:4}
+.ppin.seen{background:#ebebeb}
+.ppin .pi{width:16px;height:16px}
+.mapctl{position:absolute;right:16px;top:16px;display:flex;flex-direction:column;gap:12px}
+.mapctl .stack2{background:#fff;border-radius:8px;box-shadow:rgba(0,0,0,.18) 0 2px 4px;overflow:hidden;display:flex;flex-direction:column}
+.mapctl button{width:40px;height:40px;border:0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.mapctl .stack2 button + button{border-top:1px solid var(--hairline)}
+.mapctl .solo{border-radius:8px;box-shadow:rgba(0,0,0,.18) 0 2px 4px}
+.mappill{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;border:0;border-radius:24px;height:48px;padding:0 20px;display:flex;align-items:center;gap:8px;font:600 14px var(--font);cursor:pointer;box-shadow:rgba(0,0,0,.18) 0 4px 12px}
+.mappill:hover{transform:translateX(-50%) scale(1.04)}
+
+/* carousel header */
+.chead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.chead .t{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:500;letter-spacing:-.2px}
+.chead .t button{width:28px;height:28px;border-radius:50%;border:0;background:var(--surface-strong);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chead .ar{display:flex;gap:8px}
+.chead .ar button{width:28px;height:28px;border-radius:50%;border:0;background:var(--surface-strong);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chead .ar button:disabled{color:var(--border-strong);cursor:not-allowed}
+.crail{display:flex;gap:12px;overflow:hidden;scroll-behavior:smooth}
+.crail .mini{flex:0 0 calc((100% - 36px)/4)}
+.crail .mini .ph{aspect-ratio:20/19;border-radius:16px;position:relative}
+.crail .mini .ph .fav{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.925);border-radius:16px;padding:5px 10px;font-size:12px;font-weight:500;box-shadow:rgba(0,0,0,.08) 0 2px 4px}
+.crail .mini p{margin:8px 0 0;font-size:13px;line-height:1.3}
+
+/* listing page bits */
+.anchors{display:flex;align-items:center;gap:24px;height:80px;border-bottom:1px solid var(--hairline);padding:0 24px;background:#fff}
+.anchors a{font-size:14px;font-weight:500;color:var(--ink);text-decoration:none;height:100%;display:flex;align-items:center;border-bottom:4px solid transparent}
+.anchors a.on{border-bottom-color:var(--ink)}
+.anchors .bk{margin-left:auto;display:flex;align-items:center;gap:24px}
+.anchors .bk small{display:block;font-size:12px;color:var(--ink)}
+.anchors .bk b{font-size:16px;font-weight:500}
+.gfbanner{display:flex;align-items:center;gap:24px;border:1px solid var(--hairline);border-radius:12px;padding:20px 24px}
+.gfbanner .lau{display:flex;align-items:center;gap:4px;font-size:18px;font-weight:600;line-height:1.05;text-align:center}
+.gfbanner .lau svg{width:20px;height:36px;fill:none;stroke:var(--ink);stroke-width:2}
+.gfbanner .txt{flex:1;font-size:16px;font-weight:500;line-height:1.3}
+.gfbanner .num{text-align:center;padding:0 16px}
+.gfbanner .num b{display:block;font-size:22px;font-weight:600}
+.gfbanner .num + .num{border-left:1px solid var(--hairline)}
+.gfbanner .num small{font-size:11px;text-decoration:underline}
+.hl{display:flex;gap:24px;padding:12px 0}
+.hl svg{width:24px;height:24px;flex:none;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.hl b{display:block;font-size:16px;font-weight:500}
+.hl span{font-size:14px;color:var(--muted)}
+.trbanner{background:var(--surface-soft);border-radius:12px;padding:20px 16px;font-size:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.trbanner a{color:var(--ink);font-weight:600;text-decoration:underline;cursor:pointer}
+.trico{width:24px;height:24px;display:inline-block;vertical-align:-5px}
+.sleep{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.sleep .ph{aspect-ratio:3/2;border-radius:12px}
+.sleep b{display:block;margin-top:12px;font-size:16px;font-weight:500}
+.sleep span{font-size:14px;color:var(--muted)}
+.rbreak{display:grid;grid-template-columns:1.4fr repeat(6,1fr);border-top:0}
+.rbreak > div{padding:0 16px;border-left:1px solid var(--hairline);display:flex;flex-direction:column;gap:4px;font-size:14px}
+.rbreak > div:first-child{border-left:0;padding-left:0}
+.rbreak b{font-size:14px;font-weight:600}
+.rbreak .bars{display:flex;flex-direction:column;gap:2px;margin-top:4px}
+.rbreak .bars div{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted)}
+.rbreak .bars i{flex:1;height:4px;border-radius:2px;background:var(--hairline);position:relative;overflow:hidden}
+.rbreak .bars i::after{content:"";position:absolute;inset:0;width:var(--w);background:var(--ink);border-radius:2px}
+.rbreak svg{width:32px;height:32px;margin-top:auto;padding-top:20px;fill:none;stroke:var(--ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;box-sizing:content-box}
+.ttk{display:grid;grid-template-columns:repeat(3,1fr);gap:32px 24px}
+.ttk b{display:block;font-size:16px;font-weight:500;margin-top:12px}
+.ttk span{font-size:14px;color:var(--body);line-height:1.43}
+.ttk a{display:block;margin-top:4px;font-size:14px;color:var(--ink);text-decoration:underline;font-weight:500}
+.host2{background:#fff;border-radius:24px;padding:32px 24px;box-shadow:rgba(0,0,0,.02) 0 0 0 1px,rgba(0,0,0,.1) 0 8px 24px 0;display:grid;grid-template-columns:1.3fr 1fr;align-items:center;gap:16px;max-width:395px}
+.host2 .id{text-align:center}
+.host2 .av{width:104px;height:104px;border-radius:50%;margin:0 auto 8px;position:relative;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:600;color:#fff;background:#6b4f3a}
+.host2 .av .ver{position:absolute;right:0;bottom:4px;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ff385c,#d70466);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 0 #fff}
+.host2 .nm{font-size:32px;font-weight:700;line-height:1.1}
+.host2 .st div{border-bottom:1px solid var(--hairline);padding:10px 0}
+.host2 .st div:last-child{border:0}
+.host2 .st b{display:block;font-size:22px;font-weight:700;line-height:1}
+.host2 .st small{font-size:10px;font-weight:600}
+.cal2{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.cal2 .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-weight:600}
+.cal2 .g{display:grid;grid-template-columns:repeat(7,1fr);row-gap:2px;text-align:center}
+.cal2 .g span{font-size:12px;color:var(--muted);height:24px}
+.cal2 .g button{height:44px;border:0;background:none;font:600 14px var(--font);color:var(--ink);border-radius:50%;cursor:pointer;aspect-ratio:1;justify-self:center}
+.cal2 .g button.na{color:var(--muted-soft);text-decoration:line-through;font-weight:400;cursor:not-allowed}
+.cal2 .g button:not(.na):hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.cal2 .g button.sel{background:var(--ink);color:#fff}
+.avi{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600}
+.skel{background:linear-gradient(90deg,#ebebeb 0%,#f5f5f5 40%,#ebebeb 80%);background-size:300% 100%;animation:shimmer 1.4s linear infinite;border-radius:8px}
+@keyframes shimmer{from{background-position:100% 0}to{background-position:-200% 0}}
+
+/* app patterns */
+.phone{width:320px;height:600px;border-radius:40px;border:10px solid #111;background:#fff;position:relative;overflow:hidden;margin:0 auto;box-shadow:rgba(0,0,0,.18) 0 12px 32px}
+.phone .scr{position:absolute;inset:0;overflow:hidden}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:72px;background:#fff;border-top:1px solid var(--hairline);display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;transition:transform .3s}
+.tabbar button{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;font:500 10px var(--font);color:var(--muted);cursor:pointer;width:60px}
+.tabbar button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabbar button.on{color:var(--primary)}
+.tabbar button.on svg{stroke:var(--primary)}
+.msearch{margin:16px;height:56px;border-radius:9999px;box-shadow:rgba(0,0,0,.08) 0 2px 12px,rgba(0,0,0,.04) 0 0 0 1px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;font-weight:600}
+.sheet{position:absolute;left:0;right:0;bottom:72px;background:#fff;border-radius:24px 24px 0 0;box-shadow:rgba(0,0,0,.12) 0 -4px 16px;transition:top .35s cubic-bezier(.3,1,.4,1);padding-top:12px;overflow:hidden}
+.sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--border-strong);margin:0 auto 10px}
+.sheet .c{text-align:center;font-size:13px;font-weight:600;margin-bottom:12px}
+
+@media (max-width:820px){
+  .grid2,.grid3,.compare,.selcards,.sleep,.cal2{grid-template-columns:1fr}
+  .tilecards{grid-template-columns:repeat(2,1fr)}
+  .ttk{grid-template-columns:1fr 1fr}
+  .rbreak{grid-template-columns:1fr 1fr 1fr;row-gap:16px}
+  .crail .mini{flex-basis:calc((100% - 12px)/2)}
+  .anchors{gap:14px;padding:0 12px;overflow:auto}.anchors .bk{display:none}
+}
+
+/* ---------- responsive preview (viewport toggle) ---------- */
+.vp-mobile .canvas{max-width:390px;padding:20px}
+.vp-tablet .canvas{max-width:820px}
+.vp-mobile .cards{grid-template-columns:1fr}
+.vp-tablet .cards{grid-template-columns:repeat(2,1fr)}
+.vp-mobile .citygrid{grid-template-columns:1fr}
+.vp-tablet .citygrid{grid-template-columns:repeat(3,1fr)}
+.vp-mobile .searchbar{display:none}.vp-mobile .searchmini{display:flex}
+.vp-mobile .tabs,.vp-mobile .util .hostlink{display:none}.vp-mobile .burger{display:inline-flex}
+.vp-mobile .topnav{height:64px;padding:0 16px}
+.vp-mobile .reviews,.vp-mobile .amen{grid-template-columns:1fr}
+.vp-mobile .footer{padding:32px 20px 0}.vp-mobile .footer .cols{grid-template-columns:1fr}
+.vp-mobile .hostcard{grid-template-columns:1fr}
+.vp-mobile .resv{display:none}.vp-mobile .mobilebar{display:flex;margin:0 -20px -20px}
+.vp-mobile .typerow{grid-template-columns:1fr}.vp-mobile .typerow .spec{text-align:left}
+.vp-mobile .grid2,.vp-mobile .grid3,.vp-mobile .compare,.vp-mobile .selcards,.vp-mobile .sleep,.vp-mobile .cal2{grid-template-columns:1fr}
+.vp-mobile .tilecards{grid-template-columns:repeat(2,1fr)}
+.vp-mobile .ttk{grid-template-columns:1fr 1fr}
+.vp-mobile .rbreak{grid-template-columns:1fr 1fr;row-gap:16px}
+.vp-mobile .crail .mini{flex-basis:calc((100% - 12px)/2)}
+.vp-mobile .anchors .bk,.vp-mobile .sx{display:none}
+.vp-mobile .gfbanner{flex-wrap:wrap}
+.vp-tablet .ttk{grid-template-columns:1fr 1fr}
+.vp-tablet .rbreak{grid-template-columns:repeat(4,1fr);row-gap:16px}
+
+@media (max-width:820px){
+  .app{grid-template-columns:1fr;height:auto}
+  .side{max-height:none;border-right:0;border-bottom:1px solid var(--sb-line)}
+  .main{overflow:visible}
+  .scroll{padding:16px}
+  .canvas{padding:16px}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .citygrid{grid-template-columns:repeat(2,1fr)}
+  .typerow{grid-template-columns:1fr}.typerow .spec{text-align:left}
+  .tabs{display:none}
+  .reviews,.amen,.footer .cols{grid-template-columns:1fr}
+  .footer{padding:32px 16px 0}
+  .hostcard{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<!-- Photo-icon library: ORIGINAL drawings in the Airbnb 3D style (not Airbnb assets) -->
+<svg class="pi-defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="g-pink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7a98"/><stop offset="1" stop-color="#d70466"/></linearGradient>
+    <linearGradient id="g-pinkD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8064f"/><stop offset="1" stop-color="#7d0236"/></linearGradient>
+    <linearGradient id="g-wood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d79a63"/><stop offset="1" stop-color="#8a5229"/></linearGradient>
+    <linearGradient id="g-metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#c9cdd2"/><stop offset="1" stop-color="#7d838a"/></linearGradient>
+    <linearGradient id="g-paper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6e2dc"/></linearGradient>
+    <linearGradient id="g-cream" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffaf1"/><stop offset="1" stop-color="#e6d8c2"/></linearGradient>
+    <linearGradient id="g-sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6dcae"/><stop offset="1" stop-color="#c99d5f"/></linearGradient>
+    <linearGradient id="g-terra" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4a585"/><stop offset="1" stop-color="#bd5833"/></linearGradient>
+    <linearGradient id="g-teal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#86dbd5"/><stop offset="1" stop-color="#23807b"/></linearGradient>
+    <linearGradient id="g-blue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a8d6ff"/><stop offset="1" stop-color="#2f6fb3"/></linearGradient>
+    <linearGradient id="g-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4f1ff"/><stop offset="1" stop-color="#5ab6ef"/></linearGradient>
+    <linearGradient id="g-roof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f58a68"/><stop offset="1" stop-color="#b9432a"/></linearGradient>
+    <linearGradient id="g-roofS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c2533a"/><stop offset="1" stop-color="#7e2716"/></linearGradient>
+    <linearGradient id="g-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff8ec"/><stop offset="1" stop-color="#ead9bd"/></linearGradient>
+    <linearGradient id="g-wallS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dcc6a2"/><stop offset="1" stop-color="#b59a72"/></linearGradient>
+    <linearGradient id="g-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8080"/><stop offset="1" stop-color="#d33a3a"/></linearGradient>
+    <linearGradient id="g-brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a3"/><stop offset=".55" stop-color="#e0aa38"/><stop offset="1" stop-color="#9c6a12"/></linearGradient>
+    <linearGradient id="g-green" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9e08a"/><stop offset="1" stop-color="#4a9334"/></linearGradient>
+    <radialGradient id="g-shadow"><stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+
+    <!-- PERSPECTIVE SET -->
+    <symbol id="pi-house" viewBox="0 0 64 64">
+      <ellipse cx="33" cy="57" rx="25" ry="4.5" fill="url(#g-shadow)"/>
+      <polygon points="41,31 56,25 56,49 41,55" fill="url(#g-wallS)"/>
+      <rect x="9" y="31" width="32" height="24" rx="1.5" fill="url(#g-wall)"/>
+      <polygon points="25,9 45,31 60,25 41,4" fill="url(#g-roofS)"/>
+      <polygon points="5,33 25,9 45,33" fill="url(#g-roof)" stroke="#a83a22" stroke-width=".6" stroke-linejoin="round"/>
+      <path d="M8 32 25 11.5 26.5 13 10 33Z" fill="#fff" opacity=".35"/>
+      <rect x="18" y="39" width="10" height="16" rx="2" fill="url(#g-pink)"/>
+      <circle cx="26" cy="47.5" r=".9" fill="#ffe2a0"/>
+      <rect x="31" y="37" width="7" height="7" rx="1.2" fill="url(#g-water)" stroke="#fff" stroke-width="1"/>
+      <polygon points="45,33 52,30 52,38 45,41" fill="url(#g-water)" opacity=".85"/>
+    </symbol>
+    <symbol id="pi-cart" viewBox="0 0 64 64">
+      <ellipse cx="31" cy="59" rx="24" ry="3.5" fill="url(#g-shadow)"/>
+      <path d="M52 12v36" stroke="url(#g-metal)" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M48 12h6" stroke="#6b7076" stroke-width="3.5" stroke-linecap="round"/>
+      <rect x="9" y="26" width="41" height="25" rx="4" fill="url(#g-teal)"/>
+      <rect x="13" y="32" width="33" height="14" rx="2.5" fill="#145d59" opacity=".35"/>
+      <rect x="9" y="26" width="41" height="4" rx="2" fill="#fff" opacity=".35"/>
+      <rect x="13" y="15" width="15" height="11" rx="3" fill="url(#g-cream)"/>
+      <rect x="13" y="19" width="15" height="2" fill="#d9c7a8"/>
+      <rect x="30" y="17" width="15" height="9" rx="3" fill="url(#g-terra)"/>
+      <rect x="30" y="20.5" width="15" height="2" fill="#a4482a"/>
+      <circle cx="17" cy="55" r="4.2" fill="#2c2c2c"/><circle cx="17" cy="55" r="1.6" fill="#9aa0a6"/>
+      <circle cx="43" cy="55" r="4.2" fill="#2c2c2c"/><circle cx="43" cy="55" r="1.6" fill="#9aa0a6"/>
+    </symbol>
+    <symbol id="pi-bucket" viewBox="0 0 64 64">
+      <ellipse cx="32" cy="58" rx="20" ry="3.5" fill="url(#g-shadow)"/>
+      <path d="M13 22Q32 -2 51 22" fill="none" stroke="#5e646b" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M13 23 L51 23 L45.5 53 Q32 58.5 18.5 53 Z" fill="url(#g-blue)"/>
+      <path d="M17 26 L21 51" stroke="#fff" stroke-width="3" opacity=".35" stroke-linecap="round"/>
+      <ellipse cx="32" cy="23" rx="19" ry="5.5" fill="#24599a"/>
+      <ellipse cx="32" cy="23.5" rx="15.5" ry="3.8" fill="url(#g-water)"/>
+      <circle cx="26" cy="21.5" r="3" fill="#fff"/><circle cx="30.5" cy="20" r="2.4" fill="#fff"/><circle cx="35" cy="21.8" r="2.8" fill="#fff"/><circle cx="39" cy="20.6" r="1.8" fill="#fff"/>
+    </symbol>
+    <symbol id="pi-bell" viewBox="0 0 64 64">
+      <ellipse cx="32" cy="58" rx="24" ry="3.5" fill="url(#g-shadow)"/>
+      <path d="M10 44h44l3 4.5c.6 1.2-.2 2.5-1.6 2.5H8.6c-1.4 0-2.2-1.3-1.6-2.5Z" fill="url(#g-wood)"/>
+      <path d="M8 48h48" stroke="#5a3418" stroke-width="1" opacity=".4"/>
+      <path d="M12 44a20 20 0 0140 0Z" fill="url(#g-brass)"/>
+      <path d="M17 39a15 15 0 018-12" stroke="#fff" stroke-width="2.5" fill="none" opacity=".55" stroke-linecap="round"/>
+      <rect x="29.5" y="17" width="5" height="7" rx="1.5" fill="url(#g-metal)"/>
+      <ellipse cx="32" cy="16.5" rx="5" ry="2" fill="#6b7076"/>
+    </symbol>
+
+    <!-- ORTHOGRAPHIC SET -->
+    <symbol id="pi-door" viewBox="0 0 64 64">
+      <rect x="14" y="5" width="36" height="55" rx="3" fill="url(#g-wood)"/>
+      <rect x="18" y="9" width="28" height="51" fill="#fff4c9"/>
+      <rect x="18" y="9" width="28" height="51" fill="url(#g-water)" opacity=".25"/>
+      <polygon points="18,9 33,13 33,60 18,60" fill="url(#g-teal)"/>
+      <polygon points="18,9 20,9.6 20,60 18,60" fill="#fff" opacity=".4"/>
+      <circle cx="29.5" cy="36" r="2" fill="url(#g-brass)"/>
+    </symbol>
+    <symbol id="pi-clip" viewBox="0 0 64 64">
+      <rect x="11" y="8" width="42" height="53" rx="5" fill="url(#g-wood)"/>
+      <rect x="16" y="14" width="32" height="42" rx="2" fill="url(#g-paper)"/>
+      <path d="M21 25l2 2 3.5-4M21 35l2 2 3.5-4M21 45l2 2 3.5-4" stroke="#3c9a37" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M30 25h13M30 35h13M30 45h9" stroke="#b9b3aa" stroke-width="2.2" stroke-linecap="round"/>
+      <rect x="23" y="4" width="18" height="11" rx="3.5" fill="url(#g-metal)" stroke="#7d838a" stroke-width=".6"/>
+      <circle cx="32" cy="8" r="1.8" fill="#6b7076"/>
+    </symbol>
+    <symbol id="pi-cal" viewBox="0 0 64 64">
+      <rect x="7" y="11" width="50" height="47" rx="8" fill="url(#g-paper)" stroke="#d6d0c8" stroke-width=".8"/>
+      <path d="M7 19a8 8 0 018-8h34a8 8 0 018 8v6H7Z" fill="url(#g-red)"/>
+      <rect x="17" y="5" width="5" height="12" rx="2.5" fill="url(#g-metal)"/><rect x="42" y="5" width="5" height="12" rx="2.5" fill="url(#g-metal)"/>
+      <g fill="#e2ddd6"><rect x="13" y="30" width="7" height="6" rx="1.5"/><rect x="23" y="30" width="7" height="6" rx="1.5"/><rect x="33" y="30" width="7" height="6" rx="1.5"/><rect x="43" y="30" width="7" height="6" rx="1.5"/><rect x="13" y="40" width="7" height="6" rx="1.5"/><rect x="33" y="40" width="7" height="6" rx="1.5"/><rect x="43" y="40" width="7" height="6" rx="1.5"/><rect x="13" y="49" width="7" height="5" rx="1.5"/><rect x="23" y="49" width="7" height="5" rx="1.5"/></g>
+      <rect x="23" y="40" width="7" height="6" rx="1.5" fill="url(#g-pink)"/>
+    </symbol>
+    <symbol id="pi-shield" viewBox="0 0 64 64">
+      <path d="M32 8 52 15v15c0 13-9 22-20 27C21 52 12 43 12 30V15Z" fill="url(#g-pinkD)" transform="translate(0 3)"/>
+      <path d="M32 6 52 13v15c0 13-9 22-20 27C21 50 12 41 12 28V13Z" fill="url(#g-pink)"/>
+      <path d="M32 11 47 16.5v11.5c0 10-6.5 17-15 21-8.5-4-15-11-15-21V16.5Z" fill="#fff" opacity=".18"/>
+      <path d="M23.5 30l6 6 11-12" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16 15l8-3" stroke="#fff" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="pi-bed" viewBox="0 0 64 64">
+      <rect x="7" y="12" width="50" height="26" rx="7" fill="url(#g-wood)"/>
+      <rect x="11" y="16" width="42" height="4" rx="2" fill="#fff" opacity=".25"/>
+      <rect x="11" y="25" width="18" height="10" rx="4.5" fill="url(#g-cream)"/><rect x="35" y="25" width="18" height="10" rx="4.5" fill="url(#g-cream)"/>
+      <rect x="3" y="32" width="58" height="16" rx="5" fill="url(#g-paper)"/>
+      <rect x="3" y="38" width="58" height="13" rx="5" fill="url(#g-teal)"/>
+      <rect x="3" y="38" width="58" height="3" rx="1.5" fill="#fff" opacity=".35"/>
+      <rect x="7" y="51" width="4" height="7" rx="1.5" fill="#6b3f1f"/><rect x="53" y="51" width="4" height="7" rx="1.5" fill="#6b3f1f"/>
+    </symbol>
+    <symbol id="pi-towels" viewBox="0 0 64 64">
+      <rect x="8" y="41" width="48" height="15" rx="6" fill="url(#g-terra)"/><rect x="8" y="41" width="10" height="15" rx="5" fill="#a4482a" opacity=".5"/>
+      <rect x="11" y="27" width="44" height="15" rx="6" fill="url(#g-sand)"/><rect x="11" y="27" width="10" height="15" rx="5" fill="#a07a42" opacity=".45"/>
+      <rect x="14" y="13" width="40" height="15" rx="6" fill="url(#g-cream)"/><rect x="14" y="13" width="10" height="15" rx="5" fill="#cdbb9c" opacity=".6"/>
+      <path d="M28 16h22M31 30h20M25 44h27" stroke="#fff" stroke-width="2" opacity=".45" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="pi-spray" viewBox="0 0 64 64">
+      <path d="M22 26h20l3 6v24a4 4 0 01-4 4H23a4 4 0 01-4-4V32Z" fill="url(#g-blue)" opacity=".92"/>
+      <path d="M21 40h22v16a4 4 0 01-4 4H25a4 4 0 01-4-4Z" fill="url(#g-water)" opacity=".7"/>
+      <path d="M24 32v22" stroke="#fff" stroke-width="2.6" opacity=".45" stroke-linecap="round"/>
+      <rect x="25" y="20" width="14" height="7" rx="1.5" fill="url(#g-metal)"/>
+      <path d="M23 8h22a3 3 0 013 3v6a3 3 0 01-3 3H27c-3 0-4-2-4-5Z" fill="url(#g-paper)" stroke="#c9c3ba" stroke-width=".8"/>
+      <path d="M48 11h6v4h-6" fill="url(#g-pink)"/>
+      <path d="M30 20l-4 9" stroke="#8f959b" stroke-width="2.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="pi-key" viewBox="0 0 64 64">
+      <circle cx="21" cy="24" r="12" fill="none" stroke="url(#g-brass)" stroke-width="7"/>
+      <path d="M29 32 52 55" stroke="url(#g-brass)" stroke-width="7" stroke-linecap="round"/>
+      <path d="M43 46l6-6M48 51l5-5" stroke="url(#g-brass)" stroke-width="6" stroke-linecap="round"/>
+      <path d="M13 18a9 9 0 015-5" stroke="#fff" stroke-width="2" opacity=".6" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="pi-tag" viewBox="0 0 64 64">
+      <path d="M22 10c-6-2-12 0-12 5" stroke="#9aa0a6" stroke-width="1.6" fill="none"/>
+      <path d="M30 12h15a5 5 0 014 2l9 13a5 5 0 010 6l-9 13a5 5 0 01-4 2H30Z" fill="url(#g-pinkD)" transform="rotate(35 32 32) translate(0 3)"/>
+      <path d="M30 12h15a5 5 0 014 2l9 13a5 5 0 010 6l-9 13a5 5 0 01-4 2H30Z" fill="url(#g-pink)" transform="rotate(35 32 32)"/>
+      <circle cx="26" cy="19" r="3.4" fill="#fff" stroke="#c9cdd2" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="pi-bubble" viewBox="0 0 64 64">
+      <path d="M8 18a10 10 0 0110-10h28a10 10 0 0110 10v16a10 10 0 01-10 10H26l-10 9v-9a10 10 0 01-8-10Z" fill="url(#g-pinkD)" transform="translate(0 3)"/>
+      <path d="M8 18a10 10 0 0110-10h28a10 10 0 0110 10v16a10 10 0 01-10 10H26l-10 9v-9a10 10 0 01-8-10Z" fill="url(#g-pink)"/>
+      <circle cx="22" cy="26" r="3.2" fill="#fff"/><circle cx="32" cy="26" r="3.2" fill="#fff"/><circle cx="42" cy="26" r="3.2" fill="#fff"/>
+      <path d="M13 17a6 6 0 016-5" stroke="#fff" stroke-width="2.2" opacity=".5" fill="none" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+<div class="app">
+  <aside class="side">
+    <div class="brandbox"><div class="dot"></div><div><b>Airbnb DS</b><small>Reference storybook · v alpha</small></div></div>
+    <input class="search" id="filter" placeholder="Find a story…" aria-label="Filter stories">
+    <nav class="nav" id="nav">
+      <div class="grp">Docs</div>
+      <a href="#intro">Introduction</a>
+      <a href="#livediff">File vs live site</a>
+      <div class="grp">Foundations</div>
+      <a href="#colors">Colors</a>
+      <a href="#typography">Typography</a>
+      <a href="#spacing">Spacing</a>
+      <a href="#radius">Radius</a>
+      <a href="#elevation">Elevation &amp; scrim</a>
+      <a href="#photoicons">Photo icons (3D) ✦</a>
+      <div class="grp">Actions</div>
+      <a class="comp" href="#buttons">Buttons</a>
+      <a class="comp" href="#livebuttons">Dark, grey &amp; gradient buttons</a>
+      <a class="comp" href="#iconbuttons">Icon buttons</a>
+      <div class="grp">Navigation</div>
+      <a class="comp" href="#topnav">Top nav</a>
+      <a class="comp" href="#menu">Account menu</a>
+      <a class="comp" href="#search">Search bar</a>
+      <a class="comp" href="#searchx">Search: expanded &amp; guest popover</a>
+      <a class="comp" href="#category">Category strip</a>
+      <a class="comp" href="#app">Mobile app patterns</a>
+      <div class="grp">Listings</div>
+      <a class="comp" href="#property">Property card</a>
+      <a class="comp" href="#experience">Experience card</a>
+      <a class="comp" href="#carousel">Carousel rail</a>
+      <a class="comp" href="#badges">Badges &amp; tags</a>
+      <a class="comp" href="#map">Map pins &amp; controls</a>
+      <div class="grp">Listing detail</div>
+      <a class="comp" href="#listingx">Page extras</a>
+      <a class="comp" href="#rating">Rating display</a>
+      <a class="comp" href="#ratingx">Rating breakdown</a>
+      <a class="comp" href="#amenities">Amenity rows</a>
+      <a class="comp" href="#reviews">Reviews</a>
+      <a class="comp" href="#host">Host card</a>
+      <a class="comp" href="#hostx">Host card v2</a>
+      <a class="comp" href="#reservation">Reservation card</a>
+      <a class="comp" href="#ttk">Things to know</a>
+      <a class="comp" href="#translate">Translation pattern</a>
+      <div class="grp">Inputs</div>
+      <a class="comp" href="#datepicker">Date picker</a>
+      <a class="comp" href="#calx">Two-month calendar</a>
+      <a class="comp" href="#inputs">Text input</a>
+      <a class="comp" href="#chips">Filter chips</a>
+      <a class="comp" href="#filters">Filters modal</a>
+      <div class="grp">Page</div>
+      <a class="comp" href="#announce">Announcement modal &amp; toast</a>
+      <a class="comp" href="#skeleton">Skeleton loading</a>
+      <a class="comp" href="#footer">Footer &amp; legal</a>
+      <a class="comp" href="#citygrid">City link grid</a>
+      <a href="#responsive">Responsive rules</a>
+      <a href="#gaps">Known gaps</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="toolbar">
+      <div class="crumb" id="crumb">Docs / <b>Introduction</b></div>
+      <span style="font-size:12px;color:var(--sb-dim)">Viewport</span>
+      <button class="tb" data-vp="mobile">Mobile 390</button>
+      <button class="tb" data-vp="tablet">Tablet 820</button>
+      <button class="tb on" data-vp="desktop">Desktop</button>
+    </div>
+    <div class="scroll" id="scroll">
+
+<!-- ================= INTRO ================= -->
+<section class="story" id="s-intro">
+  <h1>Airbnb design system — reference storybook</h1>
+  <p class="lede">An interactive viewer for <code>00_inputs/references/airbnb.design.md</code>. Every color, type style, radius, spacing value and component below is rendered from the tokens in that file. Use the sidebar to browse stories and the viewport buttons to preview mobile / tablet behaviour.</p>
+  <div class="canvas">
+    <div class="stack" style="gap:20px">
+      <div class="t-display-xl">Restraint is the system</div>
+      <div class="row" style="gap:32px;align-items:flex-start">
+        <div style="flex:1;min-width:220px"><div class="t-title-md">One accent</div><p class="t-body-sm muted" style="margin:6px 0 0">Rausch <code>#ff385c</code> appears in only ~3 of 33 components: primary CTA, search orb, saved heart. Everything else is white + ink.</p></div>
+        <div style="flex:1;min-width:220px"><div class="t-title-md">Modest type</div><p class="t-body-sm muted" style="margin:6px 0 0">Display sits at 22–28px, weight 500–700. The only loud moment is the 64px rating number.</p></div>
+        <div style="flex:1;min-width:220px"><div class="t-title-md">Soft shapes, one shadow</div><p class="t-body-sm muted" style="margin:6px 0 0">8px buttons, 14px cards, pill search. A single shadow tier; depth comes from photos.</p></div>
+      </div>
+      <div class="row"><button class="btn btn-primary">Reserve</button><button class="btn btn-secondary">Save</button><button class="btn btn-tertiary">Show more</button></div>
+    </div>
+  </div>
+  <div class="note"><b>For our project:</b> this is study material only. Airbnb Cereal VF is licensed, so <b>Inter</b> is used here (the file's recommended substitute). Borrow principles — single accent, restraint, 48px touch targets, one shadow — not Airbnb's identity. Our housekeeper app needs its own international palette, RTL support and glove-sized targets.</div>
+  <h2>What's in the file</h2>
+  <table class="props"><tr><th>Group</th><th>Count</th><th>Notes</th></tr>
+    <tr><td>Colors</td><td>23</td><td>Light-only; no dark mode on public web</td></tr>
+    <tr><td>Type styles</td><td>18</td><td>Single family carries the whole scale</td></tr>
+    <tr><td>Radius</td><td>7</td><td>0 / 4 / 8 / 14 / 20 / 32 / full</td></tr>
+    <tr><td>Spacing</td><td>9</td><td>4px base with 2px micro-step, 64px sections</td></tr>
+    <tr><td>Components</td><td>33</td><td>All shown in the stories that follow</td></tr>
+  </table>
+</section>
+
+<!-- ================= COLORS ================= -->
+<section class="story" id="s-colors">
+  <h1>Colors</h1>
+  <p class="lede">Click a swatch to copy its hex. Most pages are ~90% <code>canvas</code> + <code>ink</code>, with one or two Rausch moments.</p>
+  <div id="colorGroups"></div>
+</section>
+
+<!-- ================= TYPOGRAPHY ================= -->
+<section class="story" id="s-typography">
+  <h1>Typography</h1>
+  <p class="lede">Family: <code>'Airbnb Cereal VF', Circular, -apple-system, system-ui, Roboto, 'Helvetica Neue', sans-serif</code>. Rendered here in Inter. Edit the sample text to test your own copy.</p>
+  <div class="controls"><label>Sample <input type="text" id="typeSample" value="" placeholder="Type to preview…" style="width:260px"></label></div>
+  <div class="canvas" style="margin-top:12px"><div id="typeList"></div></div>
+</section>
+
+<!-- ================= SPACING ================= -->
+<section class="story" id="s-spacing">
+  <h1>Spacing</h1>
+  <p class="lede">4px base unit with a 2px micro-step. Cards sit 16px apart; major page bands get 64px vertical padding.</p>
+  <div class="canvas"><div id="spaceList"></div></div>
+  <h2>Usage</h2>
+  <table class="props"><tr><th>Where</th><th>Token</th></tr>
+    <tr><td>Host card, reservation card padding</td><td><code>lg</code> 24px</td></tr>
+    <tr><td>Property-card meta block, card-grid gutter</td><td><code>base</code> 16px</td></tr>
+    <tr><td>Caption / date-row gutters</td><td><code>sm</code> 8px</td></tr>
+    <tr><td>Footer column gutters</td><td><code>lg</code> 24px</td></tr>
+    <tr><td>Major section vertical padding</td><td><code>section</code> 64px</td></tr>
+  </table>
+</section>
+
+<!-- ================= RADIUS ================= -->
+<section class="story" id="s-radius">
+  <h1>Radius</h1>
+  <p class="lede">Shape language is soft — there is no hard corner except the body grid.</p>
+  <div class="canvas"><div class="radii" id="radiusList"></div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Token</th><th>Used on</th></tr>
+    <tr><td><code>sm</code> 8px</td><td>Buttons, text inputs</td></tr>
+    <tr><td><code>md</code> 14px</td><td>Property / experience cards, host card, reservation card, modals</td></tr>
+    <tr><td><code>xl</code> 32px</td><td>Category strip corners</td></tr>
+    <tr><td><code>full</code></td><td>Search bar, search orb, hearts, badges, date cells</td></tr>
+  </table>
+</section>
+
+<!-- ================= ELEVATION ================= -->
+<section class="story" id="s-elevation">
+  <h1>Elevation &amp; scrim</h1>
+  <p class="lede">Exactly one shadow tier, plus flat. Used on card hover, the search bar at rest, dropdowns and floating badges.</p>
+  <div class="canvas soft">
+    <div class="row" style="gap:32px">
+      <div style="width:220px;height:120px;background:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center" class="t-caption">Flat (95% of surfaces)</div>
+      <div style="width:220px;height:120px;background:#fff;border-radius:14px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center" class="t-caption">Shadow tier</div>
+    </div>
+  </div>
+  <pre class="code" style="margin-top:12px">box-shadow: rgba(0,0,0,.02) 0 0 0 1px,
+            rgba(0,0,0,.04) 0 2px 6px 0,
+            rgba(0,0,0,.1)  0 4px 8px 0;</pre>
+  <h2>Modal scrim — #000 at 50%</h2>
+  <div class="canvas" style="padding:0">
+    <div class="modal-demo"><div class="scrim">
+      <div class="modal"><div class="mh"><button class="icon-circle" aria-label="Close"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>Log in or sign up</div>
+      <div class="mb stack"><div class="t-display-sm">Welcome</div><div class="combo"><input class="input" placeholder="Country/Region"><input class="input" placeholder="Phone number"></div><button class="btn btn-primary full">Continue</button></div></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ================= BUTTONS ================= -->
+<section class="story" id="s-buttons">
+  <h1>Buttons</h1>
+  <p class="lede">Primary is Rausch, 48px tall, 8px radius, weight 500. Press flips to <code>primary-active</code> — no transform, no shadow change.</p>
+  <div class="canvas"><div class="row" id="btnPlay"><button class="btn btn-primary" id="btnLive">Reserve</button></div></div>
+  <div class="controls">
+    <label>Variant <select id="btnVariant"><option value="btn-primary">primary</option><option value="btn-secondary">secondary</option><option value="btn-tertiary">tertiary-text</option><option value="btn-pill">pill-rausch</option></select></label>
+    <label>State <select id="btnState"><option value="">default</option><option value="is-active">active (pressed)</option><option value="is-disabled">disabled</option></select></label>
+    <label>Label <input type="text" id="btnLabel" value="Reserve"></label>
+    <label><input type="checkbox" id="btnFull"> full width</label>
+  </div>
+  <h2>All variants</h2>
+  <div class="canvas"><div class="row">
+    <button class="btn btn-primary">Reserve</button>
+    <button class="btn btn-primary is-active">Pressed</button>
+    <button class="btn btn-primary" disabled>Disabled</button>
+    <button class="btn btn-secondary">Contact host</button>
+    <button class="btn btn-tertiary">Show more</button>
+    <button class="btn btn-pill">Become a host</button>
+  </div></div>
+  <h2>Props</h2>
+  <table class="props"><tr><th>Component</th><th>Fill / text</th><th>Radius</th><th>Padding · height</th><th>Type</th></tr>
+    <tr><td><code>button-primary</code></td><td>primary / on-primary</td><td>sm 8px</td><td>14×24 · 48px</td><td>button-md</td></tr>
+    <tr><td><code>button-primary-active</code></td><td>primary-active</td><td>sm</td><td>—</td><td>—</td></tr>
+    <tr><td><code>button-primary-disabled</code></td><td>primary-disabled</td><td>sm</td><td>—</td><td>—</td></tr>
+    <tr><td><code>button-secondary</code></td><td>canvas / ink, 1px ink border</td><td>sm</td><td>13×23 · 48px</td><td>button-md</td></tr>
+    <tr><td><code>button-tertiary-text</code></td><td>transparent / ink, underline on hover</td><td>—</td><td>—</td><td>button-md</td></tr>
+    <tr><td><code>button-pill-rausch</code></td><td>primary / on-primary</td><td>full</td><td>10×20</td><td>button-sm</td></tr>
+  </table>
+</section>
+
+<!-- ================= ICON BUTTONS ================= -->
+<section class="story" id="s-iconbuttons">
+  <h1>Icon buttons</h1>
+  <p class="lede">Circular utility buttons — breadcrumb back-arrow, share, save, close.</p>
+  <div class="canvas"><div class="row" style="gap:24px">
+    <div class="stack" style="align-items:center"><button class="icon-circle" aria-label="Back"><svg class="ico" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><span class="t-caption-sm muted">icon-button-circle · 32</span></div>
+    <div class="stack" style="align-items:center"><button class="icon-outline" aria-label="Language"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></button><span class="t-caption-sm muted">icon-button-outline · 40</span></div>
+    <div class="stack" style="align-items:center"><button class="orb" aria-label="Search"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button><span class="t-caption-sm muted">search-orb · 48</span></div>
+  </div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Component</th><th>Fill</th><th>Size</th></tr>
+    <tr><td><code>icon-button-circle</code></td><td>surface-strong #f2f2f2</td><td>32px, full radius</td></tr>
+    <tr><td><code>icon-button-outline</code></td><td>canvas + hairline</td><td>40px, full radius</td></tr>
+    <tr><td><code>search-orb</code></td><td>primary</td><td>48px, full radius</td></tr>
+  </table>
+</section>
+
+<!-- ================= TOP NAV ================= -->
+<section class="story" id="s-topnav">
+  <h1>Top nav</h1>
+  <p class="lede">80px, white, 1px bottom hairline. Wordmark left, three product tabs centered, utilities right. Active tab has a 2px ink underline. Below 744px tabs collapse to a hamburger. (Wordmark here is a neutral placeholder.)</p>
+  <div class="canvas" style="padding:0">
+    <div class="topnav">
+      <div class="wordmark"><i></i>brand</div>
+      <div class="tabs" id="ptabs">
+        <button class="ptab on"><span class="pic"></span>Homes</button>
+        <button class="ptab"><span class="pic"><span class="newtag">New</span></span>Experiences</button>
+        <button class="ptab"><span class="pic"><span class="newtag">New</span></span>Services</button>
+      </div>
+      <div class="util">
+        <span class="hostlink">Become a host</span>
+        <button class="icon-outline" aria-label="Language" style="border:0;background:var(--surface-strong)"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></button>
+        <button class="icon-outline" aria-label="Menu"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <table class="props" style="margin-top:16px"><tr><th>Component</th><th>Spec</th></tr>
+    <tr><td><code>top-nav</code></td><td>canvas / ink, nav-link 16/600, 80px</td></tr>
+    <tr><td><code>product-tab-active</code></td><td>ink label, 32px illustrated icon, 2px ink underline</td></tr>
+    <tr><td><code>product-tab-inactive</code></td><td>muted label, no underline</td></tr>
+    <tr><td><code>new-tag</code></td><td>white pill, 8px/700 uppercase, 0.32px tracking, top-right of icon</td></tr>
+  </table>
+</section>
+
+<!-- ================= SEARCH ================= -->
+<section class="story" id="s-search">
+  <h1>Search bar</h1>
+  <p class="lede">The signature pill: 64px, fully rounded, hairline-divided Where / When / Who segments, ending in the Rausch orb — the hottest color moment on the page. On mobile it collapses to one tappable pill.</p>
+  <div class="canvas soft">
+    <div class="searchbar">
+      <div class="seg"><span class="l">Where</span><span class="p">Search destinations</span></div>
+      <div class="seg"><span class="l">When</span><span class="p">Add dates</span></div>
+      <div class="seg"><span class="l">Who</span><span class="p">Add guests</span></div>
+      <button class="orb" aria-label="Search"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    </div>
+    <div class="searchmini" style="margin:0 auto;max-width:360px"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Start your search</div>
+  </div>
+  <table class="props" style="margin-top:16px"><tr><th>Component</th><th>Spec</th></tr>
+    <tr><td><code>search-bar-pill</code></td><td>canvas, full radius, 64px, 14×24 padding, hairline + shadow tier</td></tr>
+    <tr><td><code>search-field-segment</code></td><td>transparent, caption 14/500, 8×24 padding, 1px hairline dividers</td></tr>
+    <tr><td><code>search-orb</code></td><td>primary, 48×48, white magnifier</td></tr>
+  </table>
+</section>
+
+<!-- ================= CATEGORY ================= -->
+<section class="story" id="s-category">
+  <h1>Category strip</h1>
+  <p class="lede">Horizontal icon + label tabs. Inactive is muted; active is ink with an underline rule.</p>
+  <div class="canvas" style="padding:16px 24px"><div class="catstrip" id="cats"></div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Component</th><th>Spec</th></tr>
+    <tr><td><code>category-strip</code></td><td>canvas / muted, button-sm</td></tr>
+    <tr><td><code>category-tab-active</code></td><td>ink, radius none, underline</td></tr>
+  </table>
+</section>
+
+<!-- ================= PROPERTY CARD ================= -->
+<section class="story" id="s-property">
+  <h1>Property card</h1>
+  <p class="lede">Photo-first: 1:1 image clipped at 14px, "Guest favorite" badge top-left, heart top-right (tap to save — turns Rausch), carousel dots, 4–5 meta lines. Hover lifts with the shadow tier.</p>
+  <div class="canvas"><div class="cards" id="cards"></div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Component</th><th>Spec</th></tr>
+    <tr><td><code>property-card</code></td><td>canvas / ink, body-sm, radius md</td></tr>
+    <tr><td><code>property-card-photo</code></td><td>radius md; reused alone in wishlists</td></tr>
+    <tr><td>Heart</td><td>32×32 tap area; outlined default, Rausch fill when saved</td></tr>
+  </table>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section class="story" id="s-experience">
+  <h1>Experience card</h1>
+  <p class="lede">Taller 4:5 photo, "NEW" badge top-left, heart top-right, single-line title (title-md).</p>
+  <div class="canvas"><div class="cards" id="xcards"></div></div>
+</section>
+
+<!-- ================= BADGES ================= -->
+<section class="story" id="s-badges">
+  <h1>Badges &amp; tags</h1>
+  <p class="lede">Small white pills that float over photos with the shadow tier.</p>
+  <div class="canvas soft"><div class="row" style="gap:24px">
+    <span class="t-badge" style="background:#fff;border-radius:9999px;padding:4px 10px;box-shadow:var(--shadow)">Guest favorite</span>
+    <span class="t-uppercase-tag" style="background:#fff;border-radius:9999px;padding:2px 6px;box-shadow:var(--shadow)">New</span>
+    <span class="superhost"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>Superhost</span>
+    <span class="t-micro-label">Inline 6</span>
+  </div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Component</th><th>Spec</th></tr>
+    <tr><td><code>guest-favorite-badge</code></td><td>canvas / ink, badge 11/600, full radius, 4×10, shadow tier</td></tr>
+    <tr><td><code>new-tag</code></td><td>canvas / ink, uppercase-tag 8/700, full radius, 2×6</td></tr>
+    <tr><td>micro-label</td><td>12/700 card amenity labels</td></tr>
+  </table>
+</section>
+
+<!-- ================= RATING ================= -->
+<section class="story" id="s-rating">
+  <h1>Rating display</h1>
+  <p class="lede">The one typographically loud moment: 64px/700 rating between laurel ornaments. Stars and numbers are ink, never gold.</p>
+  <div class="canvas"><div class="rating">
+    <div class="big">
+      <svg class="laurel" viewBox="0 0 40 72"><path d="M30 68C12 56 8 34 18 6"/><path d="M22 54c-8 0-12-4-14-8 6 0 11 2 14 8zM18 40c-7-1-10-6-11-10 6 1 10 4 11 10zM17 26c-6-2-8-7-8-11 5 2 8 6 8 11zM19 14c-4-3-5-7-4-11 4 3 5 7 4 11z"/></svg>
+      <span class="t-rating-display" id="ratingNum">4.81</span>
+      <svg class="laurel" viewBox="0 0 40 72" style="transform:scaleX(-1)"><path d="M30 68C12 56 8 34 18 6"/><path d="M22 54c-8 0-12-4-14-8 6 0 11 2 14 8zM18 40c-7-1-10-6-11-10 6 1 10 4 11 10zM17 26c-6-2-8-7-8-11 5 2 8 6 8 11zM19 14c-4-3-5-7-4-11 4 3 5 7 4 11z"/></svg>
+    </div>
+    <div class="t-display-sm" style="margin-top:8px">Guest favorite</div>
+    <div class="t-body-sm muted" style="max-width:360px;margin-top:6px">One of the most loved homes, based on ratings, reviews, and reliability</div>
+    <div class="statrow">
+      <div><b>4.9</b>Cleanliness</div><div><b>4.8</b>Accuracy</div><div><b>5.0</b>Check-in</div><div><b>4.9</b>Communication</div><div><b>4.7</b>Location</div>
+    </div>
+  </div></div>
+  <div class="controls"><label>Rating <input type="range" id="ratingRange" min="40" max="50" value="48"></label></div>
+</section>
+
+<!-- ================= AMENITIES ================= -->
+<section class="story" id="s-amenities">
+  <h1>Amenity rows</h1>
+  <p class="lede">Icon + ink label in body-md, 12px row padding, no row borders; the section is closed by hairlines above and below. Unavailable items are struck through.</p>
+  <div class="canvas"><div class="t-display-md" style="margin-bottom:12px">What this place offers</div><div class="amen" id="amen"></div><button class="btn btn-secondary" style="margin-top:24px">Show all 42 amenities</button></div>
+</section>
+
+<!-- ================= REVIEWS ================= -->
+<section class="story" id="s-reviews">
+  <h1>Reviews</h1>
+  <p class="lede">2-column grid; each has an author row and a 3-line clamped excerpt with a "Show more" tertiary link (click it).</p>
+  <div class="canvas"><div class="reviews" id="reviews"></div></div>
+</section>
+
+<!-- ================= HOST ================= -->
+<section class="story" id="s-host">
+  <h1>Host card</h1>
+  <p class="lede">White card, radius md, 24px padding: avatar, name, Superhost badge, response stats and a secondary "Contact host" button.</p>
+  <div class="canvas soft">
+    <div class="hostcard">
+      <div class="id"><div class="avatar" style="background:#6b4f3a">M</div><div class="t-display-sm">Mariam</div><div style="margin-top:6px"><span class="superhost"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>Superhost</span></div></div>
+      <div class="hoststats"><div><b>312</b>Reviews</div><div><b>4.93★</b>Rating</div><div style="border:0;padding:0"><b>7</b>Years hosting</div></div>
+    </div>
+    <div style="margin-top:16px"><button class="btn btn-secondary">Contact host</button></div>
+  </div>
+</section>
+
+<!-- ================= RESERVATION ================= -->
+<section class="story" id="s-reservation">
+  <h1>Reservation card</h1>
+  <p class="lede">Sticky right-rail card: price (display-md), date range, guest stepper, full-width Reserve, fee breakdown. Try the stepper. On mobile it becomes a sticky bottom bar (switch viewport).</p>
+  <div class="canvas soft">
+    <div class="resv" id="resv">
+      <div class="pr"><span class="t-display-md" id="nightly">$128</span><span class="t-body-md">night</span></div>
+      <div class="grid">
+        <div class="r1"><div class="cell"><div class="k">Check-in</div><div class="v">11/16/2026</div></div><div class="cell"><div class="k">Checkout</div><div class="v">11/21/2026</div></div></div>
+        <div class="r2"><div><div class="k">Guests</div><div class="v" id="gcount">2 guests</div></div>
+          <div class="stepper"><button id="gminus" aria-label="Fewer guests">−</button><button id="gplus" aria-label="More guests">+</button></div></div>
+      </div>
+      <button class="btn btn-primary full">Reserve</button>
+      <p class="center muted">You won't be charged yet</p>
+      <div class="fees" id="fees"></div>
+    </div>
+    <div class="mobilebar"><div><span class="t-title-md">$128</span> <span class="t-body-sm">night</span><div class="t-caption-sm" style="text-decoration:underline">Nov 16 – 21</div></div><button class="btn btn-primary">Reserve</button></div>
+  </div>
+</section>
+
+<!-- ================= DATE PICKER ================= -->
+<section class="story" id="s-datepicker">
+  <h1>Date picker</h1>
+  <p class="lede">40×40 circular day cells. Selected ends are ink-filled; the range between is joined by a <code>surface-soft</code> lozenge. Click two days to pick a range.</p>
+  <div class="canvas"><div class="dp" id="dp"></div><div class="row" style="margin-top:8px"><button class="btn btn-tertiary" id="dpClear" style="text-decoration:underline;font-size:14px">Clear dates</button><span class="t-body-sm muted" id="dpOut"></span></div></div>
+</section>
+
+<!-- ================= INPUTS ================= -->
+<section class="story" id="s-inputs">
+  <h1>Text input</h1>
+  <p class="lede">56px, hairline outline, 8px radius. Focus thickens the border to 2px ink — no glow, no ring. Error uses <code>primary-error-text</code> (not Rausch).</p>
+  <div class="canvas"><div class="row" style="align-items:flex-start;gap:32px">
+    <div class="field" style="flex:1;min-width:240px"><label>Default</label><input class="input" placeholder="First name"></div>
+    <div class="field" style="flex:1;min-width:240px"><label>Focused</label><input class="input focus" value="Maya"></div>
+    <div class="field" style="flex:1;min-width:240px"><label>Disabled</label><input class="input" disabled value="Locked"></div>
+    <div class="field err" id="emailField" style="flex:1;min-width:240px"><label>Error (validates live)</label><input class="input" id="email" value="maya@"><span class="msg"><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Enter a valid email.</span></div>
+  </div>
+  <h2 style="margin-top:32px">Grouped inputs</h2>
+  <div class="combo"><input class="input" placeholder="Country/Region"><input class="input" placeholder="Phone number"></div>
+  </div>
+  <div class="note">Known gap: the file documents the error text color only; the outline + background treatment shown here is an interpretation.</div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<section class="story" id="s-footer">
+  <h1>Footer &amp; legal band</h1>
+  <p class="lede">No contrast footer — three text columns over a light surface, then a muted legal strip with language / currency pickers.</p>
+  <div class="canvas" style="padding:0">
+    <div class="footer">
+      <div class="cols">
+        <div><h4>Support</h4><ul><li><a href="#footer">Help Center</a></li><li><a href="#footer">Safety issues</a></li><li><a href="#footer">Cancellation options</a></li><li><a href="#footer">Accessibility</a></li></ul></div>
+        <div><h4>Hosting</h4><ul><li><a href="#footer">Host your home</a></li><li><a href="#footer">Hosting resources</a></li><li><a href="#footer">Community forum</a></li><li><a href="#footer">Host responsibly</a></li></ul></div>
+        <div><h4>Company</h4><ul><li><a href="#footer">Newsroom</a></li><li><a href="#footer">Careers</a></li><li><a href="#footer">Investors</a></li><li><a href="#footer">Gift cards</a></li></ul></div>
+      </div>
+      <div class="legal"><span>© 2026 Company, Inc. · <a href="#footer">Privacy</a> · <a href="#footer">Terms</a></span><span class="r"><span>🌐 English (US)</span><span>$ USD</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CITY GRID ================= -->
+<section class="story" id="s-citygrid">
+  <h1>City link grid</h1>
+  <p class="lede">6 columns on desktop; city in title-md, category in muted body-sm. Grids reduce columns at breakpoints — never reflow rows.</p>
+  <div class="canvas"><div class="t-display-sm" style="margin-bottom:20px">Inspiration for future getaways</div><div class="citygrid" id="cities"></div></div>
+</section>
+
+<!-- ================= PHOTO ICONS ================= -->
+<section class="story" id="s-photoicons">
+  <h1>Photo icons (3D illustrated)<span class="tag-live">live site</span></h1>
+  <p class="lede">Next to its thin line icons, the site uses small 3D-rendered object illustrations, a bit like clay or toy models: a brass globe, a house with a tree, a luggage cart, a hot-air balloon, a concierge bell, a door, a clipboard, a calendar, a shield. They are shipped as transparent PNGs (asset folders <code>search-bar-icons</code> and <code>orthographic-images</code>). The nav versions also play a short <b>.webm</b> animation when selected. The icons below are <b>our own redraws in the same style</b>, using housekeeping objects. They are not Airbnb's artwork.</p>
+
+  <h2>Two styles</h2>
+  <div class="compare">
+    <div>
+      <h4>A · Perspective (product nav) — 48px</h4>
+      <div class="row" style="gap:20px">
+        <span class="pi pi64"><svg><use href="#pi-house"/></svg></span>
+        <span class="pi pi64"><svg><use href="#pi-cart"/></svg></span>
+        <span class="pi pi64"><svg><use href="#pi-bucket"/></svg></span>
+        <span class="pi pi64"><svg><use href="#pi-bell"/></svg></span>
+      </div>
+      <p class="t-body-sm muted" style="margin:12px 0 0">Three-quarter view with a soft ground shadow and rich materials (metal, wood, fabric). Sits beside a text label in the top nav. Plays an animation once when selected.</p>
+    </div>
+    <div>
+      <h4>B · Orthographic (info rows) — 32px</h4>
+      <div class="row" style="gap:20px">
+        <span class="pi pi48"><svg><use href="#pi-door"/></svg></span>
+        <span class="pi pi48"><svg><use href="#pi-clip"/></svg></span>
+        <span class="pi pi48"><svg><use href="#pi-cal"/></svg></span>
+        <span class="pi pi48"><svg><use href="#pi-shield"/></svg></span>
+      </div>
+      <p class="t-body-sm muted" style="margin:12px 0 0">Straight-on view with flatter shading and no ground shadow, so it reads clearly at 32px. Leads a "Things to know" card above the title.</p>
+    </div>
+  </div>
+
+  <h2>Live behaviour — click a tab</h2>
+  <div class="canvas" style="padding:16px 24px 0">
+    <div class="pinav" id="pinav">
+      <button class="on"><span class="pi pi48"><svg><use href="#pi-house"/></svg></span>Rooms</button>
+      <button><span class="pi pi48"><svg><use href="#pi-cart"/></svg></span>Cart</button>
+      <button><span class="pi pi48"><svg><use href="#pi-bucket"/></svg></span>Supplies</button>
+      <button><span class="pi pi48"><svg><use href="#pi-bell"/></svg></span>Requests</button>
+    </div>
+  </div>
+  <div class="idea"><b>Live behaviour:</b> the selected tab swaps its static PNG for a ~1s webm loop (the house "settles", the balloon bobs, the bell rings), with a 3px ink underline under the tab. Simulated here with a CSS spring.</div>
+
+  <h2>Our set in this style (housekeeping)</h2>
+  <div class="canvas"><div class="pigrid" id="pigrid"></div></div>
+
+  <h2>Style spec</h2>
+  <table class="props"><tr><th>Property</th><th>Rule</th></tr>
+    <tr><td>Rendering</td><td>Soft 3D look (clay or toy-like): rounded edges, low detail, no outlines or strokes</td></tr>
+    <tr><td>Lighting</td><td>One soft key light from the top-left, a gentle rim highlight on edges, shading underneath</td></tr>
+    <tr><td>Materials</td><td>Real-world materials made a little cuter: brass, painted metal, wood grain hinted by a gradient, matte fabric</td></tr>
+    <tr><td>Color</td><td>Warm and slightly muted. Rausch pink shows up only as an accent (door, shield, tag), never the whole palette</td></tr>
+    <tr><td>Container</td><td>None. Transparent background, no tile, no circle</td></tr>
+    <tr><td>Ground</td><td>Perspective set: a soft elliptical contact shadow. Orthographic set: no shadow</td></tr>
+    <tr><td>Sizes</td><td>48px in nav, 32px in info rows, 64–120px in modals and empty states (e.g. the "one price" tag)</td></tr>
+    <tr><td>Export</td><td>PNG @2x/@3x plus an optional webm for the selected state</td></tr>
+    <tr><td>When to use</td><td>Top-level categories, announcements, empty states, short policy rows</td></tr>
+    <tr><td>When not to use</td><td>Dense controls such as filters, amenities or toolbars. Those keep the 24px, 1.6px-stroke line icons</td></tr>
+  </table>
+  <h2>Photo icon vs line icon</h2>
+  <div class="compare">
+    <div><h4>Line (amenities, actions)</h4><div class="row" style="gap:18px">
+      <svg class="lineico" viewBox="0 0 24 24"><path d="M3 18v-6a3 3 0 013-3h12a3 3 0 013 3v6M3 14h18M6 9V6h5v3"/></svg>
+      <svg class="lineico" viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7zM9 8a3 3 0 016 0"/></svg>
+      <svg class="lineico" viewBox="0 0 24 24"><path d="M4 7h16v12H4zM8 7V5h8v2M4 11h16"/></svg>
+      <svg class="lineico" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg></div></div>
+    <div><h4>Photo (categories, onboarding)</h4><div class="row" style="gap:18px">
+      <span class="pi pi32"><svg><use href="#pi-bed"/></svg></span><span class="pi pi32"><svg><use href="#pi-bucket"/></svg></span><span class="pi pi32"><svg><use href="#pi-clip"/></svg></span><span class="pi pi32"><svg><use href="#pi-shield"/></svg></span></div></div>
+  </div>
+  <div class="note"><b>Why this matters for our housekeeper app:</b> object illustrations can be recognised without reading, which supports our icon-first and low-literacy rule. A 3D bucket, towel or bed is understood across languages better than a thin outline. We should commission or build our own set in our own palette and must not reuse Airbnb's PNGs.</div>
+</section>
+
+<!-- ================= FILE VS LIVE ================= -->
+<section class="story" id="s-livediff">
+  <h1>File vs live site</h1>
+  <p class="lede">Values read from the live airbnb.com pages on 2026-11-11 that differ from <code>airbnb.design.md</code> or are missing from it.</p>
+  <table class="props"><tr><th>Area</th><th>DESIGN.md says</th><th>Live site</th></tr>
+    <tr><td>Product nav</td><td>3 tabs (Homes / Experiences / Services)</td><td>5 tabs: All, Homes, Hotels, Experiences, Services, with 3D photo icons</td></tr>
+    <tr><td>Shadows</td><td>One tier only</td><td>At least 4: card (file), popover <code>0 2px 16px .12</code>, floating card <code>0 8px 24px .10</code>, modal <code>0 8px 28px .28</code></td></tr>
+    <tr><td>Modal radius</td><td>md 14px</td><td>32px (announcement, filters, guest popover)</td></tr>
+    <tr><td>Menu radius</td><td>—</td><td>12px</td></tr>
+    <tr><td>Primary CTA</td><td>Flat Rausch, 8px</td><td>Listing page: <b>gradient</b> #e61e4d → #e31c5f → #d70466, fully pill-shaped</td></tr>
+    <tr><td>Dark button</td><td>—</td><td>Ink #222 fill, 8px radius, 48px (modals, filters footer)</td></tr>
+    <tr><td>Grey button</td><td>—</td><td>#f2f2f2 fill, 12px radius (Show more, Message host)</td></tr>
+    <tr><td>Rating display</td><td>64px / 700</td><td>~100px / 500 between 3D laurels</td></tr>
+    <tr><td>Host card</td><td>14px, 24px padding</td><td>24px radius, 32×24 padding, floating shadow</td></tr>
+    <tr><td>Badges on photos</td><td>11px / 600</td><td>12–14px / 500, 92.5% white with a subtle shadow</td></tr>
+    <tr><td>Loading</td><td>Known gap</td><td>Grey skeleton blocks (see Skeleton story)</td></tr>
+    <tr><td>Map</td><td>Known gap</td><td>White price pills, ink when selected, 40px control stack</td></tr>
+  </table>
+</section>
+
+<!-- ================= LIVE BUTTONS ================= -->
+<section class="story" id="s-livebuttons">
+  <h1>Dark, grey &amp; gradient buttons<span class="tag-live">live site</span></h1>
+  <p class="lede">The site splits button use more finely than the file describes. Rausch is for <b>booking actions</b>, dark is for <b>confirming in a dialog</b>, and grey is for <b>secondary content actions</b>.</p>
+  <div class="canvas"><div class="row">
+    <button class="btn btn-grad">Check availability</button>
+    <button class="btn btn-grad" style="width:260px">Reserve</button>
+    <button class="btn btn-dark">Got it</button>
+    <button class="btn btn-dark">Show 1,000+ places</button>
+    <button class="btn btn-grey">Show more</button>
+    <button class="btn btn-grey">Message host</button>
+  </div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Variant</th><th>Spec</th><th>Used for</th></tr>
+    <tr><td>Gradient pill</td><td><code>linear-gradient(to right,#e61e4d,#e31c5f 50%,#d70466)</code>, radius 999, 48px</td><td>Check availability, Reserve, search orb</td></tr>
+    <tr><td>Dark</td><td>ink #222 / white, 8px, 48px, 16/500</td><td>Modal confirm, filter apply</td></tr>
+    <tr><td>Grey</td><td>#f2f2f2 / ink, 12px, 14×24 padding</td><td>Expand text, contact</td></tr>
+  </table>
+  <div class="idea"><b>Design idea:</b> use three button colours, each with one job: brand colour for the main task, dark for "confirm / done", grey for "see more". Someone who can't read the label can still learn a button's job from its colour.</div>
+</section>
+
+<!-- ================= ANNOUNCE ================= -->
+<section class="story" id="s-announce">
+  <h1>Announcement modal &amp; toast<span class="tag-live">live site</span></h1>
+  <p class="lede">First-visit announcement: a large 3D illustration, one sentence and one dark button. After it is dismissed, a small floating pill stays on the page as a reminder.</p>
+  <div class="canvas soft"><div class="grid2" style="align-items:center;justify-items:center">
+    <div class="ann shadow-modal">
+      <button class="x" aria-label="Close"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <span class="pi pi96" style="margin:0 auto"><svg><use href="#pi-tag"/></svg></span>
+      <h3>Now you'll see one price for your trip, all fees included.</h3>
+      <button class="btn btn-dark full" id="annBtn">Got it</button>
+    </div>
+    <div class="stack" style="align-items:center">
+      <div class="toast" id="toast"><span class="thumb"><span class="pi pi32"><svg><use href="#pi-tag"/></svg></span></span>Prices include all fees</div>
+      <button class="btn btn-tertiary" id="toastBtn" style="text-decoration:underline;font-size:14px">Replay toast</button>
+    </div>
+  </div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Part</th><th>Spec</th></tr>
+    <tr><td>Modal</td><td>393px wide, 32px radius, shadow <code>0 8px 28px rgba(0,0,0,.28)</code>, close 16px at top-right</td></tr>
+    <tr><td>Title</td><td>22/500, centred, 2 lines max</td></tr>
+    <tr><td>Toast</td><td>white, 1px hairline, 12px radius, padding 8/24/8/8, 40px thumb, 14/500, floating shadow</td></tr>
+  </table>
+  <div class="idea"><b>Design idea for us:</b> a shift-start announcement such as "New: tap 🧺 to ask for supplies", built from one big object icon, one line of text and one button. It works for every language.</div>
+</section>
+
+<!-- ================= SEARCH EXPANDED ================= -->
+<section class="story" id="s-searchx">
+  <h1>Search: expanded state &amp; guest popover<span class="tag-live">live site</span></h1>
+  <p class="lede">When a field is active, the whole bar turns grey and only the active segment stays white and lifted. The orb grows into a labelled "Search" pill. Click a segment.</p>
+  <div class="canvas">
+    <div class="sx" id="sx">
+      <div class="seg"><span class="l">Where</span><span class="p">Search destinations</span></div>
+      <div class="seg"><span class="l">When</span><span class="p">Add dates</span></div>
+      <div class="seg act"><span class="l">Who</span><span class="p">Add guests</span></div>
+      <button class="orbx"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span>Search</span></button>
+    </div>
+    <div style="display:flex;justify-content:flex-end;max-width:850px;margin:12px auto 0">
+      <div class="pop" id="guests"></div>
+    </div>
+  </div>
+  <div class="idea"><b>Design idea:</b> "dim everything except what you're editing" is a strong focus pattern. Stepper rows give the label, a hint and − n + on one line, ideal for counting towels or amenities with a thumb.</div>
+</section>
+
+<!-- ================= MENU ================= -->
+<section class="story" id="s-menu">
+  <h1>Account menu<span class="tag-live">live site</span></h1>
+  <p class="lede">A 265px dropdown with 12px radius and popover shadow. It holds icon rows, a promo row with a small illustration, and groups separated by hairlines.</p>
+  <div class="canvas soft"><div class="menu">
+    <a href="#menu"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>Languages &amp; currency</a>
+    <a href="#menu"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Help Center</a>
+    <hr>
+    <div class="promo"><div style="flex:1"><b>Become a host</b><span>It's easy to start hosting and earn extra income.</span></div><span class="pi pi48"><svg><use href="#pi-house"/></svg></span></div>
+    <hr>
+    <a href="#menu">Refer a Host</a><a href="#menu">Gift cards</a>
+    <hr>
+    <a href="#menu">Log in or sign up</a>
+  </div></div>
+</section>
+
+<!-- ================= CHIPS ================= -->
+<section class="story" id="s-chips">
+  <h1>Filter chips<span class="tag-live">live site</span></h1>
+  <p class="lede">Quick filters are toggle chips (checkboxes underneath). Selected chips get a 2px ink border. The Filters button shows a count badge. Click to toggle.</p>
+  <div class="canvas"><div class="chips" id="chips"></div></div>
+  <h2>Large icon chips (inside Filters)</h2>
+  <div class="canvas"><div class="chips" id="chipsLg"></div></div>
+  <h2>Removable chip (Selected list)</h2>
+  <div class="canvas"><div class="chips"><button class="chip chip-x">Washer <svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button class="chip chip-x">Self check-in <svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Chip</th><th>Spec</th></tr>
+    <tr><td>Quick</td><td>34px, 8×12 padding, 24px radius, 1px hairline, 12/400</td></tr>
+    <tr><td>Icon (large)</td><td>48px, 11×16 padding, 28px radius, 14/400, 24px line icon</td></tr>
+    <tr><td>Selected</td><td>2px ink border (padding −1px so the size doesn't jump)</td></tr>
+    <tr><td>Count badge</td><td>18px ink circle, white 2px ring, top-right</td></tr>
+  </table>
+</section>
+
+<!-- ================= FILTERS MODAL ================= -->
+<section class="story" id="s-filters">
+  <h1>Filters modal<span class="tag-live">live site</span></h1>
+  <p class="lede">The richest form on the site. It has a sticky blurred header and a sticky footer (Clear all plus a dark "Show N places" button whose count updates live). Every control below works.</p>
+  <div class="canvas soft" style="display:flex;justify-content:center">
+    <div class="fmodal">
+      <header>Filters<button class="icon-circle" style="background:transparent" aria-label="Close"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+      <div class="fbody">
+        <div class="fsec"><h5>Recommended for you</h5><div class="tilecards" id="tiles"></div></div>
+        <div class="fsec"><h5>Type of place</h5><div class="segc" id="segc"><button class="on">Any</button><button>Home</button><button>Room</button><button>Hotel</button></div></div>
+        <div class="fsec"><h5>Price</h5>
+          <div class="switchseg" id="sw" data-v="0"><span class="thumb"></span><button class="on">Trip price</button><button>Nightly price</button></div>
+          <div class="hist" id="hist" style="margin-top:24px"></div>
+          <div class="range" id="range"><div class="track"></div><div class="fill" id="rfill"></div><div class="th" id="th0" role="slider" aria-label="Minimum price" tabindex="0"></div><div class="th" id="th1" role="slider" aria-label="Maximum price" tabindex="0"></div></div>
+          <div class="minmax"><label>Minimum<output id="pmin"></output></label><label>Maximum<output id="pmax"></output></label></div>
+        </div>
+        <div class="fsec"><h5>Rooms and beds</h5><div id="rooms"></div></div>
+        <div class="fsec"><h5>Standout stays</h5><div class="selcards" id="selcards"></div></div>
+        <div class="fsec"><h5>Booking options</h5>
+          <div class="srow"><div><div>Instant Book</div><small class="muted" style="font-size:14px">Book without waiting for approval</small></div><button class="tswitch" role="switch" aria-checked="false" aria-label="Instant Book"></button></div>
+          <div class="srow"><div><div>Free cancellation</div><small class="muted" style="font-size:14px">Only show flexible stays</small></div><button class="tswitch" role="switch" aria-checked="true" aria-label="Free cancellation"></button></div>
+          <div style="margin-top:12px"><button class="disclose" id="more">Show more <svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 9l6 6 6-6"/></svg></button></div>
+        </div>
+      </div>
+      <footer><button class="clear" id="clearAll">Clear all</button><button class="btn btn-dark" id="showN">Show 1,000+ places</button></footer>
+    </div>
+  </div>
+  <table class="props" style="margin-top:16px"><tr><th>Control</th><th>Spec</th></tr>
+    <tr><td>Modal</td><td>568px, 32px radius, header 64px (92.5% white + blur), footer 24px padding</td></tr>
+    <tr><td>Segmented (outlined)</td><td>54px, 16px radius, 4px inset, hairline dividers; selected = 2px ink inset, 12px radius</td></tr>
+    <tr><td>Segmented (switch)</td><td>48px #f2f2f2 track, 30px radius; white sliding thumb, unselected text #6c6c6c</td></tr>
+    <tr><td>Price slider</td><td>Rausch histogram (out-of-range bars turn hairline), 28px white thumbs, pill min/max outputs 56px</td></tr>
+    <tr><td>Stepper</td><td>32px #f2f2f2 circles, disabled glyph #c1c1c1, value "Any" when 0</td></tr>
+    <tr><td>Selectable card</td><td>Icon + title + description, 12px radius, selected 2px ink inset</td></tr>
+    <tr><td>Toggle switch</td><td>48×32, ink when on</td></tr>
+  </table>
+  <div class="idea"><b>Design idea:</b> a histogram behind the slider shows <i>where things are</i> before you choose. For a supervisor screen, a chart of "rooms by time to clean" could use the same idea. The live count on the apply button ("Show 24 rooms") tells you the result before you commit.</div>
+</section>
+
+<!-- ================= MAP ================= -->
+<section class="story" id="s-map">
+  <h1>Map pins &amp; controls<span class="tag-live">live site</span></h1>
+  <p class="lede">Price pills are the pins: white by default, grey once visited, ink when selected. Hotels get a tiny photo icon inside the pill. Controls are 40px white tiles. Click pins.</p>
+  <div class="canvas" style="padding:0"><div class="map" id="map">
+    <div class="mapctl"><button class="solo" aria-label="Expand"><svg class="ico" viewBox="0 0 24 24"><path d="M4 10V4h6M20 14v6h-6M4 4l6 6M20 20l-6-6"/></svg></button>
+      <div class="stack2"><button aria-label="Zoom in"><svg class="ico" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button aria-label="Zoom out"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button></div></div>
+    <button class="mappill">Show list <svg class="ico" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+  </div></div>
+  <div class="idea"><b>Design idea for us:</b> a floor-plan map with <i>room-status pills</i> instead of prices (🛏 204 · dirty / cleaning / ready). The supervisor sees the whole floor at a glance.</div>
+</section>
+
+<!-- ================= CAROUSEL ================= -->
+<section class="story" id="s-carousel">
+  <h1>Carousel rail<span class="tag-live">live site</span></h1>
+  <p class="lede">Section title with a 28px arrow link, and 28px grey prev/next circles on the right (prev disabled at start). Cards are smaller than the search-grid cards, with 16px radius.</p>
+  <div class="canvas">
+    <div class="chead"><div class="t">Available in Lisbon this weekend <button aria-label="See all"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M9 6l6 6-6 6"/></svg></button></div>
+      <div class="ar"><button id="cprev" disabled aria-label="Previous"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M15 6l-6 6 6 6"/></svg></button><button id="cnext" aria-label="Next"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
+    <div class="crail" id="crail"></div>
+  </div>
+</section>
+
+<!-- ================= LISTING EXTRAS ================= -->
+<section class="story" id="s-listingx">
+  <h1>Listing page extras<span class="tag-live">live site</span></h1>
+  <p class="lede">Smaller building blocks from the listing page.</p>
+  <h2>Sticky anchor nav + booking summary (appears on scroll)</h2>
+  <div class="canvas" style="padding:0"><div class="anchors" id="anchors"><a class="on" href="#listingx">Photos</a><a href="#listingx">Amenities</a><a href="#listingx">Reviews</a><a href="#listingx">Location</a>
+    <div class="bk"><div><b>Add dates for prices</b><small>★ <b style="font-size:12px;font-weight:600">5.0</b> · 6 reviews</small></div><button class="btn btn-grad">Check availability</button></div></div></div>
+  <h2>Guest-favorite banner</h2>
+  <div class="canvas"><div class="gfbanner">
+    <div class="lau"><svg viewBox="0 0 20 36"><path d="M16 34C6 28 4 16 10 2M11 26c-4 0-6-2-7-4 3 0 6 1 7 4zM9 18c-4-1-5-3-5-6 3 1 5 3 5 6zM10 10c-3-1-4-4-3-7 2 2 3 4 3 7z"/></svg>Guest<br>favorite<svg viewBox="0 0 20 36" style="transform:scaleX(-1)"><path d="M16 34C6 28 4 16 10 2M11 26c-4 0-6-2-7-4 3 0 6 1 7 4zM9 18c-4-1-5-3-5-6 3 1 5 3 5 6zM10 10c-3-1-4-4-3-7 2 2 3 4 3 7z"/></svg></div>
+    <div class="txt">One of the most loved homes, according to guests</div>
+    <div class="num"><b>5.0</b><span style="font-size:10px">★★★★★</span></div><div class="num"><b>6</b><small>Reviews</small></div>
+  </div></div>
+  <h2>Highlights list</h2>
+  <div class="canvas">
+    <div class="hl"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><div><b>Steps from the river</b><span>The market is a short walk away</span></div></div>
+    <div class="hl"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><div><b>Well-equipped, with elevator</b><span>Full kitchen, dishwasher, washer and air conditioning</span></div></div>
+    <div class="hl"><svg viewBox="0 0 24 24"><path d="M12 20s-8-5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 9c0 6-8 11-8 11z"/></svg><div><b>Highly rated across the board</b><span>Guests highlight the easy self check-in</span></div></div>
+  </div>
+  <h2>Where you'll sleep</h2>
+  <div class="canvas"><div class="sleep"><div><div class="ph" style="background:linear-gradient(160deg,#f3e6d8,#c9a888 60%,#7a5a40)"></div><b>Bedroom</b><span>1 queen bed</span></div><div><div class="ph" style="background:linear-gradient(160deg,#ece7e0,#bdb0a0 60%,#6d6152)"></div><b>Living room</b><span>1 sofa bed</span></div></div></div>
+  <div class="idea"><b>Design idea for us:</b> "Where you'll sleep" is close to what a housekeeper needs: a photo of each bed or area with its setup ("1 queen bed · 2 pillows"). That could become the room's "how it should look" reference.</div>
+</section>
+
+<!-- ================= RATING BREAKDOWN ================= -->
+<section class="story" id="s-ratingx">
+  <h1>Rating breakdown<span class="tag-live">live site</span></h1>
+  <p class="lede">Below the big rating number: an overall histogram (5→1 bars), then six category columns divided by hairlines, each with its score and a line icon at the bottom.</p>
+  <div class="canvas"><div class="rbreak" id="rbreak"></div></div>
+  <div class="idea"><b>Design idea for us:</b> an inspection score card could use the same layout. Overall score, then columns for Bed · Bathroom · Floor · Amenities · Smell, each with an icon, so a failed area stands out without reading.</div>
+</section>
+
+<!-- ================= THINGS TO KNOW ================= -->
+<section class="story" id="s-ttk">
+  <h1>Things to know<span class="tag-live">live site</span></h1>
+  <p class="lede">A three-column grid. Each item has an orthographic photo icon (32px), a title, a two-line summary and an underlined "Show more".</p>
+  <div class="canvas"><div class="ttk">
+    <div><span class="pi pi32"><svg><use href="#pi-door"/></svg></span><b>Check in after 3:00 PM</b><span>Check out before 11:00 AM, self check-in with lockbox</span></div>
+    <div><span class="pi pi32"><svg><use href="#pi-clip"/></svg></span><b>House rules and requests</b><span>Review these details for a smooth stay.</span><a href="#ttk">Show more</a></div>
+    <div><span class="pi pi32"><svg><use href="#pi-shield"/></svg></span><b>Safety &amp; property</b><span>Carbon monoxide alarm, smoke alarm</span><a href="#ttk">Show more</a></div>
+    <div><span class="pi pi32"><svg><use href="#pi-cal"/></svg></span><b>Cancellation policy</b><span>Add your trip dates to get the cancellation details.</span><a href="#ttk">Add dates</a></div>
+  </div></div>
+  <div class="idea"><b>Design idea for us:</b> this is a near-perfect template for <b>guest culture notes</b> on the room card. Each note gets a photo icon, a short title and "Show more" for the what, the what-not and the why.</div>
+</section>
+
+<!-- ================= HOST V2 ================= -->
+<section class="story" id="s-hostx">
+  <h1>Host card v2<span class="tag-live">live site</span></h1>
+  <p class="lede">The live version differs from the file: 24px radius, a floating shadow, a Rausch-gradient verified badge on the avatar, a large 32/700 name, and stats stacked on the right.</p>
+  <div class="canvas soft"><div class="row" style="gap:32px;align-items:center">
+    <div class="host2"><div class="id"><div class="av">B<span class="ver"><svg class="ico" viewBox="0 0 24 24" style="stroke:#fff;width:14px;height:14px"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span></div><div class="nm">Best Home</div><div class="t-caption-sm">🏅 Superhost</div></div>
+      <div class="st"><div><b>572</b><small>Reviews</small></div><div><b>4.84★</b><small>Rating</small></div><div><b>4</b><small>Years hosting</small></div></div></div>
+    <div class="stack" style="max-width:320px"><div class="t-title-md">Co-hosts</div><div class="row" style="gap:12px"><span class="avi" style="background:#ffe1e8;color:#c4134a">E</span><span class="avi" style="background:#e3ecff;color:#2851a3">R</span><span class="avi" style="background:#e6f6ec;color:#0a7a3d">M</span></div><button class="btn btn-grey" style="align-self:flex-start">Message host</button></div>
+  </div></div>
+  <p class="t-body-sm muted">Avatar fallback: when there's no photo, the site shows the initial on a pastel tint (e.g. a magenta tint for "J").</p>
+</section>
+
+<!-- ================= CAL 2 ================= -->
+<section class="story" id="s-calx">
+  <h1>Two-month calendar<span class="tag-live">live site</span></h1>
+  <p class="lede">Two months side by side on desktop. Unavailable days are <s>struck through</s> in muted grey. Available days are 14/600, and hovering outlines the circle.</p>
+  <div class="canvas"><div class="cal2" id="cal2"></div></div>
+  <div class="idea"><b>Design idea:</b> a strikethrough shows "not possible" without using colour, so it stays readable for colour-blind users and on a dim phone in a dark corridor.</div>
+</section>
+
+<!-- ================= TRANSLATE ================= -->
+<section class="story" id="s-translate">
+  <h1>Translation pattern<span class="tag-live">live site</span></h1>
+  <p class="lede">The most relevant find for our international project. Machine-translated content is marked with a small <b>translate glyph</b> next to the title, and a grey banner lets the user switch back to the original. The first time it appears, a modal explains the symbol once.</p>
+  <div class="canvas">
+    <div class="t-display-lg" style="display:flex;align-items:center;gap:10px"><svg class="trico" viewBox="0 0 24 24"><rect x="1.5" y="1.5" width="13" height="13" rx="2" fill="none" stroke="#222" stroke-width="1.5"/><text x="8" y="11.5" font-size="9" font-weight="700" text-anchor="middle" fill="#222">A</text><rect x="9.5" y="9.5" width="13" height="13" rx="2" fill="#222"/><text x="16" y="19.5" font-size="9" font-weight="700" text-anchor="middle" fill="#fff">文</text></svg><span id="trTitle">Boutique apartment by the river</span></div>
+    <div class="trbanner" style="margin-top:20px"><span id="trMsg">Some info has been automatically translated.</span><a id="trToggle">Show original</a></div>
+    <p class="t-body-md" id="trBody" style="margin-top:16px">Stay in an iconic building, opposite the market and just a few steps from the river.</p>
+  </div>
+  <div class="note"><b>Direct takeaway for the housekeeper app:</b> notes written by supervisors or guests in one language can be auto-translated into each housekeeper's language. Mark them with the glyph and offer "Show original" so nothing is lost in translation. This supports our multi-language rule without designers making a screen per language.</div>
+</section>
+
+<!-- ================= SKELETON ================= -->
+<section class="story" id="s-skeleton">
+  <h1>Skeleton loading<span class="tag-live">live site</span></h1>
+  <p class="lede">Before content arrives, every block is drawn as a #ebebeb shape matching the real layout: nav pills, search segments, a section title, and cards with two text lines. The search orb is the only element that renders in full straight away.</p>
+  <div class="canvas">
+    <div class="row" style="justify-content:center;gap:24px;margin-bottom:24px"><span class="skel" style="width:24px;height:24px;border-radius:50%"></span><span class="skel" style="width:40px;height:12px"></span><span class="skel" style="width:24px;height:24px;border-radius:50%"></span><span class="skel" style="width:52px;height:12px"></span><span class="skel" style="width:24px;height:24px;border-radius:50%"></span><span class="skel" style="width:72px;height:12px"></span></div>
+    <div class="skel" style="width:160px;height:20px;margin-bottom:16px"></div>
+    <div class="cards" id="skelCards"></div>
+  </div>
+  <div class="idea"><b>Design idea for us:</b> for weak signal on the floor, show a skeleton of the room list straight away from the last offline copy, then refresh it, instead of a blank spinner.</div>
+</section>
+
+<!-- ================= APP ================= -->
+<section class="story" id="s-app">
+  <h1>Mobile app patterns<span class="tag-app">from app knowledge, not measured</span></h1>
+  <p class="lede">I couldn't open the native app from the browser, so these are well-known Airbnb app patterns rebuilt from memory. Treat the sizes as approximate. Try the tabs, and drag or click the sheet handle.</p>
+  <div class="canvas soft"><div class="phone"><div class="scr">
+    <div class="msearch"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Start your search</div>
+    <div class="map" style="position:absolute;top:88px;left:0;right:0;bottom:0;border-radius:0">
+      <span class="ppin" style="left:30%;top:22%">$128</span><span class="ppin on" style="left:62%;top:30%">$96</span><span class="ppin" style="left:45%;top:44%">$141</span>
+    </div>
+    <div class="sheet" id="sheet" style="top:300px"><div class="grab"></div><div class="c">Over 1,000 homes</div>
+      <div style="padding:0 16px"><div style="aspect-ratio:4/3;border-radius:14px;background:linear-gradient(160deg,#9cc9e6,#3f7fa8 55%,#e8d3a8 56%,#d8bd88)"></div><p class="t-body-sm" style="margin:8px 0 0"><b>Lisbon, Portugal</b> · ★ 4.92</p></div></div>
+    <div class="tabbar" id="tabbar"></div>
+  </div></div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Pattern</th><th>Notes</th></tr>
+    <tr><td>Bottom tab bar</td><td>5 tabs: Explore · Wishlists · Trips · Inbox · Profile. Active = Rausch icon + label, others muted. Hides on scroll down and returns on scroll up.</td></tr>
+    <tr><td>Bottom sheet over map</td><td>Draggable list sheet with a 40×4 grabber and 24px top radius. Snaps between peek, half and full.</td></tr>
+    <tr><td>Search entry</td><td>One 56px pill with shadow. Tapping opens full-screen stacked cards (Where / When / Who), one expanded at a time.</td></tr>
+  </table>
+  <div class="idea"><b>Design idea for us:</b> a bottom tab bar is right for one-handed use: <i>My rooms · Map · Requests · Messages · Me</i>. A bottom sheet over a floor map gives the housekeeper both views without leaving the screen.</div>
+</section>
+
+<!-- ================= RESPONSIVE ================= -->
+<section class="story" id="s-responsive">
+  <h1>Responsive rules</h1>
+  <p class="lede">Switch the viewport in the toolbar on any component story to see these rules applied.</p>
+  <table class="props"><tr><th>Breakpoint</th><th>Width</th><th>Key changes</th></tr>
+    <tr><td>Mobile</td><td>&lt; 744px</td><td>Logo + hamburger; search collapses to one pill; cards 1-up; city grid 1 col; reservation → sticky bottom bar</td></tr>
+    <tr><td>Tablet</td><td>744–1128px</td><td>Tabs stay, search narrows; cards 2-up; city grid 2–3 col</td></tr>
+    <tr><td>Desktop</td><td>1128–1440px</td><td>Full nav, full search; cards 4-up; city grid 6 col; 2-col listing detail</td></tr>
+    <tr><td>Wide</td><td>&gt; 1440px</td><td>Content caps at 1440 (listings) / ~1280 (editorial)</td></tr>
+  </table>
+  <h2>Touch targets</h2>
+  <table class="props"><tr><th>Element</th><th>Size</th></tr>
+    <tr><td>Primary CTA</td><td>≥ 48×48</td></tr><tr><td>Search orb</td><td>48×48</td></tr><tr><td>Heart</td><td>32×32 (+12px photo padding)</td></tr><tr><td>Date cell</td><td>40×40</td></tr>
+  </table>
+  <div class="note"><b>Housekeeper takeaway:</b> 48px is Airbnb's minimum for consumers on a sofa. For gloved, one-handed use on the floor, our app should go larger (≈56–64px primary targets).</div>
+</section>
+
+<!-- ================= GAPS ================= -->
+<section class="story" id="s-gaps">
+  <h1>Known gaps</h1>
+  <p class="lede">What the DESIGN.md does not specify (≈95% coverage of public surfaces).</p>
+  <table class="props"><tr><th>Gap</th><th>Detail</th></tr>
+    <tr><td>Hover colors</td><td>Only a subtle elevation lift on cards; not reliably extracted</td></tr>
+    <tr><td>Loading / skeletons</td><td>Not captured</td></tr>
+    <tr><td>Map view</td><td>Tinted tiles + Rausch markers; not captured</td></tr>
+    <tr><td>Input error states</td><td>Only text color documented</td></tr>
+    <tr><td>Sub-brands</td><td>Luxe <code>#460479</code> and Plus <code>#92174d</code> tokens only; full sub-systems live elsewhere</td></tr>
+    <tr><td>Dark mode</td><td>None on public web (native apps have one, not documented)</td></tr>
+  </table>
+</section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+/* ---------- data from DESIGN.md ---------- */
+const COLORS = {
+  'Brand & accent':[['primary','#ff385c','Rausch — CTA, search orb, saved heart'],['primary-active','#e00b41','Pressed state'],['primary-disabled','#ffd1da','Disabled CTA'],['luxe','#460479','Sub-brand only'],['plus','#92174d','Sub-brand only']],
+  'Text':[['ink','#222222','Headlines, body, stars — never pure black'],['body','#3f3f3f','Long-form review / amenity copy'],['muted','#6a6a6a','Sub-labels, inactive tabs'],['muted-soft','#929292','Disabled links'],['star-rating','#222222','Stars are ink, not gold'],['on-primary','#ffffff','Text on Rausch'],['on-dark','#ffffff','Text on ink']],
+  'Surface':[['canvas','#ffffff','Page floor'],['surface-card','#ffffff','Cards'],['surface-soft','#f7f7f7','Disabled fields, range lozenge'],['surface-strong','#f2f2f2','Icon-button fill']],
+  'Hairlines & borders':[['hairline','#dddddd','Default 1px border'],['hairline-soft','#ebebeb','Editorial separators'],['border-strong','#c1c1c1','Inputs, disabled outlines']],
+  'Semantic':[['primary-error-text','#c13515','Form errors'],['primary-error-text-hover','#b32505','Error link hover'],['legal-link','#428bff','Legal band links only']],
+  'Scrim':[['scrim','#000000','Modal backdrop @ 50%']]
+};
+const TYPE = [
+ ['rating-display','64 / 700 / 1.1 / -1px','4.81'],['display-xl','28 / 700 / 1.43','Inspiration for future getaways'],['display-lg','22 / 500 / 1.18 / -0.44px','Seaside apartment close to the old town'],
+ ['display-md','21 / 700 / 1.43','What this place offers'],['display-sm','20 / 600 / 1.2 / -0.18px','Things to know'],['title-md','16 / 600 / 1.25','Lisbon'],['title-sm','16 / 500 / 1.25','Support'],
+ ['body-md','16 / 400 / 1.5','A calm, light-filled flat with a balcony over the river.'],['body-sm','14 / 400 / 1.43','2 km away · Nov 16 – 21'],['caption','14 / 500 / 1.29','Where'],
+ ['caption-sm','13 / 400 / 1.23','© 2026 Company, Inc.'],['badge','11 / 600 / 1.18','Guest favorite'],['micro-label','12 / 700 / 1.33','Inline 6'],['uppercase-tag','8 / 700 / 1.25 / 0.32px','New'],
+ ['button-md','16 / 500 / 1.25','Reserve'],['button-sm','14 / 500 / 1.29','Become a host'],['link','14 / 400 / 1.43','Show more'],['nav-link','16 / 600 / 1.25','Homes']
+];
+const SPACE=[['xxs',2],['xs',4],['sm',8],['md',12],['base',16],['lg',24],['xl',32],['xxl',48],['section',64]];
+const RADIUS=[['none','0px'],['xs','4px'],['sm','8px'],['md','14px'],['lg','20px'],['xl','32px'],['full','9999px']];
+const PHOTOS=['linear-gradient(160deg,#9cc9e6,#3f7fa8 55%,#e8d3a8 56%,#d8bd88)','linear-gradient(160deg,#f6d1b0,#d98e6a 50%,#5f3d33)','linear-gradient(160deg,#c9e3c2,#6aa36b 50%,#2f5d3b)','linear-gradient(160deg,#e9e3f6,#9b8fc9 50%,#3d3466)','linear-gradient(160deg,#ffe9b8,#f2b35b 50%,#8a5626)','linear-gradient(160deg,#d4eef0,#62b3b8 50%,#265f63)','linear-gradient(160deg,#f3d5d9,#c97a86 50%,#5c2d36)','linear-gradient(160deg,#e6e6e6,#a5a5a5 50%,#4a4a4a)'];
+const PLACES=[['Lisbon, Portugal','4.92','2,140 km away','Nov 16 – 21','$128',1],['Kyoto, Japan','4.88','Hosted by Aiko','Dec 2 – 7','$164',0],['Marrakech, Morocco','4.97','Riad · 3 beds','Jan 4 – 9','$96',1],['Cape Town, South Africa','4.85','Ocean view','Nov 28 – Dec 3','$141',0]];
+const XP=[['Pottery with a local master','$45 / guest'],['Sunrise desert walk','$60 / guest'],['Street-food night tour','$38 / guest'],['Rooftop jazz evening','$52 / guest']];
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const STAR='<svg class="star" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>';
+const HEART='<svg viewBox="0 0 32 32"><path d="M16 28S3 20 3 11a6.5 6.5 0 0113-2 6.5 6.5 0 0113 2c0 9-13 17-13 17z"/></svg>';
+
+/* colors */
+$('#colorGroups').innerHTML = Object.entries(COLORS).map(([g,list])=>`<h2>${g}</h2><div class="swatches">${list.map(([n,h,u])=>`<div class="sw" data-hex="${h}" title="Copy ${h}"><div class="chip" style="background:${h}"></div><div class="meta"><b>${n}</b><span>${h}</span><br><span>${u}</span></div></div>`).join('')}</div>`).join('');
+$$('.sw').forEach(s=>s.onclick=()=>{try{navigator.clipboard.writeText(s.dataset.hex)}catch(e){} const b=s.querySelector('b');const o=b.textContent;b.textContent='Copied '+s.dataset.hex;setTimeout(()=>b.textContent=o,900)});
+
+/* type */
+function renderType(){const v=$('#typeSample').value;$('#typeList').innerHTML=TYPE.map(([t,spec,s])=>`<div class="typerow"><span class="tok">${t}</span><span class="t-${t}">${v?v.replace(/</g,'&lt;'):s}</span><span class="spec">${spec}</span></div>`).join('')}
+$('#typeSample').oninput=renderType;renderType();
+
+/* spacing & radius */
+$('#spaceList').innerHTML=SPACE.map(([n,v])=>`<div class="spacebar"><span class="lbl"><code>${n}</code> ${v}px</span><span class="bar" style="width:${v*4}px"></span></div>`).join('');
+$('#radiusList').innerHTML=RADIUS.map(([n,v])=>`<div class="r" style="border-radius:${n==='full'?'60px':v}"><code>${n}</code>&nbsp;${v}</div>`).join('');
+
+/* button playground */
+function renderBtn(){const b=$('#btnLive');b.className='btn '+$('#btnVariant').value+' '+$('#btnState').value+($('#btnFull').checked?' full':'');b.disabled=$('#btnState').value==='is-disabled';b.textContent=$('#btnLabel').value||'Button'}
+['#btnVariant','#btnState','#btnLabel','#btnFull'].forEach(s=>$(s).oninput=renderBtn);
+
+/* tabs */
+$$('#ptabs .ptab').forEach(t=>t.onclick=()=>{$$('#ptabs .ptab').forEach(x=>x.classList.remove('on'));t.classList.add('on')});
+const CATS=[['Beachfront','M2 18c3 0 3-2 6-2s3 2 6 2 3-2 6-2M4 14l8-10 8 10'],['Cabins','M3 21V10l9-7 9 7v11H3zM9 21v-6h6v6'],['Countryside','M3 20l6-9 4 5 3-4 5 8z'],['Iconic cities','M4 21V8h5v13M9 21V3h6v18M15 21V11h5v10'],['Amazing pools','M2 17c2 0 2 1.5 4 1.5S8 17 10 17s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5M7 14V4h3M14 14V4h3M7 8h10'],['Design','M4 20h16M6 20V9l6-5 6 5v11'],['Islands','M2 19c3-2 17-2 20 0M12 17V7M12 7c-3-3-6-2-7 0M12 7c3-3 6-2 7 0'],['Trending','M3 17l6-6 4 4 8-8M15 7h6v6']];
+$('#cats').innerHTML=CATS.map(([n,d],i)=>`<button class="cat${i?'':' on'}"><svg class="ico" viewBox="0 0 24 24"><path d="${d}"/></svg>${n}</button>`).join('');
+$$('#cats .cat').forEach(c=>c.onclick=()=>{$$('#cats .cat').forEach(x=>x.classList.remove('on'));c.classList.add('on')});
+
+/* cards */
+$('#cards').innerHTML=PLACES.map(([t,r,d,dt,p,fav],i)=>`<div class="pcard"><div class="photo"><div class="img" style="background:${PHOTOS[i]}"></div>${fav?'<span class="fav">Guest favorite</span>':''}<button class="heart${i===2?' saved':''}" aria-label="Save">${HEART}</button><div class="dots"><i></i><i></i><i></i><i></i><i></i></div></div><div class="pmeta"><div class="top"><span class="t-title-md" style="font-size:15px">${t}</span><span>${STAR} ${r}</span></div><div class="muted">${d}</div><div class="muted">${dt}</div><div class="price"><b>${p}</b> night</div></div></div>`).join('');
+$('#xcards').innerHTML=XP.map(([t,p],i)=>`<div class="pcard xcard"><div class="photo"><div class="img" style="background:${PHOTOS[i+4]}"></div><span class="fav t-uppercase-tag" style="font-size:8px;padding:2px 6px">New</span><button class="heart" aria-label="Save">${HEART}</button></div><div class="pmeta"><div class="t-title-md">${t}</div><div class="muted">From ${p}</div></div></div>`).join('');
+document.addEventListener('click',e=>{const h=e.target.closest('.heart');if(h){h.classList.toggle('saved');e.stopPropagation()}});
+
+/* rating */
+$('#ratingRange').oninput=e=>$('#ratingNum').textContent=(e.target.value/10).toFixed(1);
+
+/* amenities */
+const AM=[['Kitchen','M4 3v8a3 3 0 006 0V3M7 3v18M17 3c-2 0-3 3-3 7h3v11'],['Wifi','M2 9a15 15 0 0120 0M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0M12 19.5h.01'],['Free parking','M5 21V3h7a5 5 0 010 10H5'],['Washer','M4 2h16v20H4zM4 7h16M12 11a4 4 0 100 8 4 4 0 000-8'],['Air conditioning','M12 2v20M4 6l16 12M20 6L4 18'],['Dedicated workspace','M3 10h18M5 10v10M19 10v10M8 6h8v4H8z'],['Pool','M2 17c2 0 2 1.5 4 1.5S8 17 10 17s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5M7 14V4h3M14 14V4h3'],['Carbon monoxide alarm','M12 3a9 9 0 100 18 9 9 0 000-18M12 8v5M12 16h.01',1]];
+$('#amen').innerHTML=AM.map(([n,d,off])=>`<div class="a${off?' off':''}"><svg class="ico" viewBox="0 0 24 24"><path d="${d}"/></svg>${n}</div>`).join('');
+
+/* reviews */
+const RV=[['Lena','#7a5c99','Berlin, Germany','October 2026','Spotless, quiet and exactly like the photos. The host left a handwritten guide to the neighbourhood with the best bakeries and a lovely walk along the river that we did every morning before breakfast.'],['Omar','#2f6f73','Cairo, Egypt','October 2026','Great location and very responsive host. Check-in was simple with the lockbox and the instructions were clear in both English and Arabic, which my parents really appreciated.'],['Yuki','#a45f3c','Osaka, Japan','September 2026','Beautiful light in the mornings. Bed was very comfortable. The kitchen had everything we needed to cook, and the balcony was perfect for evening tea.'],['Carlos','#4c6b2f','Bogotá, Colombia','September 2026','Would stay again. Street can be a little noisy on weekends but the windows block most of it. Host was flexible with our late arrival.']];
+$('#reviews').innerHTML=RV.map(([n,c,f,d,t])=>`<div class="rv"><div class="who"><div class="avatar" style="background:${c}">${n[0]}</div><div><div class="t-title-md">${n}</div><div class="t-body-sm muted">${f}</div></div></div><div class="t-caption-sm" style="margin-bottom:6px">${STAR}${STAR}${STAR}${STAR}${STAR} · ${d}</div><p>${t}</p><button class="btn btn-tertiary t-title-md" style="text-decoration:underline;font-size:14px;font-weight:600">Show more</button></div>`).join('');
+$$('#reviews .rv .btn').forEach(b=>b.onclick=()=>{const r=b.parentElement;r.classList.toggle('open');b.textContent=r.classList.contains('open')?'Show less':'Show more'});
+
+/* reservation */
+let guests=2;const NIGHT=128,N=5;
+function renderResv(){$('#gcount').textContent=guests+(guests===1?' guest':' guests');$('#gminus').disabled=guests<=1;$('#gplus').disabled=guests>=6;const base=NIGHT*N,clean=45,svc=Math.round(base*.14)+ (guests>2?(guests-2)*10:0);$('#fees').innerHTML=`<div class="ln"><span>$${NIGHT} × ${N} nights</span><span>$${base}</span></div><div class="ln"><span>Cleaning fee</span><span>$${clean}</span></div><div class="ln"><span>Service fee</span><span>$${svc}</span></div><div class="tot"><span>Total before taxes</span><span>$${base+clean+svc}</span></div>`}
+$('#gminus').onclick=()=>{guests--;renderResv()};$('#gplus').onclick=()=>{guests++;renderResv()};renderResv();
+
+/* date picker — November 2026 */
+let rs=null,re=null;const TODAY=11;
+function renderDP(){const first=new Date(2026,10,1).getDay(),days=30;let h='<div class="hd"><button class="icon-circle" aria-label="Previous" style="background:transparent"><svg class="ico" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><b>November 2026</b><button class="icon-circle" aria-label="Next" style="background:transparent"><svg class="ico" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button></div><div class="gridd">';
+ h+='SMTWTFS'.split('').map(d=>`<div class="dow">${d}</div>`).join('');for(let i=0;i<first;i++)h+='<div></div>';
+ for(let d=1;d<=days;d++){let c='day',w='cellwrap';if(d<TODAY)c+=' past';if(d===rs||d===re)c+=' sel';if(rs&&re&&d>rs&&d<re)c+=' inrange';if(rs&&re&&rs!==re){if(d===rs)w+=' rs';if(d===re)w+=' re'}h+=`<div class="${w}"><button class="${c}" data-d="${d}">${d}</button></div>`}
+ $('#dp').innerHTML=h+'</div>';$('#dpOut').textContent=rs?(re?`Nov ${rs} – Nov ${re} · ${re-rs} nights`:`Check-in Nov ${rs} — pick checkout`):'Select check-in date';
+ $$('#dp .day').forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(d<TODAY)return;if(!rs||re){rs=d;re=null}else if(d<=rs){rs=d}else re=d;renderDP()})}
+$('#dpClear').onclick=()=>{rs=re=null;renderDP()};rs=16;re=21;renderDP();
+
+/* input validation */
+$('#email').oninput=e=>$('#emailField').classList.toggle('err',!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e.target.value));
+
+/* cities */
+const CT=[['Lisbon','Apartment rentals'],['Kyoto','Ryokan stays'],['Marrakech','Riad rentals'],['Cape Town','Villa rentals'],['Istanbul','Flat rentals'],['Mexico City','Loft rentals'],['Bali','Villa rentals'],['Athens','Cottage rentals'],['Dubai','Condo rentals'],['Paris','Studio rentals'],['Cairo','Apartment rentals'],['Seoul','Hanok stays']];
+$('#cities').innerHTML=CT.map(([c,s])=>`<div class="city"><b>${c}</b><span>${s}</span></div>`).join('');
+
+/* =================== LIVE-SITE STORIES =================== */
+const I=(n,cls='pi32')=>`<span class="pi ${cls}"><svg><use href="#pi-${n}"/></svg></span>`;
+/* photo icons */
+$$('#pinav button').forEach(b=>b.onclick=()=>{$$('#pinav button').forEach(x=>x.classList.remove('on'));void b.offsetWidth;b.classList.add('on')});
+const PIS=[['bed','Bed / make bed'],['towels','Towels & linen'],['bucket','Bucket / supplies'],['spray','Cleaning spray'],['cart','Housekeeping cart'],['house','Room / home'],['door','Check-in / door'],['key','Key / access'],['clip','Checklist'],['cal','Schedule'],['shield','Safety'],['bubble','Message / request'],['bell','Service bell'],['tag','Price / minibar']];
+$('#pigrid').innerHTML=PIS.map(([n,l])=>`<div class="picell">${I(n,'pi64')}<span>${l}</span></div>`).join('');
+
+/* announcement + toast */
+function replayToast(){const t=$('#toast');t.classList.remove('in');void t.offsetWidth;t.classList.add('in')}
+$('#toastBtn').onclick=replayToast;$('#annBtn').onclick=replayToast;
+
+/* expanded search + guest popover */
+$$('#sx .seg').forEach(s=>s.onclick=()=>{$$('#sx .seg').forEach(x=>x.classList.remove('act'));s.classList.add('act')});
+const G=[['Adults','Ages 13 or above',2],['Children','Ages 2–12',0],['Infants','Under 2',0],['Pets','<a>Bringing a service animal?</a>',0]];
+function renderGuests(){$('#guests').innerHTML=G.map((g,i)=>`<div class="prow"><div><b>${g[0]}</b><small>${g[1]}</small></div><div class="step2"><button data-i="${i}" data-d="-1" ${g[2]===0?'disabled':''} aria-label="Fewer">−</button><output>${g[2]}</output><button data-i="${i}" data-d="1" ${g[2]>=8?'disabled':''} aria-label="More">+</button></div></div>`).join('');
+ $$('#guests button').forEach(b=>b.onclick=()=>{G[b.dataset.i][2]+= +b.dataset.d;renderGuests();const n=G[0][2]+G[1][2];$('#sx .seg:nth-child(3) .p').textContent=n?`${n} guest${n>1?'s':''}`:'Add guests'})}
+renderGuests();
+
+/* chips */
+const QF=['Instant Book','Washer','Kitchen','Self check-in','Air conditioning','Allows pets','Free parking','Wifi'];let qsel=new Set(['Washer']);
+function renderChips(){$('#chips').innerHTML=`<button class="chip"><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Filters${qsel.size?`<span class="count">${qsel.size}</span>`:''}</button><span class="vdiv"></span>`+QF.map(f=>`<button class="chip${qsel.has(f)?' on':''}" data-f="${f}">${f}</button>`).join('');$$('#chips .chip[data-f]').forEach(c=>c.onclick=()=>{qsel.has(c.dataset.f)?qsel.delete(c.dataset.f):qsel.add(c.dataset.f);renderChips()})}
+renderChips();
+const LG=[['Air conditioning','M12 2v20M4 6l16 12M20 6L4 18'],['Free parking','M7 21V3h6a5 5 0 010 10H7'],['Wifi','M2 9a15 15 0 0120 0M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0M12 19.5h.01'],['Kitchen','M4 3v8a3 3 0 006 0V3M7 3v18M17 3c-2 0-3 3-3 7h3v11'],['Washer','M4 2h16v20H4zM4 7h16M12 11a4 4 0 100 8 4 4 0 000-8']];
+$('#chipsLg').innerHTML=LG.map(([n,d],i)=>`<button class="chip chip-lg${i===4?' on':''}"><svg class="ico" viewBox="0 0 24 24" style="width:20px;height:20px"><path d="${d}"/></svg>${n}</button>`).join('');
+$$('#chipsLg .chip').forEach(c=>c.onclick=()=>c.classList.toggle('on'));
+
+/* filters modal */
+let count=1000;const upd=()=>{$('#showN').textContent=count>=1000?'Show 1,000+ places':`Show ${count} places`};
+const bump=d=>{count=Math.max(12,Math.min(1000,count+d));upd()};
+$('#tiles').innerHTML=[['bolt','Instant Book'],['washer','Washer'],['kitchen','Kitchen'],['self','Self check-in']].map(([k,l],i)=>`<button class="tile${i===1?' on':''}">${I(['key','bucket','bell','door'][i],'pi32')}${l}</button>`).join('');
+$$('#tiles .tile').forEach(t=>t.onclick=()=>{t.classList.toggle('on');bump(t.classList.contains('on')?-140:140)});
+$$('#segc button').forEach(b=>b.onclick=()=>{$$('#segc button').forEach(x=>x.classList.remove('on'));b.classList.add('on');bump(b.textContent==='Any'?400:-180)});
+$$('#sw button').forEach((b,i)=>b.onclick=()=>{$('#sw').dataset.v=i;$$('#sw button').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawRange()});
+const HB=[2,3,5,4,7,9,12,15,19,23,28,33,38,41,44,46,45,43,40,36,32,29,25,22,19,17,15,13,11,10,9,8,7,6,6,5,4,4,3,3];
+$('#hist').innerHTML=HB.map(h=>`<i style="height:${h/46*100}%"></i>`).join('');
+let r0=.08,r1=1;
+function drawRange(){const nightly=$('#sw').dataset.v==='1',max=nightly?320:1600;$('#th0').style.left=r0*100+'%';$('#th1').style.left=r1*100+'%';$('#rfill').style.left=r0*100+'%';$('#rfill').style.width=(r1-r0)*100+'%';
+ $$('#hist i').forEach((b,i)=>b.classList.toggle('out',(i+.5)/HB.length<r0||(i+.5)/HB.length>r1));$('#pmin').textContent='$'+Math.round(r0*max);$('#pmax').textContent=r1>=.999?'$'+max+'+':'$'+Math.round(r1*max)}
+function dragTh(el,which){el.onpointerdown=e=>{el.setPointerCapture(e.pointerId);const R=$('#range').getBoundingClientRect();el.onpointermove=m=>{let v=Math.max(0,Math.min(1,(m.clientX-R.left)/R.width));if(which===0)r0=Math.min(v,r1-.05);else r1=Math.max(v,r0+.05);drawRange()};el.onpointerup=()=>{el.onpointermove=null;count=Math.round(1000*(r1-r0));upd()}};
+ el.onkeydown=k=>{const s=k.key==='ArrowRight'?.02:k.key==='ArrowLeft'?-.02:0;if(!s)return;if(which===0)r0=Math.max(0,Math.min(r0+s,r1-.05));else r1=Math.min(1,Math.max(r1+s,r0+.05));drawRange();k.preventDefault()}}
+dragTh($('#th0'),0);dragTh($('#th1'),1);drawRange();
+const RM=[['Bedrooms',0],['Beds',0],['Bathrooms',0]];
+function renderRooms(){$('#rooms').innerHTML=RM.map((r,i)=>`<div class="srow"><span>${r[0]}</span><div class="step2 step3"><button data-i="${i}" data-d="-1" ${r[1]===0?'disabled':''} aria-label="Decrease">−</button><output style="min-width:36px">${r[1]?r[1]+'+':'Any'}</output><button data-i="${i}" data-d="1" ${r[1]>=8?'disabled':''} aria-label="Increase">+</button></div></div>`).join('');
+ $$('#rooms button').forEach(b=>b.onclick=()=>{RM[b.dataset.i][1]+= +b.dataset.d;bump(+b.dataset.d*-90);renderRooms()})}
+renderRooms();
+$('#selcards').innerHTML=[['shield','Guest favorite','The most loved homes'],['key','Luxe','Luxury homes with elevated design']].map(([ic,t,d])=>`<button class="selcard">${I(ic,'pi32')}<div><b>${t}</b><span>${d}</span></div></button>`).join('');
+$$('#selcards .selcard').forEach(c=>c.onclick=()=>{c.classList.toggle('on');bump(c.classList.contains('on')?-300:300)});
+$$('.tswitch').forEach(s=>s.onclick=()=>{const on=s.getAttribute('aria-checked')!=='true';s.setAttribute('aria-checked',on);bump(on?-120:120)});
+$('#more').onclick=e=>{const b=e.currentTarget,open=b.dataset.open!=='1';b.dataset.open=open?'1':'0';b.firstChild.textContent=open?'Show less ':'Show more ';b.querySelector('svg').style.transform=open?'rotate(180deg)':''};
+$('#clearAll').onclick=()=>{count=1000;upd();r0=0;r1=1;drawRange();RM.forEach(r=>r[1]=0);renderRooms();$$('#tiles .tile,#selcards .selcard').forEach(x=>x.classList.remove('on'));$$('.tswitch').forEach(s=>s.setAttribute('aria-checked','false'));$$('#segc button').forEach((x,i)=>x.classList.toggle('on',i===0))};
+
+/* map pins */
+const PINS=[[18,30,'$128'],[34,52,'$96'],[48,28,'$141'],[58,62,'$210'],[70,40,'$88'],[40,76,'$175'],[24,64,'$119'],[78,70,'$132',1]];
+$('#map').insertAdjacentHTML('afterbegin',PINS.map(([x,y,p,h])=>`<button class="ppin" style="left:${x}%;top:${y}%">${h?I('bell','pi'):''}${p}</button>`).join(''));
+$$('#map .ppin').forEach(p=>p.onclick=()=>{$$('#map .ppin.on').forEach(o=>{o.classList.remove('on');o.classList.add('seen')});p.classList.add('on')});
+
+/* carousel */
+const CR=[['Apartment in Alfama','$412 for 2 nights · ★ 4.97',1],['Loft in Chiado','$388 for 2 nights · ★ 4.91',0],['Room in Belém','$156 for 2 nights · ★ 4.88',1],['Flat in Graça','$298 for 2 nights · ★ 5.0',1],['Home in Estrela','$520 for 2 nights · ★ 4.93',0],['Studio in Baixa','$244 for 2 nights · ★ 4.86',1],['Villa in Restelo','$690 for 2 nights · ★ 4.95',0],['Room in Lapa','$140 for 2 nights · ★ 4.9',1]];
+$('#crail').innerHTML=CR.map(([t,s,f],i)=>`<div class="mini"><div class="ph" style="background:${PHOTOS[i%8]}">${f?'<span class="fav">Guest favorite</span>':''}<button class="heart" aria-label="Save" style="position:absolute;top:8px;right:8px;width:32px;height:32px;background:none;border:0;cursor:pointer"><svg viewBox="0 0 32 32" style="width:22px;height:22px;fill:rgba(0,0,0,.5);stroke:#fff;stroke-width:2"><path d="M16 28S3 20 3 11a6.5 6.5 0 0113-2 6.5 6.5 0 0113 2c0 9-13 17-13 17z"/></svg></button></div><p><b style="font-weight:500">${t}</b><br><span class="muted">${s}</span></p></div>`).join('');
+let cpos=0;function crs(d){const rail=$('#crail'),w=rail.clientWidth+12;cpos=Math.max(0,Math.min(cpos+d,1));rail.scrollLeft=cpos*w;$('#cprev').disabled=cpos===0;$('#cnext').disabled=cpos===1}
+$('#cprev').onclick=()=>crs(-1);$('#cnext').onclick=()=>crs(1);
+$$('#anchors a').forEach(a=>a.onclick=e=>{e.preventDefault();$$('#anchors a').forEach(x=>x.classList.remove('on'));a.classList.add('on')});
+
+/* rating breakdown */
+const RB=[['Cleanliness','5.0','M7 21h10l-1-9H8zM9 12V8h6v4M10 8V4h4'],['Accuracy','5.0','M12 3a9 9 0 100 18 9 9 0 000-18M8 12l3 3 5-6'],['Check-in','5.0','M15 7a4 4 0 11-3.8 5.2L4 19.4V21h3v-2h2v-2h2l1.2-1.2A4 4 0 0115 7z'],['Communication','5.0','M4 5h16v11H9l-5 4z'],['Location','4.9','M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15'],['Value','4.9','M3 12l9-9h8v8l-9 9zM16 8h.01']];
+$('#rbreak').innerHTML=`<div><b>Overall rating</b><div class="bars">${[[5,96],[4,4],[3,0],[2,0],[1,0]].map(([n,w])=>`<div>${n}<i style="--w:${w}%"></i></div>`).join('')}</div></div>`+RB.map(([n,s,d])=>`<div><b>${n}</b><span style="font-weight:600">${s}</span><svg viewBox="0 0 24 24"><path d="${d}"/></svg></div>`).join('');
+
+/* two-month calendar */
+function month(y,m,name,blocked){const f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate();let h=`<div><div class="mh">${m===10?'<button class="icon-circle" style="background:none" disabled aria-label="Previous"><svg class="ico" viewBox="0 0 24 24" style="color:#c1c1c1"><path d="M15 18l-6-6 6-6"/></svg></button>':'<span></span>'}<span>${name}</span>${m===11?'<button class="icon-circle" style="background:none" aria-label="Next"><svg class="ico" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>':'<span></span>'}</div><div class="g">`+'SMTWTFS'.split('').map(d=>`<span>${d}</span>`).join('');for(let i=0;i<f;i++)h+='<span></span>';for(let d=1;d<=n;d++){const na=blocked(d);h+=`<button class="${na?'na':''}" ${na?'disabled':''}>${d}</button>`}return h+'</div></div>'}
+$('#cal2').innerHTML=month(2026,10,'November 2026',d=>d<15||[21,22,23,24,25,29,30].includes(d))+month(2026,11,'December 2026',d=>[1,26,29,30,31].includes(d));
+$$('#cal2 button:not(.na):not(.icon-circle)').forEach(b=>b.onclick=()=>{$$('#cal2 .sel').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')});
+
+/* translation toggle */
+let trOrig=false;$('#trToggle').onclick=()=>{trOrig=!trOrig;$('#trTitle').textContent=trOrig?'Apartamento boutique junto ao rio':'Boutique apartment by the river';$('#trBody').textContent=trOrig?'Fique num edifício icónico, em frente ao mercado e a poucos passos do rio.':'Stay in an iconic building, opposite the market and just a few steps from the river.';$('#trMsg').textContent=trOrig?'You are viewing the original (Portuguese).':'Some info has been automatically translated.';$('#trToggle').textContent=trOrig?'Translate to English':'Show original'};
+
+/* skeleton */
+$('#skelCards').innerHTML=Array(4).fill('<div><div class="skel" style="aspect-ratio:1/1;border-radius:14px"></div><div class="skel" style="height:12px;width:70%;margin-top:12px"></div><div class="skel" style="height:12px;width:45%;margin-top:8px"></div></div>').join('');
+
+/* app: tab bar + sheet */
+const TB=[['Explore','M11 4a7 7 0 100 14 7 7 0 000-14zM20 20l-4-4'],['Wishlists','M12 20s-8-5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 9c0 6-8 11-8 11z'],['Trips','M4 20V8l8-5 8 5v12zM9 20v-6h6v6'],['Inbox','M4 5h16v11H9l-5 4z'],['Profile','M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0']];
+$('#tabbar').innerHTML=TB.map(([n,d],i)=>`<button class="${i?'':'on'}"><svg viewBox="0 0 24 24"><path d="${d}"/></svg>${n}</button>`).join('');
+$$('#tabbar button').forEach(b=>b.onclick=()=>{$$('#tabbar button').forEach(x=>x.classList.remove('on'));b.classList.add('on')});
+const SN=[150,300,440];let si=1;$('#sheet .grab').parentElement.onclick=e=>{if(!e.target.closest('.grab,.c'))return;si=(si+1)%3;$('#sheet').style.top=SN[si]+'px'};
+
+/* ---------- router ---------- */
+function show(id){id=id||'intro';const s=$('#s-'+id)||$('#s-intro');$$('.story').forEach(x=>x.classList.remove('on'));s.classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+s.id.slice(2)));const a=$(`#nav a[href="#${s.id.slice(2)}"]`);let g=a;while(g&&!g.classList.contains('grp'))g=g.previousElementSibling;$('#crumb').innerHTML=(g?g.textContent:'Docs')+' / <b>'+(a?a.textContent:'')+'</b>';$('#scroll').scrollTop=0}
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));show(location.hash.slice(1));
+
+/* viewport */
+$$('.tb[data-vp]').forEach(b=>b.onclick=()=>{$$('.tb[data-vp]').forEach(x=>x.classList.remove('on'));b.classList.add('on');const sc=$('#scroll');sc.classList.remove('vp-mobile','vp-tablet');if(b.dataset.vp!=='desktop')sc.classList.add('vp-'+b.dataset.vp);try{localStorage.setItem('sb-vp',b.dataset.vp)}catch(e){}});
+try{const v=localStorage.getItem('sb-vp');if(v)$(`.tb[data-vp="${v}"]`).click()}catch(e){}
+
+/* filter */
+$('#filter').oninput=e=>{const q=e.target.value.toLowerCase();$$('#nav a').forEach(a=>a.style.display=a.textContent.toLowerCase().includes(q)?'':'none')};
+</script>
+</body>
+</html>
