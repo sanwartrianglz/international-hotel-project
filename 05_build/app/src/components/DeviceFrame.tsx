@@ -46,7 +46,7 @@ function useClock() {
 function StatusBar({ dark }: { dark: string }) {
   const time = useClock();
   const online = useApp((s) => s.online);
-  const c = dark ? "#fff" : "#1e293b";
+  const c = dark ? "#fff" : "#243f36";
   return (
     <div className={`ios-status ${dark ? "ios-status-dark ios-status-" + dark : ""}`} aria-hidden>
       <span className="ios-time">{time}</span>

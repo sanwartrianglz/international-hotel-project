@@ -52,3 +52,4 @@ Dated log of work sessions: what was done and what's next.
 - iPhone frame now shows on any window wider than 600 px (height no longer matters), so the live link shows the mockup on laptops.
 - Added the Cecil Hotel logo (splash on its own green, crests, PWA icon, favicon) via scripts/make-brand.mjs; phone + cart-tablet pictures on the device choice. Refresh now always goes splash → device choice; logging in resumes an ongoing shift.
 - Added lift and clock icons to the briefing (clock mirrored on import to match the star's angle); clock also used for the "Running late" message.
+- Main colour is now the logo green (#243f36) everywhere navy was used; primary buttons are flat (no gradient).
