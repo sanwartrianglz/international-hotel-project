@@ -16,6 +16,10 @@ const MAP = {
   "o3b71z": "service-dog", "osjhl5": "duster", "rpr7r2": "vacuum", "tewrsl": "bin", "toqizq": "shoes-off",
   "tzbkfa": "minibar", "uj7p79": "coffee-pods", "xqa5zj": "water", "y5t357": "quiet", "yoxriv": "tv",
   "z2slr8": "window",
+  // second batch (17 Nov)
+  "s7gq1v": "no-rooms", "v53hp8": "all-done", "slf0jh": "lost-item", "repbml": "cart", "nn7vud": "privacy",
+  "tj9617": "vip", "cyoq9s": "key-card", "sh6qpv": "safe", "n25vzw": "socket", "ew1j2s": "door-lock",
+  "qdgr7o": "tap-leak", "tz14u4": "light", "69gxwb": "ac",
   // FigJam Section 4 layer names (if exported from the board instead)
   "fl8f48": "towels", "q74ly3": "toiletries", "7f8rf4": "pillows", "a6y6h5": "wine",
   "image 3": "tv", "image 1": "clipboard", "image 2": "throw",
