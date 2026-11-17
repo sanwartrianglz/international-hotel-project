@@ -7,7 +7,7 @@ import { Icon } from "../components/Icon";
 import { PRESET_MESSAGES } from "../data/content";
 import { SUPERVISOR } from "../data/seed";
 import type { Status } from "../data/model";
-import { LangPicker } from "./Start";
+import { LangPicker, BriefingCard } from "./Start";
 
 /** 💬 MESSAGES: pre-set icon tiles, one tap = one message, room number attached. ✓✓ seen + quick reply. */
 export function MessagesScreen() {
@@ -93,6 +93,18 @@ function MenuRow({ icon, label, onClick, tone }: { icon: ReactNode; label: strin
   );
 }
 
+/** Today's briefing, re-opened from the menu during the shift (read-only). */
+export function BriefingScreen() {
+  const t = useT();
+  const s = useApp();
+  return (
+    <div className="screen">
+      <Header title={t("brief.title")} sub={t("shift.time")} back={() => s.go({ name: "menu" })} />
+      <div className="screen-body"><BriefingCard /></div>
+    </div>
+  );
+}
+
 export function MenuScreen() {
   const t = useT();
   const s = useApp();
@@ -110,6 +122,7 @@ export function MenuScreen() {
         </div>
         <div className="card list-card">
           <MenuRow icon={<Icon name="list" />} label={t("menu.rooms")} onClick={() => s.go({ name: "rooms" })} />
+          <MenuRow icon={<Icon name="clipboard" />} label={t("brief.title")} onClick={() => s.go({ name: "briefing" })} />
           <MenuRow icon={<Icon name="wrench" />} label={t("menu.reports")} onClick={() => s.go({ name: "reports" })} />
           <MenuRow icon={<Icon name="chat" />} label={t("msg.title")} onClick={() => s.go({ name: "messages" })} />
           <MenuRow icon={<Icon name="flag" />} label={t("menu.end")} onClick={() => s.go({ name: "end" })} />

@@ -119,11 +119,10 @@ export function Login() {
   );
 }
 
-/** Shift briefing (icons + short text) → Start shift. Styled like the hotel's daily card. */
-export function Briefing() {
+/** The day card + supervisor's briefing. Used at shift start and from the menu. */
+export function BriefingCard() {
   const t = useT();
   const s = useApp();
-  const person = me(s);
   const items: { icon: React.ReactNode; key: string }[] = [
     { icon: <Obj id="vip" size={30} />, key: "brief.vip" },
     { icon: <Obj id="clock" size={30} />, key: "brief.arrivals" },
@@ -131,16 +130,7 @@ export function Briefing() {
     { icon: <Obj id="towels" size={30} />, key: "brief.linen" },
   ];
   return (
-    <div className="screen">
-      <div className="screen-body">
-        <div className="greet">
-          <div className="avatar">{person.name[0]}</div>
-          <div>
-            <h1 className="display">{t("greet.morning", { name: person.name })}</h1>
-            <div className="muted small">{t("shift.time")}</div>
-          </div>
-        </div>
-
+    <>
         <div className="daycard">
           <div className="daycard-floor"><small>FLOOR</small><span>4</span></div>
           <div className="daycard-main">
@@ -158,6 +148,26 @@ export function Briefing() {
           </ul>
           <div className="signature">— {t("brief.from", { name: SUPERVISOR })}</div>
         </div>
+    </>
+  );
+}
+
+/** Shift briefing (icons + short text) → Start shift. Styled like the hotel's daily card. */
+export function Briefing() {
+  const t = useT();
+  const s = useApp();
+  const person = me(s);
+  return (
+    <div className="screen">
+      <div className="screen-body">
+        <div className="greet">
+          <div className="avatar">{person.name[0]}</div>
+          <div>
+            <h1 className="display">{t("greet.morning", { name: person.name })}</h1>
+            <div className="muted small">{t("shift.time")}</div>
+          </div>
+        </div>
+        <BriefingCard />
       </div>
       <BottomBar>
         <button type="button" className="btn btn-primary" onClick={s.startShift}><Icon name="play" size={14} fill stroke={0} /> {t("shift.start")}</button>

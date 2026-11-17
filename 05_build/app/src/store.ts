@@ -17,6 +17,7 @@ export type Screen =
   | { name: "issue"; no?: string }
   | { name: "reports" }
   | { name: "menu" }
+  | { name: "briefing" }
   | { name: "end" }
   | { name: "demo" };
 

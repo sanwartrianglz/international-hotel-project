@@ -41,6 +41,7 @@ const P: Record<string, string> = {
   star: "M12 4l2.4 5 5.4.6-4 3.7 1.1 5.3L12 16l-4.9 2.6 1.1-5.3-4-3.7 5.4-.6z",
   handover: "M4 12h12M12 8l4 4-4 4M20 5v14",
   box: "M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8",
+  clipboard: "M9 3.5h6v3H9zM8 5H6v15.5h12V5h-2M9 11h6M9 15h4",
 };
 
 export type IconName = keyof typeof P;

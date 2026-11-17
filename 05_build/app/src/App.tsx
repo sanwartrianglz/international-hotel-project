@@ -5,7 +5,7 @@ import { Login, Briefing } from "./screens/Start";
 import { Home, RoomScreen } from "./screens/Home";
 import { CleanScreen, DoneScreen, FixScreen } from "./screens/Clean";
 import { IssueScreen, ReportsScreen } from "./screens/Issue";
-import { MessagesScreen, RoomsScreen, MenuScreen, EndScreen, OffDuty, DemoScreen } from "./screens/More";
+import { MessagesScreen, RoomsScreen, MenuScreen, EndScreen, OffDuty, DemoScreen, BriefingScreen } from "./screens/More";
 import { BreakScreen, Toasts, UrgentAlert } from "./components/chrome";
 import { DeviceFrame } from "./components/DeviceFrame";
 import { Splash, Onboarding } from "./screens/Welcome";
@@ -51,6 +51,7 @@ export default function App() {
       case "issue": body = <IssueScreen no={screen.no} />; break;
       case "reports": body = <ReportsScreen />; break;
       case "menu": body = <MenuScreen />; break;
+      case "briefing": body = <BriefingScreen />; break;
       case "end": body = <EndScreen />; break;
       case "demo": body = <DemoScreen />; break;
       default: body = <Home />;
