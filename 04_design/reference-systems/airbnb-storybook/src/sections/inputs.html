@@ -1,0 +1,12 @@
+<h1>Text input</h1>
+  <p class="lede">56px, hairline outline, 8px radius. Focus thickens the border to 2px ink — no glow, no ring. Error uses <code>primary-error-text</code> (not Rausch).</p>
+  <div class="canvas"><div class="row" style="align-items:flex-start;gap:32px">
+    <div class="field" style="flex:1;min-width:240px"><label>Default</label><input class="input" placeholder="First name"></div>
+    <div class="field" style="flex:1;min-width:240px"><label>Focused</label><input class="input focus" value="Maya"></div>
+    <div class="field" style="flex:1;min-width:240px"><label>Disabled</label><input class="input" disabled value="Locked"></div>
+    <div class="field err" id="emailField" style="flex:1;min-width:240px"><label>Error (validates live)</label><input class="input" id="email" value="maya@"><span class="msg"><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Enter a valid email.</span></div>
+  </div>
+  <h2 style="margin-top:32px">Grouped inputs</h2>
+  <div class="combo"><input class="input" placeholder="Country/Region"><input class="input" placeholder="Phone number"></div>
+  </div>
+  <div class="note">Known gap: the file documents the error text color only; the outline + background treatment shown here is an interpretation.</div>

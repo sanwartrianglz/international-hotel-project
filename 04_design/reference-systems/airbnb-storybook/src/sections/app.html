@@ -1,0 +1,17 @@
+<h1>Mobile app patterns<span class="tag-app">from app knowledge, not measured</span></h1>
+  <p class="lede">I couldn't open the native app from the browser, so these are well-known Airbnb app patterns rebuilt from memory. Treat the sizes as approximate. Try the tabs, and drag or click the sheet handle.</p>
+  <div class="canvas soft"><div class="phone"><div class="scr">
+    <div class="msearch"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Start your search</div>
+    <div class="map" style="position:absolute;top:88px;left:0;right:0;bottom:0;border-radius:0">
+      <span class="ppin" style="left:30%;top:22%">$128</span><span class="ppin on" style="left:62%;top:30%">$96</span><span class="ppin" style="left:45%;top:44%">$141</span>
+    </div>
+    <div class="sheet" id="sheet" style="top:300px"><div class="grab"></div><div class="c">Over 1,000 homes</div>
+      <div style="padding:0 16px"><div style="aspect-ratio:4/3;border-radius:14px;background:linear-gradient(160deg,#9cc9e6,#3f7fa8 55%,#e8d3a8 56%,#d8bd88)"></div><p class="t-body-sm" style="margin:8px 0 0"><b>Lisbon, Portugal</b> · ★ 4.92</p></div></div>
+    <div class="tabbar" id="tabbar"></div>
+  </div></div></div>
+  <table class="props" style="margin-top:16px"><tr><th>Pattern</th><th>Notes</th></tr>
+    <tr><td>Bottom tab bar</td><td>5 tabs: Explore · Wishlists · Trips · Inbox · Profile. Active = Rausch icon + label, others muted. Hides on scroll down and returns on scroll up.</td></tr>
+    <tr><td>Bottom sheet over map</td><td>Draggable list sheet with a 40×4 grabber and 24px top radius. Snaps between peek, half and full.</td></tr>
+    <tr><td>Search entry</td><td>One 56px pill with shadow. Tapping opens full-screen stacked cards (Where / When / Who), one expanded at a time.</td></tr>
+  </table>
+  <div class="idea"><b>Design idea for us:</b> a bottom tab bar is right for one-handed use: <i>My rooms · Map · Requests · Messages · Me</i>. A bottom sheet over a floor map gives the housekeeper both views without leaving the screen.</div>

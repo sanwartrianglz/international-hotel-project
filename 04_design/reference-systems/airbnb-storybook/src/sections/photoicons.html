@@ -1,0 +1,65 @@
+<h1>Photo icons (3D illustrated)<span class="tag-live">live site</span></h1>
+  <p class="lede">Next to its thin line icons, the site uses small 3D-rendered object illustrations, a bit like clay or toy models: a brass globe, a house with a tree, a luggage cart, a hot-air balloon, a concierge bell, a door, a clipboard, a calendar, a shield. They are shipped as transparent PNGs (asset folders <code>search-bar-icons</code> and <code>orthographic-images</code>). The nav versions also play a short <b>.webm</b> animation when selected. The icons below are <b>our own redraws in the same style</b>, using housekeeping objects. They are not Airbnb's artwork.</p>
+
+  <h2>Two styles</h2>
+  <div class="compare">
+    <div>
+      <h4>A · Perspective (product nav) — 48px</h4>
+      <div class="row" style="gap:20px">
+        <span class="pi pi64"><svg><use href="#pi-house"/></svg></span>
+        <span class="pi pi64"><svg><use href="#pi-cart"/></svg></span>
+        <span class="pi pi64"><svg><use href="#pi-bucket"/></svg></span>
+        <span class="pi pi64"><svg><use href="#pi-bell"/></svg></span>
+      </div>
+      <p class="t-body-sm muted" style="margin:12px 0 0">Three-quarter view with a soft ground shadow and rich materials (metal, wood, fabric). Sits beside a text label in the top nav. Plays an animation once when selected.</p>
+    </div>
+    <div>
+      <h4>B · Orthographic (info rows) — 32px</h4>
+      <div class="row" style="gap:20px">
+        <span class="pi pi48"><svg><use href="#pi-door"/></svg></span>
+        <span class="pi pi48"><svg><use href="#pi-clip"/></svg></span>
+        <span class="pi pi48"><svg><use href="#pi-cal"/></svg></span>
+        <span class="pi pi48"><svg><use href="#pi-shield"/></svg></span>
+      </div>
+      <p class="t-body-sm muted" style="margin:12px 0 0">Straight-on view with flatter shading and no ground shadow, so it reads clearly at 32px. Leads a "Things to know" card above the title.</p>
+    </div>
+  </div>
+
+  <h2>Live behaviour — click a tab</h2>
+  <div class="canvas" style="padding:16px 24px 0">
+    <div class="pinav" id="pinav">
+      <button class="on"><span class="pi pi48"><svg><use href="#pi-house"/></svg></span>Rooms</button>
+      <button><span class="pi pi48"><svg><use href="#pi-cart"/></svg></span>Cart</button>
+      <button><span class="pi pi48"><svg><use href="#pi-bucket"/></svg></span>Supplies</button>
+      <button><span class="pi pi48"><svg><use href="#pi-bell"/></svg></span>Requests</button>
+    </div>
+  </div>
+  <div class="idea"><b>Live behaviour:</b> the selected tab swaps its static PNG for a ~1s webm loop (the house "settles", the balloon bobs, the bell rings), with a 3px ink underline under the tab. Simulated here with a CSS spring.</div>
+
+  <h2>Our set in this style (housekeeping)</h2>
+  <div class="canvas"><div class="pigrid" id="pigrid"></div></div>
+
+  <h2>Style spec</h2>
+  <table class="props"><tr><th>Property</th><th>Rule</th></tr>
+    <tr><td>Rendering</td><td>Soft 3D look (clay or toy-like): rounded edges, low detail, no outlines or strokes</td></tr>
+    <tr><td>Lighting</td><td>One soft key light from the top-left, a gentle rim highlight on edges, shading underneath</td></tr>
+    <tr><td>Materials</td><td>Real-world materials made a little cuter: brass, painted metal, wood grain hinted by a gradient, matte fabric</td></tr>
+    <tr><td>Color</td><td>Warm and slightly muted. Rausch pink shows up only as an accent (door, shield, tag), never the whole palette</td></tr>
+    <tr><td>Container</td><td>None. Transparent background, no tile, no circle</td></tr>
+    <tr><td>Ground</td><td>Perspective set: a soft elliptical contact shadow. Orthographic set: no shadow</td></tr>
+    <tr><td>Sizes</td><td>48px in nav, 32px in info rows, 64–120px in modals and empty states (e.g. the "one price" tag)</td></tr>
+    <tr><td>Export</td><td>PNG @2x/@3x plus an optional webm for the selected state</td></tr>
+    <tr><td>When to use</td><td>Top-level categories, announcements, empty states, short policy rows</td></tr>
+    <tr><td>When not to use</td><td>Dense controls such as filters, amenities or toolbars. Those keep the 24px, 1.6px-stroke line icons</td></tr>
+  </table>
+  <h2>Photo icon vs line icon</h2>
+  <div class="compare">
+    <div><h4>Line (amenities, actions)</h4><div class="row" style="gap:18px">
+      <svg class="lineico" viewBox="0 0 24 24"><path d="M3 18v-6a3 3 0 013-3h12a3 3 0 013 3v6M3 14h18M6 9V6h5v3"/></svg>
+      <svg class="lineico" viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7zM9 8a3 3 0 016 0"/></svg>
+      <svg class="lineico" viewBox="0 0 24 24"><path d="M4 7h16v12H4zM8 7V5h8v2M4 11h16"/></svg>
+      <svg class="lineico" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg></div></div>
+    <div><h4>Photo (categories, onboarding)</h4><div class="row" style="gap:18px">
+      <span class="pi pi32"><svg><use href="#pi-bed"/></svg></span><span class="pi pi32"><svg><use href="#pi-bucket"/></svg></span><span class="pi pi32"><svg><use href="#pi-clip"/></svg></span><span class="pi pi32"><svg><use href="#pi-shield"/></svg></span></div></div>
+  </div>
+  <div class="note"><b>Why this matters for our housekeeper app:</b> object illustrations can be recognised without reading, which supports our icon-first and low-literacy rule. A 3D bucket, towel or bed is understood across languages better than a thin outline. We should commission or build our own set in our own palette and must not reuse Airbnb's PNGs.</div>

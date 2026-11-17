@@ -1,0 +1,16 @@
+<h1>Reservation card</h1>
+  <p class="lede">Sticky right-rail card: price (display-md), date range, guest stepper, full-width Reserve, fee breakdown. Try the stepper. On mobile it becomes a sticky bottom bar (switch viewport).</p>
+  <div class="canvas soft">
+    <div class="resv" id="resv">
+      <div class="pr"><span class="t-display-md" id="nightly">$128</span><span class="t-body-md">night</span></div>
+      <div class="grid">
+        <div class="r1"><div class="cell"><div class="k">Check-in</div><div class="v">11/16/2026</div></div><div class="cell"><div class="k">Checkout</div><div class="v">11/21/2026</div></div></div>
+        <div class="r2"><div><div class="k">Guests</div><div class="v" id="gcount">2 guests</div></div>
+          <div class="stepper"><button id="gminus" aria-label="Fewer guests">−</button><button id="gplus" aria-label="More guests">+</button></div></div>
+      </div>
+      <button class="btn btn-primary full">Reserve</button>
+      <p class="center muted">You won't be charged yet</p>
+      <div class="fees" id="fees"></div>
+    </div>
+    <div class="mobilebar"><div><span class="t-title-md">$128</span> <span class="t-body-sm">night</span><div class="t-caption-sm" style="text-decoration:underline">Nov 16 – 21</div></div><button class="btn btn-primary">Reserve</button></div>
+  </div>
