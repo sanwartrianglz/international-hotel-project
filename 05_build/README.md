@@ -1,5 +1,4 @@
 # 05_build
 
-Coded app goes here when the build phase starts (stack TBD; Cecil Hotel used React + Vite + Tailwind + shadcn/ui via Lovable).
-
-The build follows `02_define/RSD.md` and `04_design/design-system/`.
+- `app/`: the housekeeper app, a mobile-first PWA (React + Vite + TypeScript). See `app/README.md` for how to run it and the demo script.
+- Stack decision: DECISIONS.md, 2026-11-17.

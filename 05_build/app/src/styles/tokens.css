@@ -1,0 +1,45 @@
+/* Design tokens: from Amr's "E · Foundations & components" (FigJam, agreed 12 Nov).
+   Every pair passes WCAG (text 4.5:1, icons 3:1) per the board. */
+:root {
+  /* Base */
+  --navy: #1e293b;          /* primary & text, white text 14.6:1 */
+  --white: #ffffff;
+  --surface: #f6f5f2;       /* warm tiles */
+  --border: #e4e2dc;
+  --text-2: #5b6472;        /* secondary text, 6.0:1 on white */
+  --urgent: #d92d20;        /* urgent badge, white text 4.8:1 */
+
+  /* Guest notes: reserved purple, never a status */
+  --note: #7c3aed;
+  --note-bg: #f1eafe;
+
+  /* Room status: key-tag colour + icon + word */
+  --st-to-clean: #d9573f;   --st-to-clean-bg: #fdece8;
+  --st-cleaning: #b37600;   --st-cleaning-bg: #fdf3dc;
+  --st-to-inspect: #2f6fd0; --st-to-inspect-bg: #e6f0fc;
+  --st-ready: #23875a;      --st-ready-bg: #e3f5ec;
+  --st-needs-fix: #cc2f6a;  --st-needs-fix-bg: #fce8f0;
+  --st-dnd: #7a808a;        --st-dnd-bg: #eeeff1;
+
+  /* Type: Readex Pro, one family for Latin + Arabic */
+  --font: "Readex Pro", system-ui, "Segoe UI", Tahoma, sans-serif;
+  --fs-room: 40px;     /* room number, SemiBold: numbers are the anchor */
+  --fs-title: 26px;    /* screen title, SemiBold */
+  --fs-body: 18px;     /* base size */
+  --fs-button: 18px;   /* SemiBold */
+  --fs-label: 16px;    /* Medium */
+  --fs-caption: 14px;  /* never smaller */
+
+  /* Size & touch: gloves, one hand */
+  --main-action: 50px; /* full width, pinned bottom */
+  --tap-min: 44px;
+  --gap-tap: 8px;
+
+  /* Spacing scale: 4 · 8 · 12 · 16 · 24 · 32 */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --shadow: 0 1px 2px rgba(30, 41, 59, 0.06), 0 4px 16px rgba(30, 41, 59, 0.08);
+}
