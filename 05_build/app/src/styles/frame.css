@@ -1,0 +1,54 @@
+/* ---------- Frame-aware sizes (full-screen on a real phone) ---------- */
+:root { --app-h: 100dvh; --safe-bottom: env(safe-area-inset-bottom); }
+
+/* ---------- iPhone 15 Pro mockup (desktop / presentations) ---------- */
+html.is-framed, html.is-framed body { overflow: hidden; }
+html.is-framed body { background: radial-gradient(1200px 700px at 30% 20%, #ffffff 0%, #ece9e2 55%, #dcd8cf 100%); }
+html.is-framed { --app-h: 798px; --safe-bottom: 22px; }
+
+.mock-stage {
+  min-block-size: 100dvh; display: flex; align-items: center; justify-content: center;
+  gap: 56px; padding: 24px; font-family: var(--font); color: var(--navy);
+}
+.mock-slot { position: relative; flex: none; }
+.iphone {
+  position: absolute; inset-block-start: 0; inset-inline-start: 0; transform-origin: top left;
+  inline-size: 417px; block-size: 876px; padding: 12px; border-radius: 68px;
+  background: linear-gradient(145deg, #6b6a68, #3a3936 40%, #57554f 70%, #2c2b29);
+  box-shadow:
+    inset 0 0 0 2px #8d8b86, inset 0 0 0 5px #1b1b1a,
+    0 2px 4px rgba(0,0,0,0.2), 0 40px 80px -20px rgba(30,41,59,0.45), 0 20px 40px -20px rgba(0,0,0,0.3);
+}
+.iphone-btn { position: absolute; inline-size: 4px; border-radius: 2px; background: linear-gradient(90deg, #2a2927, #6d6b66); }
+.iphone-btn-action { inset-inline-start: -3px; inset-block-start: 118px; block-size: 32px; }
+.iphone-btn-vol-up { inset-inline-start: -3px; inset-block-start: 174px; block-size: 62px; }
+.iphone-btn-vol-down { inset-inline-start: -3px; inset-block-start: 250px; block-size: 62px; }
+.iphone-btn-power { inset-inline-end: -3px; inset-block-start: 210px; block-size: 98px; background: linear-gradient(270deg, #2a2927, #6d6b66); }
+.iphone-screen {
+  position: relative; inline-size: 393px; block-size: 852px; overflow: hidden;
+  border-radius: 56px; background: var(--surface);
+  transform: translateZ(0); /* makes position:fixed children (sheets, alerts, toasts) stay inside the phone */
+}
+.iphone-island {
+  position: absolute; z-index: 60; inset-block-start: 11px; inset-inline-start: 50%; translate: -50% 0;
+  inline-size: 126px; block-size: 37px; border-radius: 20px; background: #000;
+}
+.ios-status {
+  position: relative; z-index: 55; block-size: 54px; padding: 18px 30px 0 52px;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  background: var(--paper); color: var(--navy); font-family: -apple-system, "SF Pro Text", var(--font);
+}
+.ios-status-dark { background: var(--navy); color: var(--white); }
+.ios-time { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; inline-size: 54px; text-align: center; }
+.ios-icons { display: flex; align-items: center; gap: 6px; padding-block-start: 3px; }
+.iphone-content { position: relative; block-size: 798px; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
+.iphone-content::-webkit-scrollbar { display: none; }
+.iphone-home {
+  position: absolute; z-index: 60; inset-block-end: 8px; inset-inline-start: 50%; translate: -50% 0;
+  inline-size: 134px; block-size: 5px; border-radius: 3px; background: #111; pointer-events: none;
+}
+.iphone-home-light { background: #fff; }
+html.is-framed .app { max-inline-size: none; min-block-size: 100%; box-shadow: none; }
+html.is-framed .sheet { max-inline-size: none; }
+html.is-framed .toasts { inset-block-start: 70px; }
+

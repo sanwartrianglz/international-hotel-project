@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useApp, queue } from "../store";
 import { useT, speak } from "../i18n";
 import { Header } from "../components/chrome";
-import { BottomBar, Obj, ObjectTile, Progress, Sheet, KeyTag } from "../components/ui";
+import { BottomBar, Eyebrow, Obj, ObjectTile, Progress, Sheet, KeyTag } from "../components/ui";
+import { Icon } from "../components/Icon";
 import { AREAS, MINIBAR_ITEMS, NOTES, areasFor, progress } from "../data/content";
 import type { AreaId } from "../data/model";
 
-/** 🧹 CLEAN THE ROOM: object checklist · progress n/6 · extras · minibar ± · 🔧 Report issue.
+/** 🧹 CLEAN THE ROOM: object checklist · progress n/n · extras · minibar ± · Report issue.
  *  "Room done" stays locked until every step is ticked. */
 export function CleanScreen({ no }: { no: string }) {
   const t = useT();
@@ -20,12 +21,18 @@ export function CleanScreen({ no }: { no: string }) {
 
   return (
     <div className="screen">
-      <Header title={room.no} back={() => s.go({ name: "room", no })} />
+      <Header title={t("status.cleaning")} back={() => s.go({ name: "room", no })} />
       <div className="screen-body">
         <div className="clean-head">
           <KeyTag room={room} size="s" />
+          <div className="clean-head-main">
+            <div className="clean-count"><b>{p.done}</b> / {p.total}</div>
+            <Progress done={p.done} total={p.total} />
+          </div>
           {room.notes.length > 0 && (
-            <div className="note-mini">{room.notes.map((n) => { const o = NOTES[n].object; return <span key={n} className="note-dot" title={t(`note.${n}.title`)}>{o ? <Obj id={o} size={24} /> : NOTES[n].emoji}</span>; })}</div>
+            <div className="note-mini">
+              {room.notes.map((n) => { const o = NOTES[n].object; return <span key={n} className="note-dot" title={t(`note.${n}.title`)}>{o ? <Obj id={o} size={18} /> : NOTES[n].emoji}</span>; })}
+            </div>
           )}
         </div>
 
@@ -33,54 +40,58 @@ export function CleanScreen({ no }: { no: string }) {
           {areasFor(room).map((a) => (
             <ObjectTile key={a} object={AREAS[a].object} label={t(`area.${a}`)} state={room.done[a] ? "done" : "todo"} onClick={() => setArea(a)} />
           ))}
-          {room.requests.map((rq) => (
-            <ObjectTile key={rq.item} object={rq.item} label={`${t(`obj.${rq.item}`)} ×${rq.qty}`}
-              state={room.done["req:" + rq.item] ? "done" : "todo"} badge={room.done["req:" + rq.item] ? "✓" : "➕"}
-              onClick={() => s.tick(no, "req:" + rq.item)} />
-          ))}
           {room.occ !== "vacant" && (
             <ObjectTile object="minibar" label={t("clean.minibar")} state={room.done.minibar ? "done" : "todo"} onClick={() => setMinibar(true)} />
           )}
         </div>
-        {room.requests.length > 0 && <p className="muted small">➕ {t("clean.bring")}</p>}
 
-        <button type="button" className="btn btn-secondary btn-issue" onClick={() => s.go({ name: "issue", no })}>
-          <Obj id="tap-leak" size={32} /> {t("clean.reportIssue")}
+        {room.requests.length > 0 && (
+          <>
+            <Eyebrow>{t("clean.bring")}</Eyebrow>
+            <div className="tile-grid">
+              {room.requests.map((rq) => (
+                <ObjectTile key={rq.item} object={rq.item} label={`${t(`obj.${rq.item}`)} ×${rq.qty}`}
+                  state={room.done["req:" + rq.item] ? "done" : "todo"}
+                  badge={room.done["req:" + rq.item] ? <Icon name="check" size={12} stroke={3} /> : <Icon name="plus" size={12} stroke={2.4} />}
+                  onClick={() => s.tick(no, "req:" + rq.item)} />
+              ))}
+            </div>
+          </>
+        )}
+
+        <button type="button" className="opt opt-quiet" onClick={() => s.go({ name: "issue", no })}>
+          <span className="opt-ic"><Icon name="wrench" size={18} /></span><span>{t("clean.reportIssue")}</span><Icon name="next" size={16} className="flip-rtl muted" />
         </button>
       </div>
 
       <BottomBar>
-        <div className="bar-progress">
-          <Progress done={p.done} total={p.total} />
-          <span className="bar-progress-label">{t("clean.progress", p)}</span>
-        </div>
         <button type="button" className="btn btn-primary" disabled={!all} onClick={() => s.roomDone(no)}>
-          {all ? "✓" : "🔒"} {t("clean.roomDone")}
+          <Icon name={all ? "check" : "lock"} size={16} stroke={2.2} /> {t("clean.roomDone")}
         </button>
       </BottomBar>
 
       {area && <AreaSheet no={no} area={area} onClose={() => setArea(null)} />}
-      <Sheet open={minibar} onClose={() => setMinibar(false)} title={<><Obj id="minibar" size={36} /> {t("clean.minibar")}</>}>
-        <p className="muted">{t("clean.minibarHint")}</p>
+      <Sheet open={minibar} onClose={() => setMinibar(false)} title={<><Obj id="minibar" size={28} /> {t("clean.minibar")}</>}>
+        <p className="muted small">{t("clean.minibarHint")}</p>
         <div className="mb-list">
           {MINIBAR_ITEMS.filter((i) => !(noAlcohol && i === "wine")).map((item) => (
             <div key={item} className="mb-row">
-              <Obj id={item} size={48} />
+              <Obj id={item} size={36} />
               <span className="mb-name">{t(`obj.${item}`)}</span>
-              <button type="button" className="round-btn" onClick={() => s.setMinibar(no, item, -1)} aria-label="−">−</button>
+              <button type="button" className="round-btn" onClick={() => s.setMinibar(no, item, -1)} aria-label="−"><Icon name="minus" size={16} stroke={2.2} /></button>
               <b className="mb-count">{room.minibar[item] ?? 0}</b>
-              <button type="button" className="round-btn" onClick={() => s.setMinibar(no, item, 1)} aria-label="+">+</button>
+              <button type="button" className="round-btn" onClick={() => s.setMinibar(no, item, 1)} aria-label="+"><Icon name="plus" size={16} stroke={2.2} /></button>
             </div>
           ))}
         </div>
-        {noAlcohol && <p className="note-inline">🚫🍷 {t("note.no-alcohol.do")}</p>}
-        <button type="button" className="btn btn-primary" onClick={() => { s.tick(no, "minibar", true); setMinibar(false); }}>✓ {t("clean.minibarDone")}</button>
+        {noAlcohol && <p className="note-inline"><Icon name="ban" size={14} /> {t("note.no-alcohol.do")}</p>}
+        <button type="button" className="btn btn-primary" onClick={() => { s.tick(no, "minibar", true); setMinibar(false); }}><Icon name="check" size={16} stroke={2.2} /> {t("clean.minibarDone")}</button>
       </Sheet>
     </div>
   );
 }
 
-/** Step screen: reference image (how it must look, brand standard) + icon sub-steps + 🔊 audio hint. */
+/** Step sheet: reference image (how it must look, brand standard) + icon sub-steps + 🔊 audio hint. */
 function AreaSheet({ no, area, onClose }: { no: string; area: AreaId; onClose: () => void }) {
   const t = useT();
   const s = useApp();
@@ -91,23 +102,23 @@ function AreaSheet({ no, area, onClose }: { no: string; area: AreaId; onClose: (
   const listen = () => speak(t(`area.${area}`) + ". " + def.steps.map((st) => t(st.key)).join(", "), s.lang);
 
   return (
-    <Sheet open onClose={onClose} title={<><Obj id={def.object} size={36} /> {t(`area.${area}`)}</>}>
+    <Sheet open onClose={onClose} title={t(`area.${area}`)}>
       <div className="reference">
-        <div className="reference-img"><Obj id={def.object} size={150} /></div>
-        <div className="reference-cap">📷 {t("clean.reference")}{room.vip ? " · ⭐ VIP" : ""}</div>
-        <button type="button" className="icon-btn reference-audio" onClick={listen} aria-label={t("clean.listen")}>🔊</button>
+        <div className="reference-frame"><Obj id={def.object} size={112} /></div>
+        <div className="reference-cap"><Icon name="camera" size={13} /> {t("clean.reference")}{room.vip ? " · VIP" : ""}</div>
+        <button type="button" className="icon-btn reference-audio" onClick={listen} aria-label={t("clean.listen")}><Icon name="volume" size={18} /></button>
       </div>
       <div className="steps">
         {def.steps.map((st, i) => (
           <button type="button" key={st.key} className={`step ${ticks[i] ? "on" : ""}`} onClick={() => setTicks((x) => x.map((v, j) => (j === i ? !v : v)))} aria-pressed={ticks[i]}>
-            <Obj id={st.object} size={44} />
+            <Obj id={st.object} size={32} />
             <span>{t(st.key)}</span>
-            <span className="step-check">{ticks[i] ? "✓" : ""}</span>
+            <span className="step-check">{ticks[i] && <Icon name="check" size={14} stroke={3} />}</span>
           </button>
         ))}
       </div>
       <button type="button" className="btn btn-primary" onClick={() => { s.tick(no, area, allTicked); onClose(); }}>
-        {allTicked ? "✓ " + t("clean.done") : t("common.back")}
+        {allTicked ? <><Icon name="check" size={16} stroke={2.2} /> {t("clean.done")}</> : t("common.back")}
       </button>
     </Sheet>
   );
@@ -121,14 +132,14 @@ export function DoneScreen({ no }: { no: string }) {
   return (
     <div className="screen done-screen">
       <div className="screen-body center">
-        <div className="done-stamp">✓</div>
-        <h1 className="title">{t("done.title", { room: no })}</h1>
+        <div className="seal"><Icon name="check" size={40} stroke={2.4} /></div>
+        <h1 className="display">{t("done.title", { room: no })}</h1>
         <p className="muted">{t("done.sub")}</p>
         {next && <p className="done-next">{t("done.next", { room: next.no })}</p>}
       </div>
       <BottomBar>
         {next ? (
-          <button type="button" className="btn btn-primary" onClick={() => s.go({ name: "room", no: next.no })}>{t("done.goTo", { room: next.no })} <span className="flip-rtl">→</span></button>
+          <button type="button" className="btn btn-primary" onClick={() => s.go({ name: "room", no: next.no })}>{t("done.goTo", { room: next.no })} <Icon name="next" size={16} className="flip-rtl" /></button>
         ) : (
           <button type="button" className="btn btn-primary" onClick={s.home}>{t("home.allDone")}</button>
         )}
@@ -146,22 +157,23 @@ export function FixScreen({ no }: { no: string }) {
   const left = failed.filter((f) => !f.fixed).length;
   return (
     <div className="screen">
-      <Header title={t("fix.title", { room: no, n: failed.length })} back={s.home} />
+      <Header title={t("status.needs_fix")} sub={no} back={s.home} />
       <div className="screen-body">
         <div className="fix-summary">
           <bdi dir="ltr"><span className="fix-big">{room.inspection?.score ?? 0}</span><span className="muted"> / 100</span></bdi>
-          <span className="muted">· {t("fix.passMark")}</span>
+          <span className="muted small">{t("fix.passMark")}</span>
         </div>
+        <Eyebrow>{t("fix.items", { n: failed.length })}</Eyebrow>
         <div className="fix-list">
           {failed.map((f, i) => (
             <div key={i} className={`fix-item ${f.fixed ? "on" : ""}`}>
-              <div className="fix-photo"><Obj id={AREAS[f.area].object} size={72} /><small>📷 {t("fix.inspector")}</small></div>
+              <div className="fix-photo"><Obj id={AREAS[f.area].object} size={44} /><small><Icon name="camera" size={10} /> {t("fix.inspector")}</small></div>
               <div className="fix-reason">
                 <b>{t(f.reason)}</b>
-                <span className="muted">{t(`area.${f.area}`)}</span>
+                <span className="muted small">{t(`area.${f.area}`)}</span>
               </div>
               <button type="button" className={`btn btn-small ${f.fixed ? "btn-ok" : "btn-secondary"}`} onClick={() => s.fixItem(no, i)} aria-pressed={f.fixed}>
-                {f.fixed ? "✓ " : ""}{t("fix.mark")}
+                {f.fixed && <Icon name="check" size={14} stroke={2.6} />} {t("fix.mark")}
               </button>
             </div>
           ))}
@@ -170,7 +182,7 @@ export function FixScreen({ no }: { no: string }) {
       </div>
       <BottomBar>
         <button type="button" className="btn btn-primary" disabled={left > 0} onClick={() => s.sendRecheck(no)}>
-          {left > 0 ? `🔒 ${t("fix.send")} (${failed.length - left} / ${failed.length})` : `✓ ${t("fix.send")}`}
+          <Icon name={left > 0 ? "lock" : "send"} size={16} /> {t("fix.send")}{left > 0 ? ` · ${failed.length - left} / ${failed.length}` : ""}
         </button>
       </BottomBar>
     </div>

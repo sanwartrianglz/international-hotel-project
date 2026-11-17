@@ -102,15 +102,6 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
           </div>
         </div>
       </div>
-      <aside className="mock-caption">
-        <div className="mock-title">Cecil Housekeeping</div>
-        <div className="mock-sub">Housekeeper app · International team</div>
-        <ul>
-          <li>☰ → <b>Demo controls</b> simulate reception, the supervisor and the PMS</li>
-          <li>☰ → <b>Language</b> switches English · العربية · Filipino</li>
-          <li>Add <code>?frame=off</code> to hide the phone, <code>?frame=on</code> to force it</li>
-        </ul>
-      </aside>
     </div>
   );
 }

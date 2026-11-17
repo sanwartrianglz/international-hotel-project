@@ -1,17 +1,27 @@
-/* Design tokens: from Amr's "E · Foundations & components" (FigJam, agreed 12 Nov).
-   Every pair passes WCAG (text 4.5:1, icons 3:1) per the board. */
+/* Design tokens: from Amr's "E · Foundations & components" (FigJam, agreed 12 Nov),
+   refined 17 Nov: smaller iOS-scale type + grand-hotel character (brass accent, serif display).
+   Status colours are unchanged: every pair passes WCAG (text 4.5:1, icons 3:1). */
 :root {
   /* Base */
   --navy: #1e293b;          /* primary & text, white text 14.6:1 */
+  --navy-2: #2b3a52;
   --white: #ffffff;
-  --surface: #f6f5f2;       /* warm tiles */
-  --border: #e4e2dc;
+  --paper: #faf8f4;         /* card / sheet: hotel stationery */
+  --surface: #f3f0ea;       /* page: warm linen */
+  --border: #e4dfd5;
+  --hairline: #ece7dd;
   --text-2: #5b6472;        /* secondary text, 6.0:1 on white */
   --urgent: #d92d20;        /* urgent badge, white text 4.8:1 */
 
+  /* Brass: decoration, rings, rules. Text only in the dark tone (5.3:1 on white). */
+  --brass: #b8955a;
+  --brass-light: #e9dcc3;
+  --brass-text: #82632c;
+
   /* Guest notes: reserved purple, never a status */
   --note: #7c3aed;
-  --note-bg: #f1eafe;
+  --note-bg: #f3edfe;
+  --note-border: #e1d3fb;
 
   /* Room status: key-tag colour + icon + word */
   --st-to-clean: #d9573f;   --st-to-clean-bg: #fdece8;
@@ -21,25 +31,28 @@
   --st-needs-fix: #cc2f6a;  --st-needs-fix-bg: #fce8f0;
   --st-dnd: #7a808a;        --st-dnd-bg: #eeeff1;
 
-  /* Type: Readex Pro, one family for Latin + Arabic */
+  /* Type: Readex Pro for UI (Latin + Arabic); a hotel serif for room numbers & headings */
   --font: "Readex Pro", system-ui, "Segoe UI", Tahoma, sans-serif;
-  --fs-room: 40px;     /* room number, SemiBold: numbers are the anchor */
-  --fs-title: 26px;    /* screen title, SemiBold */
-  --fs-body: 18px;     /* base size */
-  --fs-button: 18px;   /* SemiBold */
-  --fs-label: 16px;    /* Medium */
-  --fs-caption: 14px;  /* never smaller */
+  --font-display: "Playfair Display", "Amiri", Georgia, serif;
+  --fs-room: 32px;     /* room number on the key tag */
+  --fs-title: 22px;    /* screen / hero title (serif) */
+  --fs-body: 15px;
+  --fs-button: 15px;   /* SemiBold */
+  --fs-label: 14px;    /* Medium */
+  --fs-caption: 13px;
+  --fs-eyebrow: 11px;  /* stationery labels: caps, tracked */
 
-  /* Size & touch: gloves, one hand */
-  --main-action: 50px; /* full width, pinned bottom */
+  /* Size & touch: still glove-friendly */
+  --main-action: 48px; /* full width, pinned bottom */
   --tap-min: 44px;
   --gap-tap: 8px;
 
-  /* Spacing scale: 4 · 8 · 12 · 16 · 24 · 32 */
-  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+  /* Spacing scale: 4 · 8 · 12 · 16 · 20 · 28 */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 28px;
 
-  --radius-s: 10px;
-  --radius-m: 16px;
-  --radius-l: 24px;
-  --shadow: 0 1px 2px rgba(30, 41, 59, 0.06), 0 4px 16px rgba(30, 41, 59, 0.08);
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 18px;
+  --shadow: 0 1px 1px rgba(30, 41, 59, 0.04), 0 2px 10px rgba(30, 41, 59, 0.06);
+  --shadow-lift: 0 1px 2px rgba(30, 41, 59, 0.06), 0 10px 28px -8px rgba(30, 41, 59, 0.18);
 }

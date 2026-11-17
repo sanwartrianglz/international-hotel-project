@@ -207,6 +207,7 @@ export const ar: Partial<Record<StringKey, string>> = {
   "issue.state.lost": "مع المشرفة",
 
   "msg.title": "الرسائل",
+  "msg.role": "المشرفة · الطابق 4",
   "msg.tap": "الضغط للإرسال",
   "msg.seen": "شوهدت {time}",
   "msg.notSent": "لم تُرسل بعد",

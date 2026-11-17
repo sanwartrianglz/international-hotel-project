@@ -204,6 +204,7 @@ export const en = {
   "issue.state.lost": "With supervisor",
 
   "msg.title": "Messages",
+  "msg.role": "Supervisor · floor 4",
   "msg.tap": "Tap to send",
   "msg.seen": "Seen {time}",
   "msg.notSent": "Not sent yet",

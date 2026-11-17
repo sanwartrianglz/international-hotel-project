@@ -41,7 +41,7 @@ export function progress(room: Room) {
 export const NOTES: Record<NoteId, { object: ObjectId | null; emoji: string }> = {
   "prayer-mat":   { object: "prayer-mat", emoji: "🕌" },
   "no-alcohol":   { object: "wine", emoji: "🚫🍷" },
-  "female-staff": { object: null, emoji: "👩" },
+  "female-staff": { object: "female-staff", emoji: "👩" },
   "shoes-off":    { object: "shoes-off", emoji: "👞" },
   quiet:          { object: "quiet", emoji: "🤫" },
   "service-dog":  { object: "service-dog", emoji: "🐕" },

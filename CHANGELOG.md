@@ -40,3 +40,7 @@ Dated log of work sessions: what was done and what's next.
 - Amr's object PNGs still need to be exported from Figma into `05_build/app/public/objects/` (then `npm run objects`). Until then the app shows emoji stand-ins.
 - **Next:** export the object images; native-speaker review of the Arabic and Filipino strings; supervisor view (Floor · Team · Inbox · Inspect); deploy to GitHub Pages for a shareable link.
 - Added an iPhone 15 Pro mockup around the app on desktop screens (for reviews and presenting). Sheets, alerts and toasts stay inside the phone screen; the status bar follows offline mode and the break screen; Arabic mirrors only the app, not the phone. `?frame=off` / `?frame=on`.
+- UI v2: smaller sizes, brass + serif hotel character, line icons for controls, Cecil crest on login, daily-card briefing, key tag with brass ring, seal on completion, door-hanger break screen, segmented language picker, initials instead of flag avatars. Removed the side panel next to the iPhone mockup.
+- Guest needs section under the room card (home + room screens); icon-only markers on list cards.
+- Switched objects to the navy-gradient set: import script maps the 11 board layers to file names; placeholder emoji are tinted navy. Added FigJam section "Icons to generate · navy set (34)" (node 102:2056) to the right of Sally's section, plus 04_design/icons-to-generate.md.
+- **Next:** export the 11 navy images (they are selected in Figma) and generate the other 34; Amr to confirm the smaller sizes.

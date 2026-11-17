@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useApp, me } from "../store";
 import { useT } from "../i18n";
 import { Header } from "../components/chrome";
-import { BottomBar, Obj, RoomCard, hhmm, STATUS_ICON } from "../components/ui";
+import { BottomBar, Eyebrow, KeyTag, Obj, RoomCard, hhmm, STATUS_ICON } from "../components/ui";
+import { Icon } from "../components/Icon";
 import { PRESET_MESSAGES } from "../data/content";
 import { SUPERVISOR } from "../data/seed";
 import type { Status } from "../data/model";
@@ -15,27 +16,28 @@ export function MessagesScreen() {
   useEffect(() => { s.markMessagesSeen(); }, [s.messages.length]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="screen">
-      <Header title={`💬 ${SUPERVISOR}`} back={s.home} />
+      <Header title={SUPERVISOR} sub={t("msg.role")} back={s.home} />
       <div className="screen-body chat">
+        {s.messages.length === 0 && <p className="muted small center">{t("msg.tap")}</p>}
         {s.messages.map((m) => (
           <div key={m.id} className={`bubble ${m.from === "me" ? "mine" : "theirs"}`}>
             <div className="bubble-main">
-              {m.object ? <Obj id={m.object} size={36} /> : <span className="big-emoji-s">{m.emoji}</span>}
+              {m.object ? <Obj id={m.object} size={26} /> : <span className="bubble-emoji">{m.emoji}</span>}
               <span>{t(m.key)}</span>
             </div>
             <div className="bubble-meta">
-              {m.room && <span>{m.room} · </span>}
-              {m.from === "me" ? (m.synced ? (m.seen ? `✓✓ ${t("msg.seen", { time: hhmm(m.at) })}` : "✓") : `☁︎ ${t("msg.notSent")}`) : hhmm(m.at)}
+              {m.room && <span className="room-no">{m.room} · </span>}
+              {m.from === "me" ? (m.synced ? (m.seen ? `✓✓ ${t("msg.seen", { time: hhmm(m.at) })}` : "✓") : t("msg.notSent")) : hhmm(m.at)}
             </div>
           </div>
         ))}
       </div>
       <div className="preset-panel">
-        <div className="muted small">{t("msg.tap")}</div>
+        <Eyebrow>{t("msg.tap")}</Eyebrow>
         <div className="preset-grid">
           {PRESET_MESSAGES.map((p) => (
             <button type="button" key={p.key} className="preset" onClick={() => s.sendMessage(p.key, p.object, p.emoji)}>
-              {p.object ? <Obj id={p.object} size={44} /> : <span className="big-emoji">{p.emoji}</span>}
+              {p.object ? <Obj id={p.object} size={32} /> : <span className="preset-ic"><Icon name="clock" size={20} /></span>}
               <span>{t(p.key)}</span>
             </button>
           ))}
@@ -61,7 +63,7 @@ export function RoomsScreen() {
           const n = x === "all" ? s.rooms.length : s.rooms.filter((r) => r.status === x).length;
           return (
             <button type="button" role="tab" aria-selected={f === x} key={x} className={`filter st-${x} ${f === x ? "on" : ""}`} onClick={() => setF(x)}>
-              {x !== "all" && <span aria-hidden>{STATUS_ICON[x]}</span>} {x === "all" ? t("rooms.all") : t("status." + x)} <b>{n}</b>
+              {x !== "all" && <Icon name={STATUS_ICON[x]} size={12} stroke={2.4} />} {x === "all" ? t("rooms.all") : t("status." + x)} <b>{n}</b>
             </button>
           );
         })}
@@ -73,7 +75,7 @@ export function RoomsScreen() {
             <div key={r.no} className="room-list-item">
               <RoomCard room={r} onClick={() => s.go({ name: r.status === "needs_fix" ? "fix" : r.status === "cleaning" ? "clean" : "room", no: r.no })} />
               {r.status === "dnd" && (
-                <button type="button" className="btn btn-secondary btn-small" onClick={() => s.retryNow(r.no)}>⟳ {t("rooms.retry")}</button>
+                <button type="button" className="btn btn-secondary btn-small" onClick={() => s.retryNow(r.no)}><Icon name="refresh" size={14} /> {t("rooms.retry")}</button>
               )}
             </div>
           ))}
@@ -83,27 +85,40 @@ export function RoomsScreen() {
   );
 }
 
+function MenuRow({ icon, label, onClick, tone }: { icon: ReactNode; label: string; onClick: () => void; tone?: "quiet" }) {
+  return (
+    <button type="button" className={`menu-item ${tone ? "menu-" + tone : ""}`} onClick={onClick}>
+      <span className="menu-ic">{icon}</span><span>{label}</span><Icon name="next" size={16} className="flip-rtl muted" />
+    </button>
+  );
+}
+
 export function MenuScreen() {
   const t = useT();
   const s = useApp();
   const person = me(s);
-  const items = [
-    { icon: <span className="big-emoji-s">☰</span>, label: t("menu.rooms"), go: () => s.go({ name: "rooms" }) },
-    { icon: <Obj id="clipboard" size={36} />, label: t("menu.reports"), go: () => s.go({ name: "reports" }) },
-    { icon: <span className="big-emoji-s">💬</span>, label: t("msg.title"), go: () => s.go({ name: "messages" }) },
-    { icon: <span className="big-emoji-s">🏁</span>, label: t("menu.end"), go: () => s.go({ name: "end" }) },
-  ];
   return (
     <div className="screen">
       <Header title={t("menu.title")} back={s.home} />
       <div className="screen-body">
-        <div className="greet"><div className="avatar">{person.from}</div><div><b>{person.name}</b><div className="muted">{t("shift.floor", { floor: 4, n: s.rooms.length })} · {s.device === "tablet" ? t("login.cartTablet") : t("login.ownPhone")}</div></div></div>
-        <div className="menu-list">
-          {items.map((it) => <button type="button" key={it.label} className="menu-item" onClick={it.go}>{it.icon}<span>{it.label}</span><span className="flip-rtl muted">›</span></button>)}
+        <div className="profile">
+          <div className="avatar">{person.name[0]}</div>
+          <div>
+            <div className="profile-name">{person.name}</div>
+            <div className="muted small">{t("shift.floor", { floor: 4, n: s.rooms.length })} · {s.device === "tablet" ? t("login.cartTablet") : t("login.ownPhone")}</div>
+          </div>
         </div>
-        <h2 className="section-title">🌐 {t("menu.language")}</h2>
+        <div className="card list-card">
+          <MenuRow icon={<Icon name="list" />} label={t("menu.rooms")} onClick={() => s.go({ name: "rooms" })} />
+          <MenuRow icon={<Icon name="wrench" />} label={t("menu.reports")} onClick={() => s.go({ name: "reports" })} />
+          <MenuRow icon={<Icon name="chat" />} label={t("msg.title")} onClick={() => s.go({ name: "messages" })} />
+          <MenuRow icon={<Icon name="flag" />} label={t("menu.end")} onClick={() => s.go({ name: "end" })} />
+        </div>
+        <Eyebrow>{t("menu.language")}</Eyebrow>
         <LangPicker />
-        <button type="button" className="menu-item menu-demo" onClick={() => s.go({ name: "demo" })}>🎬<span>{t("menu.demo")}</span><span className="flip-rtl muted">›</span></button>
+        <div className="card list-card">
+          <MenuRow icon={<Icon name="film" />} label={t("menu.demo")} onClick={() => s.go({ name: "demo" })} tone="quiet" />
+        </div>
       </div>
     </div>
   );
@@ -131,24 +146,24 @@ export function EndScreen() {
           <div className="stat"><b>{s.issues.length}</b><span>{t("end.issues")}</span></div>
           <div className="stat stat-ok"><b>{rate}%</b><span>{t("end.passed")}</span></div>
         </div>
-        <p className="thanks">⭐ {t("end.thanks", { name: person.name })}</p>
+        <p className="thanks">{t("end.thanks", { name: person.name })}</p>
 
-        {notDone > 0 && <div className="rule rule-warn">⚠ {t("end.notDone", { n: notDone })}</div>}
+        {notDone > 0 && <div className="rule rule-warn"><Icon name="info" size={16} /> {t("end.notDone", { n: notDone })}</div>}
 
         {dnd.length > 0 && (
-          <section>
-            <h2 className="section-title">🚫 {t("end.handTitle")}</h2>
-            <div className="then-row">{dnd.map((r) => <span key={r.no} className="keytag keytag-s st-dnd"><span className="keytag-hole" /><span className="keytag-no">{r.no}</span></span>)}</div>
+          <section className="block">
+            <Eyebrow>{t("end.handTitle")}</Eyebrow>
+            <div className="then-row">{dnd.map((r) => <KeyTag key={r.no} room={r} size="s" />)}</div>
             {handed ? (
-              <p className="ok-line">✓ {t("end.handed", { name: SUPERVISOR })}</p>
+              <p className="ok-line"><Icon name="check" size={16} stroke={2.4} /> {t("end.handed", { name: SUPERVISOR })}</p>
             ) : (
-              <button type="button" className="btn btn-secondary" onClick={s.handOver}>↪ {t("end.hand")}</button>
+              <button type="button" className="btn btn-secondary" onClick={s.handOver}><Icon name="handover" size={16} className="flip-rtl" /> {t("end.hand")}</button>
             )}
           </section>
         )}
       </div>
       <BottomBar>
-        <button type="button" className="btn btn-primary" disabled={dnd.length > 0 && !handed} onClick={s.endShift}>🏁 {t("end.btn")}</button>
+        <button type="button" className="btn btn-primary" disabled={dnd.length > 0 && !handed} onClick={s.endShift}><Icon name="flag" size={16} /> {t("end.btn")}</button>
       </BottomBar>
     </div>
   );
@@ -160,11 +175,11 @@ export function OffDuty() {
   return (
     <div className="screen done-screen">
       <div className="screen-body center">
-        <div className="done-stamp">🌙</div>
-        <h1 className="title">{t("end.offTitle")}</h1>
+        <div className="seal seal-night"><Icon name="moon" size={34} /></div>
+        <h1 className="display">{t("end.offTitle")}</h1>
         <p className="muted">{s.device === "tablet" ? t("end.loggedOut") : t("end.offSub")}</p>
       </div>
-      <BottomBar><button type="button" className="btn btn-secondary" onClick={s.demoReset}>↺ {t("end.again")}</button></BottomBar>
+      <BottomBar><button type="button" className="btn btn-secondary" onClick={s.demoReset}><Icon name="refresh" size={16} /> {t("end.again")}</button></BottomBar>
     </div>
   );
 }
@@ -177,7 +192,7 @@ export function DemoScreen() {
   const r = s.rooms.find((x) => x.no === room);
   return (
     <div className="screen">
-      <Header title="🎬 Demo controls" back={s.home} />
+      <Header title="Demo controls" back={s.home} />
       <div className="screen-body demo">
         <p className="muted small">Simulates the other side: reception, the PMS (OPERA) and the supervisor.</p>
         <label className="demo-row">Room
@@ -186,16 +201,16 @@ export function DemoScreen() {
           </select>
         </label>
         <div className="demo-grid">
-          <button type="button" className="btn btn-urgent" onClick={() => { s.demoUrgent(room); s.home(); }}>⚡ Reception: mark urgent</button>
-          <button type="button" className="btn btn-secondary" disabled={r?.status !== "to_inspect"} onClick={() => s.demoInspect(room, true)}>✓ Supervisor: pass</button>
-          <button type="button" className="btn btn-secondary" disabled={r?.status !== "to_inspect"} onClick={() => s.demoInspect(room, false)}>🔧 Supervisor: needs a fix</button>
-          <button type="button" className="btn btn-secondary" onClick={() => s.demoCheckout(room)}>🧳 PMS: guest checked out</button>
+          <button type="button" className="btn btn-urgent" onClick={() => { s.demoUrgent(room); s.home(); }}><Icon name="bolt" size={15} fill stroke={0} /> Reception: mark urgent</button>
+          <button type="button" className="btn btn-secondary" disabled={r?.status !== "to_inspect"} onClick={() => s.demoInspect(room, true)}><Icon name="check" size={15} /> Supervisor: pass</button>
+          <button type="button" className="btn btn-secondary" disabled={r?.status !== "to_inspect"} onClick={() => s.demoInspect(room, false)}><Icon name="wrench" size={15} /> Supervisor: needs a fix</button>
+          <button type="button" className="btn btn-secondary" onClick={() => s.demoCheckout(room)}><Icon name="door" size={15} /> PMS: guest checked out</button>
         </div>
         <label className="demo-row">
           <input type="checkbox" checked={!s.online} onChange={(e) => s.setOnline(!e.target.checked)} /> No signal (offline)
         </label>
         <p className="muted small">Inspection buttons work once the room is “To inspect” (after Room done). Maintenance issues move to “Being fixed” after 20 s and “Fixed” after 60 s. Messages get a reply after 5 s. DND rooms come back after 45 s.</p>
-        <button type="button" className="btn btn-secondary" onClick={() => { localStorage.clear(); location.reload(); }}>↺ Reset everything</button>
+        <button type="button" className="btn btn-secondary" onClick={() => { localStorage.clear(); location.reload(); }}><Icon name="refresh" size={15} /> Reset everything</button>
       </div>
       <BottomBar><button type="button" className="btn btn-primary" onClick={s.home}>Back to app</button></BottomBar>
     </div>

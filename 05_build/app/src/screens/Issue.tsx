@@ -2,7 +2,8 @@ import { useRef, useState } from "react";
 import { useApp } from "../store";
 import { useT } from "../i18n";
 import { Header } from "../components/chrome";
-import { BottomBar, Obj, hhmm } from "../components/ui";
+import { BottomBar, Eyebrow, Obj, hhmm } from "../components/ui";
+import { Icon, type IconName } from "../components/Icon";
 import { ISSUE_OBJECTS } from "../data/content";
 import type { IssueKind } from "../data/model";
 import type { ObjectId } from "../data/objects";
@@ -45,10 +46,10 @@ export function IssueScreen({ no }: { no?: string }) {
     return (
       <div className="screen done-screen">
         <div className="screen-body center">
-          <div className="done-stamp">{kind === "lost" ? <Obj id="lost-item" size={90} /> : "✓"}</div>
-          <h1 className="title">{kind === "lost" ? t("issue.lostSent") : t("issue.sent")}</h1>
+          <div className="seal">{kind === "lost" ? <Obj id="lost-item" size={56} /> : <Icon name="send" size={34} />}</div>
+          <h1 className="display">{kind === "lost" ? t("issue.lostSent") : t("issue.sent")}</h1>
           <p className="muted">{kind === "lost" ? t("issue.lostSentSub") : t("issue.sentSub")}</p>
-          {!s.online && <p className="banner banner-offline">☁︎ {t("mode.offline")}</p>}
+          {!s.online && <p className="banner banner-offline"><Icon name="cloudOff" size={16} /> {t("mode.offline")}</p>}
         </div>
         <BottomBar><button type="button" className="btn btn-primary" onClick={back}>{no ? t("home.continue", { room: no }) : t("common.back")}</button></BottomBar>
       </div>
@@ -58,20 +59,20 @@ export function IssueScreen({ no }: { no?: string }) {
   const ready = kind === "lost" || object;
   return (
     <div className="screen">
-      <Header title={`${t("issue.title")} · ${roomNo}`} back={back} />
+      <Header title={t("issue.title")} sub={roomNo} back={back} />
       <div className="screen-body">
         <div className="seg">
-          <button type="button" className={kind === "maintenance" ? "on" : ""} onClick={() => setKind("maintenance")}><Obj id="tap-leak" size={36} /> {t("issue.kind.maintenance")}</button>
-          <button type="button" className={kind === "lost" ? "on" : ""} onClick={() => setKind("lost")}><Obj id="lost-item" size={36} /> {t("issue.kind.lost")}</button>
+          <button type="button" className={kind === "maintenance" ? "on" : ""} onClick={() => setKind("maintenance")}><Icon name="wrench" size={18} /> {t("issue.kind.maintenance")}</button>
+          <button type="button" className={kind === "lost" ? "on" : ""} onClick={() => setKind("lost")}><Icon name="box" size={18} /> {t("issue.kind.lost")}</button>
         </div>
 
         {kind === "maintenance" && (
           <>
-            <h2 className="section-title">① {t("issue.what")}</h2>
+            <Eyebrow>1 · {t("issue.what")}</Eyebrow>
             <div className="issue-grid">
               {ISSUE_OBJECTS.map((o) => (
                 <button type="button" key={o} className={`issue-opt ${object === o ? "on" : ""}`} onClick={() => setObject(o)} aria-pressed={object === o}>
-                  <Obj id={o} size={52} /><span>{t(`obj.${o}`)}</span>
+                  <Obj id={o} size={36} /><span>{t(`obj.${o}`)}</span>
                 </button>
               ))}
             </div>
@@ -80,40 +81,42 @@ export function IssueScreen({ no }: { no?: string }) {
 
         {ready && (
           <>
-            <h2 className="section-title">② {noPhotos ? t("issue.noPhoto") : t("issue.photo")}</h2>
+            <Eyebrow>{kind === "lost" ? "1" : "2"} · {noPhotos ? t("issue.noPhoto") : t("issue.photo")}</Eyebrow>
             {!noPhotos && (
               <>
                 <input ref={fileRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => pickPhoto(e.target.files?.[0])} />
                 {photo ? (
-                  <div className="photo-preview"><img src={photo} alt="" /><button type="button" className="btn btn-secondary btn-small" onClick={() => fileRef.current?.click()}>📷 {t("issue.retake")}</button></div>
+                  <div className="photo-preview"><img src={photo} alt="" /><button type="button" className="btn btn-secondary btn-small" onClick={() => fileRef.current?.click()}><Icon name="camera" size={16} /> {t("issue.retake")}</button></div>
                 ) : (
-                  <button type="button" className="photo-btn" onClick={() => fileRef.current?.click()}>📷<span>{t("issue.photo")}</span></button>
+                  <button type="button" className="photo-btn" onClick={() => fileRef.current?.click()}><Icon name="camera" size={26} stroke={1.5} /><span>{t("issue.photo")}</span></button>
                 )}
               </>
             )}
 
-            <h2 className="section-title">③ {kind === "lost" ? t("issue.lostNote") : t("issue.note")}</h2>
+            <Eyebrow>{kind === "lost" ? "2" : "3"} · {kind === "lost" ? t("issue.lostNote") : t("issue.note")}</Eyebrow>
             <div className="note-input">
               <textarea value={note} onChange={(e) => { setNote(e.target.value); setNeedNote(false); }} placeholder={t("issue.placeholder")} rows={2} />
               <button type="button" className={`mic-btn ${recording ? "rec" : ""} ${voice ? "has" : ""}`}
                 onPointerDown={holdStart} onPointerUp={holdEnd} onPointerLeave={holdEnd} onContextMenu={(e) => e.preventDefault()}
-                aria-label={t("issue.voice")}>🎤</button>
+                aria-label={t("issue.voice")}><Icon name={voice && !recording ? "check" : "mic"} size={22} /></button>
             </div>
-            <div className={`muted small ${needNote ? "error" : ""}`}>
-              {needNote ? "⚠ " + t("issue.noteRequired") : recording ? "● " + t("issue.recording") : voice ? "✓ " + t("issue.voiceAdded") : t("issue.voice")}
+            <div className={`small ${needNote ? "error" : "muted"}`}>
+              {needNote ? t("issue.noteRequired") : recording ? "● " + t("issue.recording") : voice ? t("issue.voiceAdded") : t("issue.voice")}
             </div>
             {voice && voice !== "simulated" && <audio src={voice} controls className="voice-play" />}
           </>
         )}
       </div>
       <BottomBar>
-        <button type="button" className="btn btn-primary" disabled={!ready} onClick={send}>➤ {t("issue.send")}</button>
+        <button type="button" className="btn btn-primary" disabled={!ready} onClick={send}><Icon name="send" size={16} /> {t("issue.send")}</button>
       </BottomBar>
     </div>
   );
 }
 
-/** → Track my reported issues: 🔧 in progress → ✅ fixed. */
+const STATE_IC: Record<string, IconName> = { sent: "send", in_progress: "wrench", fixed: "check", lost: "box" };
+
+/** → Track my reported issues: Sent → Being fixed → Fixed. */
 export function ReportsScreen() {
   const t = useT();
   const s = useApp();
@@ -121,27 +124,29 @@ export function ReportsScreen() {
     <div className="screen">
       <Header title={t("issue.mine")} back={s.home} />
       <div className="screen-body">
-        {s.issues.length === 0 && <div className="empty"><Obj id="clipboard" size={110} /><p className="muted">{t("issue.none")}</p></div>}
-        <div className="report-list">
-          {s.issues.map((i) => {
-            const st = i.kind === "lost" ? "lost" : i.state;
-            return (
-              <div key={i.id} className="report-row">
-                {i.photo ? <img src={i.photo} alt="" className="report-photo" /> : <Obj id={i.object} size={56} />}
-                <div className="report-main">
-                  <b>{i.room} · {t(`obj.${i.object}`)}</b>
-                  <span className="muted small">{i.note || (i.voice ? "🎤" : "")} · {hhmm(i.at)}</span>
+        {s.issues.length === 0 && <div className="empty"><Obj id="clipboard" size={90} /><p className="muted">{t("issue.none")}</p></div>}
+        {s.issues.length > 0 && (
+          <div className="card list-card">
+            {s.issues.map((i) => {
+              const st = i.kind === "lost" ? "lost" : i.state;
+              return (
+                <div key={i.id} className="report-row">
+                  {i.photo ? <img src={i.photo} alt="" className="report-photo" /> : <span className="report-obj"><Obj id={i.object} size={34} /></span>}
+                  <div className="report-main">
+                    <b><span className="room-no">{i.room}</span> · {t(`obj.${i.object}`)}</b>
+                    <span className="muted small">{i.note || (i.voice ? t("issue.voiceAdded") : "")} · {hhmm(i.at)}</span>
+                  </div>
+                  <span className={`report-state rs-${st}`}>
+                    <Icon name={STATE_IC[st]} size={12} stroke={2.2} /> {t(`issue.state.${st}`)}
+                    {!i.synced && <Icon name="cloudOff" size={12} />}
+                  </span>
                 </div>
-                <span className={`report-state rs-${st}`}>
-                  {st === "fixed" ? "✓" : st === "in_progress" ? "🔧" : st === "lost" ? "📦" : "➤"} {t(`issue.state.${st}`)}
-                  {!i.synced && <small> · ☁︎</small>}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
-      <BottomBar><button type="button" className="btn btn-primary" onClick={() => s.go({ name: "issue" })}>➕ {t("issue.title")}</button></BottomBar>
+      <BottomBar><button type="button" className="btn btn-primary" onClick={() => s.go({ name: "issue" })}><Icon name="plus" size={16} /> {t("issue.title")}</button></BottomBar>
     </div>
   );
 }

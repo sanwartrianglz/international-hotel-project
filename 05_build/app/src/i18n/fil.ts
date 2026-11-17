@@ -193,6 +193,7 @@ export const fil: Partial<Record<StringKey, string>> = {
   "issue.state.lost": "Nasa supervisor",
 
   "msg.title": "Mga mensahe",
+  "msg.role": "Supervisor · floor 4",
   "msg.tap": "Pindutin para ipadala",
   "msg.seen": "Nakita {time}",
   "msg.notSent": "Hindi pa naipadala",
