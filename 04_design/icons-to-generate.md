@@ -1,6 +1,6 @@
 # Icons to generate: navy-gradient object set
 
-Style: match the navy images in `00_inputs/Icons/` (e.g. bed, towels, minibar). Soft navy-blue gradients, light paper background, same angle and light. Attach one as the style reference when generating.
+Style: keep generating in **navy** to match the images in `00_inputs/Icons/` (e.g. bed, towels, minibar). Soft navy-blue gradients, light paper background, same angle and light. Attach one as the style reference when generating. The app turns them emerald on import (hue shift), so new icons must stay navy for the colours to match.
 
 **How to add new ones:** save the PNG/JPG into `00_inputs/Icons/` (any size; Gemini file names are fine). Then, in `05_build/app`, run `npm run objects`. The script resizes each image to 256 px, cuts out the background, and writes `public/objects/<name>.webp`. For a new Gemini file, add its id to `MAP` in `scripts/import-objects.mjs`, or name the file after the object (e.g. `ac.png`).
 

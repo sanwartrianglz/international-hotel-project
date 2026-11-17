@@ -46,3 +46,4 @@ Dated log of work sessions: what was done and what's next.
 - **Next:** export the 11 navy images (they are selected in Figma) and generate the other 34; Amr to confirm the smaller sizes.
 - Imported 30 navy-gradient icons from 00_inputs/Icons (identified by eye, mapped in scripts/import-objects.mjs): resized to 256 px WebP with the paper background cut out (75 MB → 240 KB). 15 still needed (04_design/icons-to-generate.md).
 - Imported 13 more icons (43 total). Still needed: female-staff, first-aid.
+- Icons recoloured to emerald on import (hue shift −95°); placeholders tinted to match.

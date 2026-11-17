@@ -34,10 +34,14 @@ function idFor(file) {
   return /^[a-z-]+$/.test(plain) ? plain : null;
 }
 
+/** Colour of the set: the source images are navy; this hue shift turns them emerald (0 = keep navy). */
+const HUE_SHIFT = Number(process.env.ICON_HUE ?? -95);
+
 /** Resize to 256 px and cut out the off-white paper background (near-white AND low-colour pixels),
  *  so light-blue highlights stay solid. Soft ramp keeps edges anti-aliased. */
 async function toTransparentWebp(input, output) {
   const { data, info } = await sharp(input).resize(256, 256, { fit: "contain", background: "#ffffff" })
+    .modulate({ hue: HUE_SHIFT })
     .removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const out = Buffer.alloc(info.width * info.height * 4);
   for (let i = 0, j = 0; i < data.length; i += 3, j += 4) {

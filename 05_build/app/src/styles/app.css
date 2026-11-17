@@ -39,9 +39,9 @@ button:disabled { cursor: not-allowed; }
 .block { display: flex; flex-direction: column; gap: var(--s3); }
 
 /* Objects: navy-gradient images sit on tinted tiles (multiply drops their light background).
-   Missing images fall back to an emoji tinted navy, so the set stays one family. */
+   Missing images fall back to an emoji tinted emerald, so the set stays one family. */
 .obj { display: block; object-fit: contain; flex: none; user-select: none; }
-.obj-fallback { display: inline-grid; place-items: center; flex: none; line-height: 1; filter: grayscale(1) sepia(1) hue-rotate(185deg) saturate(2.2) brightness(0.8) contrast(1.1); }
+.obj-fallback { display: inline-grid; place-items: center; flex: none; line-height: 1; filter: grayscale(1) sepia(1) hue-rotate(120deg) saturate(2) brightness(0.8) contrast(1.1); }
 
 /* Stationery label */
 .eyebrow { display: flex; align-items: center; gap: var(--s2); font-size: var(--fs-eyebrow); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brass-text); }
