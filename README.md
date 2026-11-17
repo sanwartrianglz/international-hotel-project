@@ -4,6 +4,8 @@ Trianglz group UX assignment: the **Cecil Hotel** concept, international edition
 
 Team: Sally, Salma, Amr.
 
+**Live prototype:** https://sanwartrianglz.github.io/international-hotel-project/ (opens in an iPhone frame on a laptop and full-screen on a phone; ☰ → Demo controls simulates reception and the supervisor). It republishes automatically a minute or two after each push to `main`.
+
 ## Start here
 1. `BRIEF.md`: the assignment and open questions
 2. `DECISIONS.md`: dated decisions log
@@ -22,9 +24,15 @@ Team: Sally, Salma, Amr.
 | `06_test/` | Test script, usability findings |
 
 ## Working together
+First time: accept the GitHub invite, install [Git](https://git-scm.com) and [Node.js](https://nodejs.org) (LTS), then:
 ```bash
 git clone https://github.com/sanwartrianglz/international-hotel-project.git
-cd international-hotel-project
+cd international-hotel-project/05_build/app
+npm install
+npm run dev       # opens the app at http://localhost:5173
+```
+Every time:
+```bash
 git pull          # before you start working
 git add .
 git commit -m "Short description of what you changed"
