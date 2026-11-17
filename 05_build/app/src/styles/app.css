@@ -241,7 +241,8 @@ button:disabled { cursor: not-allowed; }
 /* ---------- Start / login ---------- */
 .start-screen { padding: var(--s6) var(--s4) var(--s5); gap: var(--s5); display: flex; flex-direction: column; }
 .crest { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-block: var(--s4) var(--s2); }
-.crest-mark { inline-size: 58px; block-size: 58px; border-radius: 50%; display: grid; place-items: center; background: var(--navy); box-shadow: inset 0 0 0 3px var(--navy), inset 0 0 0 4px var(--brass), 0 6px 16px -6px rgba(30,41,59,0.5); }
+.crest-mark { inline-size: 64px; block-size: 64px; border-radius: 18px; overflow: hidden; background: var(--brand-green); box-shadow: 0 6px 16px -6px rgba(36,63,54,0.6); }
+.crest-mark img { inline-size: 100%; block-size: 100%; display: block; }
 .crest-c { font-family: var(--font-display); font-size: 30px; font-weight: 600; color: var(--brass-light); line-height: 1; margin-block-start: -2px; }
 .crest-name { font-family: var(--font-display); font-size: 22px; font-weight: 600; letter-spacing: 0.32em; margin-inline-start: 0.32em; margin-block-start: 6px; }
 .crest-sub { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brass-text); }
@@ -252,7 +253,7 @@ button:disabled { cursor: not-allowed; }
 .device-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); }
 .who-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
 .device-opt, .who-opt { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: var(--s4) var(--s2); background: var(--paper); border-radius: var(--radius-l); border: 1px solid var(--hairline); text-align: center; box-shadow: var(--shadow); font-size: var(--fs-label); }
-.device-ic { display: grid; place-items: center; inline-size: 48px; block-size: 48px; border-radius: 50%; background: var(--surface); margin-block-end: 4px; }
+.device-art { display: grid; place-items: center; inline-size: 96px; block-size: 96px; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #fff, #efebe3); margin-block-end: 6px; }
 .avatar { inline-size: 44px; block-size: 44px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 600; color: var(--brass-text); font-size: 20px; background: var(--paper); border: 1px solid var(--brass-light); flex: none; }
 .avatar-l { inline-size: 72px; block-size: 72px; font-size: 36px; }
 .face-wrap, .pin-wrap { display: flex; flex-direction: column; align-items: center; gap: var(--s3); text-align: center; }
@@ -464,21 +465,17 @@ button:disabled { cursor: not-allowed; }
   .device-tablet .preset-grid { grid-template-columns: repeat(6, 1fr); }
 }
 
-/* ---------- Splash ---------- */
-.splash { min-block-size: var(--app-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: radial-gradient(circle at 50% 42%, var(--navy-2), var(--navy) 65%); color: var(--white); cursor: pointer; }
-.splash-ring { margin-block-end: var(--s4); animation: splash-pop 0.6s cubic-bezier(.2,1.4,.4,1) both; }
-.splash-ring-draw { stroke-dasharray: 327; stroke-dashoffset: 327; transform: rotate(-90deg); transform-origin: 56px 56px; animation: splash-draw 1s 0.15s ease-out forwards; }
-.splash-c { font-family: var(--font-display); font-size: 46px; font-weight: 600; fill: var(--brass-light); opacity: 0; animation: splash-fade 0.5s 0.45s ease-out forwards; }
-.splash-name { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: 0.4em; margin-inline-start: 0.4em; opacity: 0; animation: splash-rise 0.6s 0.7s ease-out forwards; }
-.splash-tag { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass-light); opacity: 0; animation: splash-rise 0.6s 0.9s ease-out forwards; }
+/* ---------- Splash: the Cecil Hotel logo on its own green ---------- */
+.splash { min-block-size: var(--app-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s3); background: var(--brand-green); color: var(--brand-gold); cursor: pointer; }
+.splash-logo { inline-size: 200px; block-size: auto; animation: splash-in 0.9s cubic-bezier(.2,.8,.3,1) both; }
+.splash-rule { inline-size: 0; block-size: 1px; background: var(--brand-gold); opacity: 0.6; animation: splash-rule 0.7s 0.6s ease-out forwards; }
+.splash-tag { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--brand-gold); opacity: 0; animation: splash-rise 0.6s 0.9s ease-out forwards; }
 [dir="rtl"] .splash-tag { letter-spacing: 0; font-size: 13px; }
-@keyframes splash-pop { from { transform: scale(0.8); opacity: 0; } }
-@keyframes splash-draw { to { stroke-dashoffset: 0; } }
-@keyframes splash-fade { to { opacity: 1; } }
-@keyframes splash-rise { from { transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes splash-in { from { opacity: 0; transform: scale(0.94) translateY(6px); filter: blur(2px); } }
+@keyframes splash-rule { to { inline-size: 56px; } }
+@keyframes splash-rise { from { transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .splash-ring-draw { stroke-dashoffset: 0; animation: none; }
-  .splash-c, .splash-name, .splash-tag { opacity: 1; animation: none; }
+  .splash-logo { animation: none; } .splash-rule { inline-size: 56px; animation: none; } .splash-tag { opacity: 1; animation: none; }
 }
 
 /* ---------- Onboarding ---------- */
@@ -490,7 +487,8 @@ button:disabled { cursor: not-allowed; }
 @keyframes onb-in { from { opacity: 0; transform: translateX(16px); } }
 [dir="rtl"] .onb-body { animation-name: onb-in-rtl; }
 @keyframes onb-in-rtl { from { opacity: 0; transform: translateX(-16px); } }
-.onb-crest { inline-size: 52px; block-size: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--navy); box-shadow: inset 0 0 0 3px var(--navy), inset 0 0 0 4px var(--brass); }
+.onb-crest { inline-size: 56px; block-size: 56px; border-radius: 16px; overflow: hidden; background: var(--brand-green); box-shadow: 0 6px 16px -6px rgba(36,63,54,0.6); }
+.onb-crest img { inline-size: 100%; block-size: 100%; display: block; }
 .onb-crest span { font-family: var(--font-display); font-size: 26px; font-weight: 600; color: var(--brass-light); margin-block-start: -2px; }
 .onb-title { font-size: 24px; display: flex; flex-direction: column; gap: 2px; }
 .onb-title span { font-size: 15px; font-weight: 500; color: var(--text-2); font-family: var(--font); }

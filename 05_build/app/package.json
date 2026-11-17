@@ -9,7 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "objects": "node scripts/import-objects.mjs",
-    "icons": "node scripts/make-icons.mjs"
+    "brand": "node scripts/make-brand.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

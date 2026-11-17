@@ -15,13 +15,9 @@ export function Splash() {
     return () => clearTimeout(id);
   }, [endSplash]);
   return (
-    <div className="splash" onClick={endSplash} role="img" aria-label="Cecil Housekeeping">
-      <svg className="splash-ring" width="112" height="112" viewBox="0 0 112 112" aria-hidden>
-        <circle cx="56" cy="56" r="52" fill="none" stroke="rgba(233,220,195,0.18)" strokeWidth="1.5" />
-        <circle className="splash-ring-draw" cx="56" cy="56" r="52" fill="none" stroke="var(--brass)" strokeWidth="2.5" strokeLinecap="round" />
-        <text x="56" y="70" textAnchor="middle" className="splash-c">C</text>
-      </svg>
-      <div className="splash-name">CECIL</div>
+    <div className="splash" onClick={endSplash} role="img" aria-label="Cecil Hotel · Housekeeping">
+      <img className="splash-logo" src={`${import.meta.env.BASE_URL}brand/logo.webp`} alt="" />
+      <div className="splash-rule" aria-hidden />
       <div className="splash-tag">{t("splash.tag")}</div>
     </div>
   );
@@ -110,7 +106,7 @@ export function Onboarding() {
 
       {step === 0 ? (
         <div className="onb-body" key="lang">
-          <div className="onb-crest" aria-hidden><span>C</span></div>
+          <div className="onb-crest" aria-hidden><img src={`${import.meta.env.BASE_URL}brand/mark.webp`} alt="" /></div>
           <Eyebrow>{t("onb.welcome")}</Eyebrow>
           <h1 className="display onb-title">
             {LANGS.map((l) => <span key={l.id} lang={l.id} dir={l.dir} className={l.id === lang ? "on" : ""}>{translate(l.id, "onb.lang.title")}</span>)}

@@ -20,6 +20,8 @@ const MAP = {
   "s7gq1v": "no-rooms", "v53hp8": "all-done", "slf0jh": "lost-item", "repbml": "cart", "nn7vud": "privacy",
   "tj9617": "vip", "cyoq9s": "key-card", "sh6qpv": "safe", "n25vzw": "socket", "ew1j2s": "door-lock",
   "qdgr7o": "tap-leak", "tz14u4": "light", "69gxwb": "ac",
+  // device choice (17 Nov)
+  "gasc6o": "own-phone", "qvkky7": "cart-tablet",
   // FigJam Section 4 layer names (if exported from the board instead)
   "fl8f48": "towels", "q74ly3": "toiletries", "7f8rf4": "pillows", "a6y6h5": "wine",
   "image 3": "tv", "image 1": "clipboard", "image 2": "throw",
@@ -61,6 +63,7 @@ mkdirSync(dest, { recursive: true });
 let n = 0;
 for (const f of readdirSync(src).sort()) {
   if (!/\.(png|jpe?g|webp)$/i.test(f)) continue;
+  if (/oj3ili/.test(f)) continue; // Cecil logo: handled by make-brand.mjs, not an object
   const id = idFor(f);
   if (!id) { console.log("skipped (unknown):", f); continue; }
   await toTransparentWebp(join(src, f), join(dest, id + ".webp"));

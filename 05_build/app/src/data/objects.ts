@@ -8,7 +8,7 @@ export const OBJECTS = {
   "first-aid": "⛑️", clipboard: "📋", "all-done": "✅", shower: "🚿", duster: "🪶",
   bathrobe: "🥋", throw: "🧣", linen: "🛏️", "soft-drink": "🥤", snack: "🍫", quiet: "🤫",
   "service-dog": "🐕", vip: "⭐", privacy: "🔒", socket: "🔌", safe: "🔐", furniture: "🪑",
-  "key-card": "🔑", "female-staff": "👩", "lost-item": "⌚", "no-rooms": "🛌", turndown: "🍬", "coffee-pods": "☕",
+  "key-card": "🔑", "female-staff": "👩", "own-phone": "📱", "cart-tablet": "📟", "lost-item": "⌚", "no-rooms": "🛌", turndown: "🍬", "coffee-pods": "☕",
 } as const;
 
 export type ObjectId = keyof typeof OBJECTS;

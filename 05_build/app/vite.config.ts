@@ -11,13 +11,13 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "objects/*.webp"],
+      includeAssets: ["favicon.png", "brand/*.webp", "objects/*.webp"],
       manifest: {
         name: "Cecil Housekeeping",
         short_name: "Housekeeping",
         description: "Housekeeping app for Cecil Hotels: one room at a time, icon-first, works offline.",
-        theme_color: "#1e293b",
-        background_color: "#f6f5f2",
+        theme_color: "#243f36",
+        background_color: "#243f36",
         display: "standalone",
         orientation: "any",
         start_url: base,

@@ -43,12 +43,12 @@ function useClock() {
   return `${now.getHours()}:${String(now.getMinutes()).padStart(2, "0")}`;
 }
 
-function StatusBar({ dark }: { dark: boolean }) {
+function StatusBar({ dark }: { dark: string }) {
   const time = useClock();
   const online = useApp((s) => s.online);
   const c = dark ? "#fff" : "#1e293b";
   return (
-    <div className={`ios-status ${dark ? "ios-status-dark" : ""}`} aria-hidden>
+    <div className={`ios-status ${dark ? "ios-status-dark ios-status-" + dark : ""}`} aria-hidden>
       <span className="ios-time">{time}</span>
       <span className="ios-icons">
         {/* signal: bars go empty when the demo simulates "no signal" */}
@@ -77,7 +77,7 @@ function StatusBar({ dark }: { dark: boolean }) {
 export function DeviceFrame({ children }: { children: ReactNode }) {
   const framed = useFramed();
   const scale = useScale();
-  const dark = useApp((s) => s.splash || (!!s.onBreak && s.phase === "shift"));
+  const dark = useApp((s) => (s.splash ? "brand" : !!s.onBreak && s.phase === "shift" ? "navy" : ""));
   const dir = useApp((s) => LANGS.find((l) => l.id === s.lang)?.dir ?? "ltr");
 
   useEffect(() => {

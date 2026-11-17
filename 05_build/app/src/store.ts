@@ -26,7 +26,8 @@ interface State {
   lang: Lang;
   onboarded: boolean;          // first-run onboarding seen on this device
   splash: boolean;             // splash screen showing (not persisted)
-  phase: "login" | "briefing" | "shift" | "offduty";
+  phase: "login" | "briefing" | "shift" | "offduty";   // not persisted: every app open starts at login
+  shiftStarted: boolean;       // persisted: logging in again resumes the shift
   device?: "phone" | "tablet";
   userId?: string;
   screen: Screen;
@@ -93,6 +94,7 @@ let toastSeq = 1;
 
 const initial = (): Omit<State, "lang" | "onboarded" | "splash"> => ({
   phase: "login",
+  shiftStarted: false,
   screen: { name: "home" },
   rooms: seedRooms(),
   issues: [],
@@ -135,9 +137,10 @@ export const useApp = create<State & Actions>()(
         replayOnboarding: () => set({ onboarded: false, splash: true, phase: "login" }),
         login: (device, userId) => {
           const staff = STAFF.find((p) => p.id === userId);
-          set({ device, userId, phase: "briefing", lang: get().lang ?? staff?.lang ?? "en" });
+          void staff;
+          set({ device, userId, phase: get().shiftStarted ? "shift" : "briefing", screen: { name: "home" } });
         },
-        startShift: () => { set({ phase: "shift", screen: { name: "home" } }); sync(); },
+        startShift: () => { set({ phase: "shift", shiftStarted: true, screen: { name: "home" } }); sync(); },
         go: (screen) => set({ screen }),
         home: () => set({ screen: { name: "home" } }),
 
@@ -232,7 +235,7 @@ export const useApp = create<State & Actions>()(
           set((s) => ({ handedOver: [...s.handedOver, ...dnd] }));
           sync();
         },
-        endShift: () => { set({ phase: "offduty", onBreak: undefined, urgentAlert: undefined, help: undefined }); sync(); },
+        endShift: () => { set({ phase: "offduty", shiftStarted: false, onBreak: undefined, urgentAlert: undefined, help: undefined }); sync(); },
 
         setOnline: (online) => {
           const wasPending = get().pending;
@@ -284,8 +287,8 @@ export const useApp = create<State & Actions>()(
     {
       name: "cecil-hk-v1",
       partialize: (s) => {
-        const { toasts: _t, splash: _s, ...rest } = s;
-        void _t; void _s;
+        const { toasts: _t, splash: _s, phase: _p, ...rest } = s;
+        void _t; void _s; void _p;
         return rest;
       },
     },

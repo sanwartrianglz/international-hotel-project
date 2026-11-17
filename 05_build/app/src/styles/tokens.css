@@ -13,6 +13,10 @@
   --text-2: #5b6472;        /* secondary text, 6.0:1 on white */
   --urgent: #d92d20;        /* urgent badge, white text 4.8:1 */
 
+  /* Cecil Hotel logo: deep green + gold (splash, crests, app icon) */
+  --brand-green: #243f36;
+  --brand-gold: #c9aa6e;
+
   /* Brass: decoration, rings, rules. Text only in the dark tone (5.3:1 on white). */
   --brass: #b8955a;
   --brass-light: #e9dcc3;

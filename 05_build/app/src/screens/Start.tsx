@@ -3,7 +3,7 @@ import { useApp, me } from "../store";
 import { LANGS, useT } from "../i18n";
 import { STAFF, SUPERVISOR } from "../data/seed";
 import { Obj, BottomBar, Eyebrow } from "../components/ui";
-import { Icon, type IconName } from "../components/Icon";
+import { Icon } from "../components/Icon";
 
 export function LangPicker() {
   const { lang, setLang } = useApp();
@@ -22,7 +22,7 @@ function Crest() {
   const t = useT();
   return (
     <div className="crest">
-      <div className="crest-mark" aria-hidden><span className="crest-c">C</span></div>
+      <div className="crest-mark" aria-hidden><img src={`${import.meta.env.BASE_URL}brand/mark.webp`} alt="" /></div>
       <div className="crest-name">CECIL</div>
       <div className="crest-sub">{t("app.chain")}</div>
     </div>
@@ -65,7 +65,7 @@ export function Login() {
           <div className="device-grid">
             {([["phone", "phone", "login.ownPhone", "login.ownPhoneSub"], ["tablet", "tablet", "login.cartTablet", "login.cartTabletSub"]] as const).map(([id, ic, a, b]) => (
               <button type="button" key={id} className="device-opt" onClick={() => setDevice(id)}>
-                <span className="device-ic"><Icon name={ic as IconName} size={24} /></span>
+                <span className="device-art"><Obj id={ic === "phone" ? "own-phone" : "cart-tablet"} size={84} /></span>
                 <b>{t(a)}</b><span className="muted small">{t(b)}</span>
               </button>
             ))}

@@ -32,6 +32,7 @@ On a desktop-size window the app shows inside an **iPhone 15 Pro mockup** (Dynam
 | `src/i18n/` | English, Arabic (RTL, gender-neutral nouns), Filipino. **Translations are drafts; please review.** |
 | `src/store.ts` | Room status flow, offline queue, simulated reception / supervisor / PMS |
 | `src/screens/` | Start (login, briefing), Home, Clean (checklist, done, fix-it), Issue, More (messages, rooms, menu, end, demo) |
+| `public/brand/` | Logo lock-up and arch mark from the Cecil Hotel logo; also `pwa-*.png` and `favicon.png`. Regenerate with `npm run brand`. |
 | `public/objects/` | Navy-gradient object icons as 256 px WebP with transparent background. Source images live in `00_inputs/Icons/`; run `npm run objects` to regenerate. Missing icons show a navy-tinted placeholder. |
 
 ## Not built yet

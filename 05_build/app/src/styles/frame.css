@@ -39,6 +39,7 @@ html.is-framed { --app-h: 798px; --safe-bottom: 22px; }
   background: var(--paper); color: var(--navy); font-family: -apple-system, "SF Pro Text", var(--font);
 }
 .ios-status-dark { background: var(--navy); color: var(--white); }
+.ios-status-brand { background: var(--brand-green); }
 .ios-time { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; inline-size: 54px; text-align: center; }
 .ios-icons { display: flex; align-items: center; gap: 6px; padding-block-start: 3px; }
 .iphone-content { position: relative; block-size: 798px; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
