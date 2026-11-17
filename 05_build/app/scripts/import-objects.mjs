@@ -22,6 +22,8 @@ const MAP = {
   "qdgr7o": "tap-leak", "tz14u4": "light", "69gxwb": "ac",
   // device choice (17 Nov)
   "gasc6o": "own-phone", "qvkky7": "cart-tablet",
+  // briefing (17 Nov)
+  "k36j1q": "lift", "va4u2s": "clock",
   // FigJam Section 4 layer names (if exported from the board instead)
   "fl8f48": "towels", "q74ly3": "toiletries", "7f8rf4": "pillows", "a6y6h5": "wine",
   "image 3": "tv", "image 1": "clipboard", "image 2": "throw",
@@ -36,13 +38,18 @@ function idFor(file) {
   return /^[a-z-]+$/.test(plain) ? plain : null;
 }
 
+/** Mirrored on import so their 3D depth faces the same way as the rest of the set (e.g. the VIP star). */
+const FLIP = new Set(["clock"]);
+
 /** Colour of the set: the source images are navy; this hue shift turns them emerald (0 = keep navy). */
 const HUE_SHIFT = Number(process.env.ICON_HUE ?? -95);
 
 /** Resize to 256 px and cut out the off-white paper background (near-white AND low-colour pixels),
  *  so light-blue highlights stay solid. Soft ramp keeps edges anti-aliased. */
-async function toTransparentWebp(input, output) {
-  const { data, info } = await sharp(input).resize(256, 256, { fit: "contain", background: "#ffffff" })
+async function toTransparentWebp(input, output, flip = false) {
+  let img = sharp(input);
+  if (flip) img = img.flop();
+  const { data, info } = await img.resize(256, 256, { fit: "contain", background: "#ffffff" })
     .modulate({ hue: HUE_SHIFT })
     .removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const out = Buffer.alloc(info.width * info.height * 4);
@@ -66,7 +73,7 @@ for (const f of readdirSync(src).sort()) {
   if (/oj3ili/.test(f)) continue; // Cecil logo: handled by make-brand.mjs, not an object
   const id = idFor(f);
   if (!id) { console.log("skipped (unknown):", f); continue; }
-  await toTransparentWebp(join(src, f), join(dest, id + ".webp"));
+  await toTransparentWebp(join(src, f), join(dest, id + ".webp"), FLIP.has(id));
   console.log(`${f}  →  ${id}.webp`);
   n++;
 }

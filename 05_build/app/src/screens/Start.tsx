@@ -126,8 +126,8 @@ export function Briefing() {
   const person = me(s);
   const items: { icon: React.ReactNode; key: string }[] = [
     { icon: <Obj id="vip" size={30} />, key: "brief.vip" },
-    { icon: <span className="brief-ic"><Icon name="clock" size={18} /></span>, key: "brief.arrivals" },
-    { icon: <span className="brief-ic"><Icon name="lift" size={18} /></span>, key: "brief.lift" },
+    { icon: <Obj id="clock" size={30} />, key: "brief.arrivals" },
+    { icon: <Obj id="lift" size={30} />, key: "brief.lift" },
     { icon: <Obj id="towels" size={30} />, key: "brief.linen" },
   ];
   return (

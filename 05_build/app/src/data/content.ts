@@ -58,7 +58,7 @@ export const MINIBAR_ITEMS: ObjectId[] = ["water", "soft-drink", "snack", "coffe
 export const PRESET_MESSAGES: { key: string; object?: ObjectId; emoji?: string }[] = [
   { key: "msg.towels", object: "towels" },
   { key: "msg.doneEarly", object: "all-done" },
-  { key: "msg.late", emoji: "⏰" },
+  { key: "msg.late", object: "clock" },
   { key: "msg.guestNo", object: "dnd" },
   { key: "msg.key", object: "key-card" },
   { key: "msg.amenities", object: "toiletries" },

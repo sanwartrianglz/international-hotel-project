@@ -51,3 +51,4 @@ Dated log of work sessions: what was done and what's next.
 - Added splash (brass ring draws around the Cecil C, ~1.7 s each open) and first-run onboarding: language step (asked in all three languages) + 4 picture-first slides with listen, swipe, skip. Demo controls: Replay splash + onboarding.
 - iPhone frame now shows on any window wider than 600 px (height no longer matters), so the live link shows the mockup on laptops.
 - Added the Cecil Hotel logo (splash on its own green, crests, PWA icon, favicon) via scripts/make-brand.mjs; phone + cart-tablet pictures on the device choice. Refresh now always goes splash → device choice; logging in resumes an ongoing shift.
+- Added lift and clock icons to the briefing (clock mirrored on import to match the star's angle); clock also used for the "Running late" message.
