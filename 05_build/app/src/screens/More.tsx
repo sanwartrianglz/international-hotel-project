@@ -210,6 +210,7 @@ export function DemoScreen() {
           <input type="checkbox" checked={!s.online} onChange={(e) => s.setOnline(!e.target.checked)} /> No signal (offline)
         </label>
         <p className="muted small">Inspection buttons work once the room is “To inspect” (after Room done). Maintenance issues move to “Being fixed” after 20 s and “Fixed” after 60 s. Messages get a reply after 5 s. DND rooms come back after 45 s.</p>
+        <button type="button" className="btn btn-secondary" onClick={s.replayOnboarding}><Icon name="play" size={13} fill stroke={0} /> Replay splash + onboarding</button>
         <button type="button" className="btn btn-secondary" onClick={() => { localStorage.clear(); location.reload(); }}><Icon name="refresh" size={15} /> Reset everything</button>
       </div>
       <BottomBar><button type="button" className="btn btn-primary" onClick={s.home}>Back to app</button></BottomBar>

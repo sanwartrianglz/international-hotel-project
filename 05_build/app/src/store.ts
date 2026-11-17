@@ -24,6 +24,8 @@ export interface Toast { id: number; key: string; vars?: Record<string, string |
 
 interface State {
   lang: Lang;
+  onboarded: boolean;          // first-run onboarding seen on this device
+  splash: boolean;             // splash screen showing (not persisted)
   phase: "login" | "briefing" | "shift" | "offduty";
   device?: "phone" | "tablet";
   userId?: string;
@@ -45,6 +47,9 @@ interface State {
 
 interface Actions {
   setLang(l: Lang): void;
+  endSplash(): void;
+  finishOnboarding(): void;
+  replayOnboarding(): void;
   login(device: "phone" | "tablet", userId: string): void;
   startShift(): void;
   go(s: Screen): void;
@@ -86,7 +91,7 @@ interface Actions {
 const uid = () => Math.random().toString(36).slice(2, 9);
 let toastSeq = 1;
 
-const initial = (): Omit<State, "lang"> => ({
+const initial = (): Omit<State, "lang" | "onboarded" | "splash"> => ({
   phase: "login",
   screen: { name: "home" },
   rooms: seedRooms(),
@@ -120,9 +125,14 @@ export const useApp = create<State & Actions>()(
 
       return {
         lang: "en",
+        onboarded: false,
+        splash: true,
         ...initial(),
 
         setLang: (lang) => set({ lang }),
+        endSplash: () => set({ splash: false }),
+        finishOnboarding: () => set({ onboarded: true }),
+        replayOnboarding: () => set({ onboarded: false, splash: true, phase: "login" }),
         login: (device, userId) => {
           const staff = STAFF.find((p) => p.id === userId);
           set({ device, userId, phase: "briefing", lang: get().lang ?? staff?.lang ?? "en" });
@@ -274,8 +284,8 @@ export const useApp = create<State & Actions>()(
     {
       name: "cecil-hk-v1",
       partialize: (s) => {
-        const { toasts: _t, ...rest } = s;
-        void _t;
+        const { toasts: _t, splash: _s, ...rest } = s;
+        void _t; void _s;
         return rest;
       },
     },

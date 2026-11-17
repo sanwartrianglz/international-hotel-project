@@ -11,7 +11,7 @@ const FRAME_H = SCREEN_H + BEZEL * 2;
 /** On a desktop-size window the app is shown inside an iPhone mockup (for reviews and presentations).
  *  On a real phone, or with ?frame=off, it runs full-screen. */
 function useFramed() {
-  const query = "(min-width: 600px) and (min-height: 560px)";
+  const query = "(min-width: 600px)";
   const param = new URLSearchParams(location.search).get("frame");
   const off = param === "off";
   const force = param === "on";
@@ -77,7 +77,7 @@ function StatusBar({ dark }: { dark: boolean }) {
 export function DeviceFrame({ children }: { children: ReactNode }) {
   const framed = useFramed();
   const scale = useScale();
-  const dark = useApp((s) => !!s.onBreak && s.phase === "shift");
+  const dark = useApp((s) => s.splash || (!!s.onBreak && s.phase === "shift"));
   const dir = useApp((s) => LANGS.find((l) => l.id === s.lang)?.dir ?? "ltr");
 
   useEffect(() => {

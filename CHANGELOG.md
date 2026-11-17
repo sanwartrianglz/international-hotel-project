@@ -48,3 +48,5 @@ Dated log of work sessions: what was done and what's next.
 - Imported 13 more icons (43 total). Still needed: female-staff, first-aid.
 - Icons recoloured to emerald on import (hue shift −95°); placeholders tinted to match.
 - Invited sallyabdelfattah22 and amrdarwish-ai as collaborators (write). Published the app on GitHub Pages via .github/workflows/deploy-app.yml: https://sanwartrianglz.github.io/international-hotel-project/
+- Added splash (brass ring draws around the Cecil C, ~1.7 s each open) and first-run onboarding: language step (asked in all three languages) + 4 picture-first slides with listen, swipe, skip. Demo controls: Replay splash + onboarding.
+- iPhone frame now shows on any window wider than 600 px (height no longer matters), so the live link shows the mockup on laptops.

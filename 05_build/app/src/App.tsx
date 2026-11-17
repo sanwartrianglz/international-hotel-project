@@ -8,9 +8,10 @@ import { IssueScreen, ReportsScreen } from "./screens/Issue";
 import { MessagesScreen, RoomsScreen, MenuScreen, EndScreen, OffDuty, DemoScreen } from "./screens/More";
 import { BreakScreen, Toasts, UrgentAlert } from "./components/chrome";
 import { DeviceFrame } from "./components/DeviceFrame";
+import { Splash, Onboarding } from "./screens/Welcome";
 
 export default function App() {
-  const { phase, screen, lang, onBreak, setOnline, device } = useApp();
+  const { phase, screen, lang, onBreak, setOnline, device, splash, onboarded } = useApp();
 
   // Arabic → RTL. Every layout uses logical CSS properties, so it mirrors by itself.
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function App() {
   }, [lang]);
 
   // Each new screen starts at the top.
-  const screenKey = phase + screen.name + ("no" in screen ? screen.no : "");
+  const screenKey = String(splash) + String(onboarded) + phase + screen.name + ("no" in screen ? screen.no : "");
   useEffect(() => { window.scrollTo(0, 0); document.getElementById("app-scroll")?.scrollTo(0, 0); }, [screenKey]);
 
   // Real signal follows the browser; the demo panel can also simulate "no signal".
@@ -33,7 +34,9 @@ export default function App() {
   }, [setOnline]);
 
   let body;
-  if (phase === "login") body = <Login />;
+  if (splash) body = <Splash />;
+  else if (!onboarded) body = <Onboarding />;
+  else if (phase === "login") body = <Login />;
   else if (phase === "briefing") body = <Briefing />;
   else if (phase === "offduty") body = <OffDuty />;
   else if (onBreak) body = <BreakScreen />;

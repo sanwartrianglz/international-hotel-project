@@ -4,6 +4,22 @@ import type { StringKey } from "./en";
 // Missing keys fall back to English.
 export const fil: Partial<Record<StringKey, string>> = {
   "app.chain": "Cecil Hotels · Cairo",
+  "splash.tag": "Housekeeping",
+  "onb.skip": "Laktawan",
+  "onb.next": "Susunod",
+  "onb.start": "Magsimula",
+  "onb.welcome": "Maligayang pagdating",
+  "onb.lang.title": "Piliin ang wika",
+  "onb.lang.sub": "Puwede itong palitan sa menu",
+  "onb.1.title": "Isang kuwarto sa isang pagkakataon",
+  "onb.1.body": "Laging nasa itaas ang susunod mong kuwarto. Una ang madalian.",
+  "onb.2.title": "Sundan ang mga larawan",
+  "onb.2.body": "Pindutin ang bawat larawan kapag tapos na. Hindi kailangang magbasa.",
+  "onb.3.title": "Igalang ang paalala ng bisita",
+  "onb.3.body": "Ang lilang paalala ay nagpapakita ng kailangan ng bisita. Pindutin para malaman kung bakit.",
+  "onb.4.title": "Isang pindot lang ang tulong",
+  "onb.4.body": "Magpadala ng mensahe o humingi ng tulong. Gumagana kahit walang signal.",
+
   "login.device": "Aling device?",
   "login.ownPhone": "Phone ko",
   "login.ownPhoneSub": "Laging naka-sign in",
