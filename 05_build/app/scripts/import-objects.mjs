@@ -1,38 +1,62 @@
-// Puts the board's navy-gradient object images into public/objects/<object>.png.
-// Export the selected images from FigJam Section 4 (left column) into public/objects, then run:
-//   npm run objects            (or: node scripts/import-objects.mjs <folder-with-exports>)
-// It understands Figma's export names ("image 3@2x.png", "Gemini_Generated_Image_… 1.png")
-// and already-named files ("towels.png", "U2 · towels@2x.png").
-import { readdirSync, renameSync, copyFileSync, existsSync } from "node:fs";
+// Imports the navy-gradient object icons into the app as small WebP files.
+//   npm run objects                 → reads ../../00_inputs/Icons (raw, untouched)
+//   node scripts/import-objects.mjs <folder>
+// Output: public/objects/<object>.webp, 256 × 256 (shown at most ~112 px, so 2x-sharp).
+// Files are recognised by their Gemini id (see MAP), a FigJam layer name, or an object name ("bed.png").
+import { readdirSync, mkdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
+import sharp from "sharp";
 
-/** Layer name in FigJam Section 4 (navy column) → object id. */
-const NAVY = {
-  "Gemini_Generated_Image_fl8f48fl8f48fl8f 1": "towels",
-  "Gemini_Generated_Image_q74ly3q74ly3q74l 1": "toiletries",
-  "Gemini_Generated_Image_7f8rf47f8rf47f8r 1": "pillows",
-  "Gemini_Generated_Image_a6y6h5a6y6h5a6y6 1": "wine",
-  "image 3": "tv",
-  "image 1": "clipboard",
-  "image 2": "throw",
-  "Gemini_Generated_Image_o3b71zo3b71zo3b7 1": "service-dog",
-  "Gemini_Generated_Image_2vhhyd2vhhyd2vhh 1": "furniture",
-  "Gemini_Generated_Image_uj7p79uj7p79uj7p 1": "coffee-pods",
-  "Gemini_Generated_Image_l3e0uel3e0uel3e0 1": "dnd",
+/** Gemini id (or FigJam layer name) → object id. Identified by eye on 17 Nov. */
+const MAP = {
+  "2vhhyd": "furniture", "3tbb8p (1)": "toiletries", "3tbb8p (2)": "pillows", "3tbb8p (3)": "wine",
+  "3tbb8p (4)": "clipboard", "3tbb8p": "towels", "4uswkg": "toilet", "5bri0n": "throw", "5oobia": "bathrobe",
+  "a1xzlb": "soft-drink", "a3fcwd": "bed", "ba17sm": "crib", "d1i2yn": "linen", "f4czif": "prayer-mat",
+  "g74blu": "sink", "k2n7nw": "shower", "kxr4f3": "snack", "l3e0ue": "dnd", "lq6dqa": "bathtub",
+  "o3b71z": "service-dog", "osjhl5": "duster", "rpr7r2": "vacuum", "tewrsl": "bin", "toqizq": "shoes-off",
+  "tzbkfa": "minibar", "uj7p79": "coffee-pods", "xqa5zj": "water", "y5t357": "quiet", "yoxriv": "tv",
+  "z2slr8": "window",
+  // FigJam Section 4 layer names (if exported from the board instead)
+  "fl8f48": "towels", "q74ly3": "toiletries", "7f8rf4": "pillows", "a6y6h5": "wine",
+  "image 3": "tv", "image 1": "clipboard", "image 2": "throw",
 };
 
-const dest = resolve(import.meta.dirname, "../public/objects");
-const src = resolve(process.argv[2] ?? dest);
+function idFor(file) {
+  const base = file.replace(/(@\dx)?\.(png|jpe?g|webp)$/i, "");
+  const g = base.match(/Gemini_Generated_Image_([a-z0-9]{6})[a-z0-9]*( 1)?( \(\d\))?$/i);
+  if (g) return MAP[g[1] + (g[3] ?? "")] ?? MAP[g[1]];
+  if (MAP[base]) return MAP[base];
+  const plain = base.replace(/^U2\s*·\s*/i, "").toLowerCase();
+  return /^[a-z-]+$/.test(plain) ? plain : null;
+}
+
+/** Resize to 256 px and cut out the off-white paper background (near-white AND low-colour pixels),
+ *  so light-blue highlights stay solid. Soft ramp keeps edges anti-aliased. */
+async function toTransparentWebp(input, output) {
+  const { data, info } = await sharp(input).resize(256, 256, { fit: "contain", background: "#ffffff" })
+    .removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const out = Buffer.alloc(info.width * info.height * 4);
+  for (let i = 0, j = 0; i < data.length; i += 3, j += 4) {
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const mn = Math.min(r, g, b), sat = Math.max(r, g, b) - mn;
+    const d = Math.max(0, 232 - mn) + Math.max(0, sat - 16) * 2;   // 0 = paper
+    out[j] = r; out[j + 1] = g; out[j + 2] = b; out[j + 3] = Math.min(255, d * 14);
+  }
+  await sharp(out, { raw: { width: info.width, height: info.height, channels: 4 } }).webp({ quality: 85, alphaQuality: 90 }).toFile(output);
+}
+
+const root = resolve(import.meta.dirname, "..");
+const src = resolve(process.argv[2] ?? join(root, "../../00_inputs/Icons"));
+const dest = join(root, "public/objects");
+mkdirSync(dest, { recursive: true });
+
 let n = 0;
-for (const f of readdirSync(src)) {
-  if (!/\.png$/i.test(f)) continue;
-  const base = f.replace(/(@\dx)?\.png$/i, "");
-  const id = NAVY[base] ?? base.replace(/^U2\s*·\s*/i, "").toLowerCase();
-  if (!/^[a-z-]+$/.test(id)) { console.log("skipped (unknown name):", f); continue; }
-  const target = join(dest, id + ".png");
-  if (join(src, f) === target) continue;
-  if (src === dest) renameSync(join(src, f), target); else copyFileSync(join(src, f), target);
+for (const f of readdirSync(src).sort()) {
+  if (!/\.(png|jpe?g|webp)$/i.test(f)) continue;
+  const id = idFor(f);
+  if (!id) { console.log("skipped (unknown):", f); continue; }
+  await toTransparentWebp(join(src, f), join(dest, id + ".webp"));
+  console.log(`${f}  →  ${id}.webp`);
   n++;
 }
-const have = readdirSync(dest).filter((f) => f.endsWith(".png")).length;
-console.log(`${n} renamed · ${have} object images in public/objects` + (existsSync(join(dest, "towels.png")) ? "" : " (towels.png missing)"));
+console.log(`\n${n} icons written to public/objects` + (existsSync(join(dest, "bed.webp")) ? "" : " (bed.webp missing)"));

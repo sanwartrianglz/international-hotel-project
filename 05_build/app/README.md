@@ -32,7 +32,7 @@ On a desktop-size window the app shows inside an **iPhone 15 Pro mockup** (Dynam
 | `src/i18n/` | English, Arabic (RTL, gender-neutral nouns), Filipino. **Translations are drafts; please review.** |
 | `src/store.ts` | Room status flow, offline queue, simulated reception / supervisor / PMS |
 | `src/screens/` | Start (login, briefing), Home, Clean (checklist, done, fix-it), Issue, More (messages, rooms, menu, end, demo) |
-| `public/objects/` | Amr's 46 U2 object PNGs (`towels.png`…). After exporting from Figma into this folder, run `npm run objects` to rename them. Missing images fall back to emoji. |
+| `public/objects/` | Navy-gradient object icons as 256 px WebP with transparent background. Source images live in `00_inputs/Icons/`; run `npm run objects` to regenerate. Missing icons show a navy-tinted placeholder. |
 
 ## Not built yet
 - Supervisor view (Floor · Team · Inbox · Inspect). Its actions are simulated in **Demo controls** for now.

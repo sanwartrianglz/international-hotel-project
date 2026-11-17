@@ -13,7 +13,7 @@ export function Obj({ id, size = 48, alt = "" }: { id: ObjectId; size?: number; 
   if (broken) {
     return <span className="obj-fallback" style={{ fontSize: size * 0.6, width: size, height: size }} aria-hidden={!alt}>{OBJECTS[id]}</span>;
   }
-  return <img className="obj" src={`${BASE}objects/${id}.png`} width={size} height={size} alt={alt} onError={() => setBroken(true)} draggable={false} />;
+  return <img className="obj" src={`${BASE}objects/${id}.webp`} width={size} height={size} alt={alt} onError={() => setBroken(true)} draggable={false} />;
 }
 
 export const STATUS_ICON: Record<Status, IconName> = {

@@ -44,3 +44,4 @@ Dated log of work sessions: what was done and what's next.
 - Guest needs section under the room card (home + room screens); icon-only markers on list cards.
 - Switched objects to the navy-gradient set: import script maps the 11 board layers to file names; placeholder emoji are tinted navy. Added FigJam section "Icons to generate · navy set (34)" (node 102:2056) to the right of Sally's section, plus 04_design/icons-to-generate.md.
 - **Next:** export the 11 navy images (they are selected in Figma) and generate the other 34; Amr to confirm the smaller sizes.
+- Imported 30 navy-gradient icons from 00_inputs/Icons (identified by eye, mapped in scripts/import-objects.mjs): resized to 256 px WebP with the paper background cut out (75 MB → 240 KB). 15 still needed (04_design/icons-to-generate.md).

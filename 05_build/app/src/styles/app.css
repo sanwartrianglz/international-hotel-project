@@ -40,7 +40,7 @@ button:disabled { cursor: not-allowed; }
 
 /* Objects: navy-gradient images sit on tinted tiles (multiply drops their light background).
    Missing images fall back to an emoji tinted navy, so the set stays one family. */
-.obj { display: block; object-fit: contain; flex: none; user-select: none; mix-blend-mode: multiply; }
+.obj { display: block; object-fit: contain; flex: none; user-select: none; }
 .obj-fallback { display: inline-grid; place-items: center; flex: none; line-height: 1; filter: grayscale(1) sepia(1) hue-rotate(185deg) saturate(2.2) brightness(0.8) contrast(1.1); }
 
 /* Stationery label */
